@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Wound - WoundPro_Ke</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #F0F7F9; }
+        .soft-card { border-radius: 2.5rem; }
+        
+        /* Styling the default Django form fields */
+        .django-form-wrapper p {
+            margin-bottom: 1.25rem;
+        }
+        .django-form-wrapper input, 
+        .django-form-wrapper select, 
+        .django-form-wrapper textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+            background-color: #f8fafc;
+            font-size: 0.875rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .django-form-wrapper input:focus {
+            border-color: #3b82f6;
+            background-color: #fff;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.05);
+        }
+        .django-form-wrapper label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            margin-left: 0.25rem;
+        }
+    </style>
+</head>
+
+<body class="font-sans">
+
+<div class="max-w-md mx-auto p-5">
+
+    <div class="flex items-center justify-between mb-8">
+        <a href="javascript:history.back()" class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-gray-600">
+            <i class="fa-solid fa-xmark"></i>
+        </a>
+        <h1 class="text-lg font-bold text-gray-800">New Wound Record</h1>
+        <div class="w-10"></div>
+    </div>
+
+    <div class="bg-white soft-card p-8 shadow-sm border border-white">
+        <div class="flex items-center gap-4 mb-8">
+            <div class="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center text-blue-600">
+                <i class="fa-solid fa-file-medical text-xl"></i>
+            </div>
+            <div>
+                <h2 class="text-md font-bold text-gray-800">Registration</h2>
+                <p class="text-xs text-gray-400 font-medium">Entry Detail</p>
+            </div>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="django-form-wrapper">
+                {{ form.as_p }}
+            </div>
+
+            <div class="mt-8">
+                <button type="submit" 
+                    class="w-full bg-blue-600 text-white flex items-center justify-center gap-3 py-4 soft-card shadow-lg shadow-blue-100 text-sm font-bold active:transform active:scale-95 transition-all">
+                    Save Record
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <p class="text-center text-[11px] text-gray-400 mt-6 px-10">
+        Ensure all clinical parameters are entered correctly before saving.
+    </p>
+
+</div>
+
+</body>
+</html>

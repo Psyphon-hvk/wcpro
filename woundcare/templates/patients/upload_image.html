@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Wound Image</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #F0F7F9; }
+        .soft-card { border-radius: 2rem; }
+        /* Custom styling for the default Django form file input */
+        input[type="file"] {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+        input[type="file"]::file-selector-button {
+            background-color: #eff6ff;
+            color: #2563eb;
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            border: none;
+            font-weight: 600;
+            margin-right: 1rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body class="font-sans">
+
+<div class="max-w-md mx-auto p-5">
+
+    <div class="flex items-center justify-between mb-8">
+        <a href="javascript:history.back()" class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-gray-600">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <h1 class="text-lg font-bold text-gray-800">Visual Documentation</h1>
+        <div class="w-10"></div>
+    </div>
+
+    <div class="bg-white soft-card p-8 shadow-sm border border-white text-center">
+        <div class="w-20 h-20 bg-blue-50 rounded-3xl flex items-center justify-center text-blue-500 mx-auto mb-6">
+            <i class="fa-solid fa-cloud-arrow-up text-3xl"></i>
+        </div>
+        
+        <h2 class="text-xl font-bold text-gray-800 mb-2">Upload Image</h2>
+        <p class="text-sm text-gray-400 mb-8 px-4">Ensure the wound is well-lit and the ruler is visible for accurate measurement.</p>
+
+        <form method="POST" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+            
+            <div class="text-left bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                <div class="text-xs font-bold text-gray-400 uppercase mb-2 ml-1">Select File</div>
+                <div class="django-form-wrapper">
+                    {{ form.as_p }}
+                </div>
+            </div>
+
+            <button type="submit" 
+                class="w-full bg-blue-600 text-white flex items-center justify-center gap-3 py-4 soft-card shadow-lg shadow-blue-100 text-sm font-bold active:transform active:scale-95 transition-all">
+                <i class="fa-solid fa-upload"></i> Start Upload
+            </button>
+        </form>
+    </div>
+
+    <div class="mt-8 px-4">
+        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Best Practices</h4>
+        <ul class="space-y-3">
+            <li class="flex items-start gap-3 text-xs text-gray-500">
+                <i class="fa-solid fa-circle-check text-emerald-500 mt-0.5"></i>
+                Keep camera 10-15cm away from the wound.
+            </li>
+            <li class="flex items-start gap-3 text-xs text-gray-500">
+                <i class="fa-solid fa-circle-check text-emerald-500 mt-0.5"></i>
+                Avoid using camera flash to prevent glares.
+            </li>
+        </ul>
+    </div>
+
+</div>
+
+</body>
+</html>

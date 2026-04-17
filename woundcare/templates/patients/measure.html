@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Measure Wound - WoundPro_Ke</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #0F172A; } /* Dark theme for precision measurement */
+        #container { position: relative; display: inline-block; overflow: hidden; border-radius: 1.5rem; }
+        #canvas { position: absolute; left: 0; top: 0; cursor: crosshair; touch-action: none; }
+        .soft-card { border-radius: 2rem; }
+        .active-mode { background-color: #3b82f6 !important; color: white !important; }
+    </style>
+</head>
+
+<body class="font-sans text-gray-200 overflow-x-hidden">
+
+<div class="max-w-md mx-auto p-5 min-h-screen flex flex-col">
+
+    <div class="flex items-center justify-between mb-6">
+        <a href="javascript:history.back()" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-gray-400">
+            <i class="fa-solid fa-chevron-left"></i>
+        </a>
+        <h1 class="text-lg font-bold">Wound Analyzer</h1>
+        <button onclick="resetCanvas()" class="text-xs font-bold text-red-400 uppercase tracking-widest">Reset</button>
+    </div>
+
+    <div class="bg-gray-800/50 backdrop-blur-md soft-card p-6 border border-gray-700 mb-6 text-center">
+        <p id="result-label" class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Select Mode to Begin</p>
+        <div id="result" class="text-2xl font-extrabold text-blue-400">—</div>
+    </div>
+
+    <div class="flex-1 flex items-center justify-center">
+        <div id="container" class="shadow-2xl shadow-blue-900/20 border border-gray-700">
+            <img id="woundImage" src="{{ image.image.url }}" class="max-w-full block">
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
+
+    <div class="mt-8 bg-gray-800 soft-card p-4 flex gap-3 shadow-xl">
+        <button onclick="setMode('distance')" id="btn-distance"
+            class="flex-1 py-4 rounded-2xl bg-gray-700 text-gray-400 flex flex-col items-center gap-2 transition-all">
+            <i class="fa-solid fa-ruler"></i>
+            <span class="text-[10px] font-bold uppercase">Distance</span>
+        </button>
+        
+        <button onclick="setMode('curve')" id="btn-curve"
+            class="flex-1 py-4 rounded-2xl bg-gray-700 text-gray-400 flex flex-col items-center gap-2 transition-all">
+            <i class="fa-solid fa-draw-polygon"></i>
+            <span class="text-[10px] font-bold uppercase">Area</span>
+        </button>
+    </div>
+
+</div>
+
+<script>
+    let points = [];
+    let draggingPoint = null;
+    let mode = "distance";
+
+    const img = document.getElementById("woundImage");
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    img.onload = function () {
+        canvas.width = img.width;
+        canvas.height = img.height;
+    };
+
+    function setMode(newMode) {
+        mode = newMode;
+        points = [];
+        
+        // Update UI Buttons
+        document.getElementById('btn-distance').classList.remove('active-mode');
+        document.getElementById('btn-curve').classList.remove('active-mode');
+        document.getElementById('btn-' + newMode).classList.add('active-mode');
+        
+        document.getElementById("result-label").innerHTML = "Ready to Measure " + newMode;
+        document.getElementById("result").innerHTML = "—";
+        draw();
+    }
+
+    function resetCanvas() {
+        points = [];
+        draw();
+        document.getElementById("result").innerHTML = "—";
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (points.length > 1) {
+            ctx.beginPath();
+            ctx.moveTo(points[0].x, points[0].y);
+
+            for (let i = 1; i < points.length; i++) {
+                ctx.lineTo(points[i].x, points[i].y);
+            }
+
+            if (mode === "curve") {
+                ctx.closePath();
+                ctx.fillStyle = "rgba(59, 130, 246, 0.3)";
+                ctx.fill();
+            }
+
+            ctx.strokeStyle = "#3b82f6";
+            ctx.setLineDash(mode === "distance" ? [5, 5] : []);
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        }
+
+        points.forEach(p => {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 6, 0, 2 * Math.PI);
+            ctx.fillStyle = "white";
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = "rgba(0,0,0,0.5)";
+            ctx.fill();
+            ctx.strokeStyle = "#3b82f6";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        });
+
+        calculateResults();
+    }
+
+    function calculateResults() {
+        const resultEl = document.getElementById("result");
+        const labelEl = document.getElementById("result-label");
+
+        if (mode === "distance" && points.length === 2) {
+            let dx = points[0].x - points[1].x;
+            let dy = points[0].y - points[1].y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+            let cm = distance * 0.026;
+            labelEl.innerHTML = "Calculated Length";
+            resultEl.innerHTML = cm.toFixed(2) + " <span class='text-sm font-normal text-gray-400'>cm</span>";
+        }
+
+        if (mode === "curve" && points.length > 2) {
+            let area = 0;
+            for (let i = 0; i < points.length; i++) {
+                let j = (i + 1) % points.length;
+                area += points[i].x * points[j].y;
+                area -= points[j].x * points[i].y;
+            }
+            area = Math.abs(area / 2);
+            let cm2 = area * (0.026 * 0.026);
+            labelEl.innerHTML = "Calculated Area";
+            resultEl.innerHTML = cm2.toFixed(2) + " <span class='text-sm font-normal text-gray-400'>cm²</span>";
+        }
+    }
+
+    // Reuse your existing desktop/mobile event logic here...
+    // (Ensure you use getTouchPos and standard event listeners as in your original code)
+
+    // ===== Quick Desktop Click logic for testing =====
+    canvas.addEventListener("click", function(event) {
+        const rect = canvas.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        if (mode === "distance") {
+            if (points.length < 2) points.push({x, y});
+            else points = [{x, y}];
+        }
+        draw();
+    });
+
+    // Default to distance mode on load
+    setMode('distance');
+</script>
+
+</body>
+</html>

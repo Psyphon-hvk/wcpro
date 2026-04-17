@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patients - WoundPro_Ke</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #F0F7F9; }
+        .soft-card { border-radius: 2rem; }
+        .search-input:focus { box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
+    </style>
+</head>
+
+<body class="font-sans pb-24">
+
+<div class="max-w-md mx-auto p-5">
+
+    <div class="mb-8">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-extrabold text-gray-800">Patient Registry</h1>
+            <a href="/" class="text-gray-400 text-xl"><i class="fa-solid fa-house"></i></a>
+        </div>
+        
+        <div class="relative group">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <input type="text" placeholder="Search by name or diagnosis..." 
+                class="w-full bg-white py-4 pl-12 pr-4 rounded-2xl shadow-sm border-transparent focus:border-blue-300 focus:ring-0 search-input transition-all text-sm font-medium">
+        </div>
+    </div>
+
+    <div class="flex gap-4 mb-8 px-2">
+        <div class="flex flex-col">
+            <span class="text-2xl font-black text-gray-800">{{ patients|length }}</span>
+            <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Total Files</span>
+        </div>
+        <div class="w-[1px] h-10 bg-gray-200"></div>
+        <div class="flex flex-col">
+            <span class="text-2xl font-black text-emerald-500">Active</span>
+            <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Status</span>
+        </div>
+    </div>
+
+    <div class="space-y-4">
+        {% for patient in patients %}
+        <a href="/patient/{{ patient.id }}/"
+           class="flex items-center gap-4 bg-white p-5 soft-card shadow-sm border border-white hover:border-blue-100 transition-all active:scale-[0.98]">
+            
+            <div class="w-14 h-14 rounded-[1.5rem] bg-blue-50 flex items-center justify-center text-blue-500 text-xl font-bold">
+                {{ patient.name|first }}
+            </div>
+
+            <div class="flex-1">
+                <p class="text-md font-extrabold text-gray-800 leading-tight">
+                    {{ patient.name }}
+                </p>
+                <div class="flex items-center gap-2 mt-1">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    <p class="text-xs font-bold text-gray-400 truncate w-40">
+                        {{ patient.diagnosis }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="text-gray-300">
+                <i class="fa-solid fa-chevron-right text-sm"></i>
+            </div>
+        </a>
+        {% empty %}
+        <div class="text-center py-20">
+            <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fa-solid fa-users-slash text-gray-300 text-2xl"></i>
+            </div>
+            <p class="text-gray-400 font-bold">No patients registered.</p>
+            <p class="text-xs text-gray-400 mt-1">Tap the plus button to add your first patient.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+<div class="fixed bottom-8 right-8 left-8 max-w-md mx-auto pointer-events-none">
+    <div class="flex justify-end pointer-events-auto">
+        <a href="/add/" 
+           class="w-16 h-16 bg-blue-600 rounded-3xl shadow-xl shadow-blue-200 flex items-center justify-center text-white text-2xl transition-transform hover:scale-105 active:scale-90">
+            <i class="fa-solid fa-plus"></i>
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

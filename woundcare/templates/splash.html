@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WoundPro_Ke</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 25%, #bae6fd 50%, #7dd3fc 100%);
+            /* Use dvh for mobile browser address bar compatibility */
+            height: 100dvh; 
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Responsive Blob - smaller for mobile */
+        .glow-blob {
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.3) 0%, transparent 70%);
+            filter: blur(40px);
+            z-index: -1;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(15px, -20px); }
+        }
+
+        .splash-exit {
+            opacity: 0;
+            filter: blur(40px);
+            transform: scale(1.1);
+            transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        /* Responsive Logo Scaling */
+        .logo-hero {
+            width: 240px; /* Smaller base for mobile */
+            max-width: 80vw; /* Never wider than 80% of screen */
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.05));
+            animation: breathe 5s ease-in-out infinite;
+        }
+
+        /* Desktop override for logo */
+        @media (min-width: 768px) {
+            .logo-hero { width: 320px; }
+            .glow-blob { width: 400px; height: 400px; filter: blur(60px); }
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .loader-bar {
+            position: absolute;
+            bottom: 15%; /* Higher up on mobile screens */
+            width: 120px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .loader-progress {
+            width: 100%;
+            height: 100%;
+            background: #0ea5e9;
+            transform: translateX(-100%);
+            animation: loading 3s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+        }
+
+        @keyframes loading {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(0%); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glow-blob"></div>
+
+    <div id="splash-container" class="flex flex-col items-center justify-center px-6">
+        <div class="relative">
+            <img src="{% static 'images/logo.png' %}" alt="WoundPro_Ke" class="logo-hero">
+        </div>
+
+        <div class="loader-bar">
+            <div class="loader-progress"></div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener("load", function() {
+            const container = document.getElementById('splash-container');
+            
+            
+            setTimeout(() => {
+                container.classList.add('splash-exit');
+                
+                setTimeout(() => {
+                    window.location.href = "/dashboard/"; 
+                }, 1000);
+            }, 3500);
+        });
+    </script>
+</body>
+</html>

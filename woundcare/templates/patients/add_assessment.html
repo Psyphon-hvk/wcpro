@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Assessment - WoundPro_Ke</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #F0F7F9; }
+        .soft-card { border-radius: 2.5rem; }
+        
+        /* Consistent Django Form Styling */
+        .django-form-wrapper p {
+            margin-bottom: 1.5rem;
+        }
+        .django-form-wrapper input, 
+        .django-form-wrapper select, 
+        .django-form-wrapper textarea {
+            width: 100%;
+            padding: 0.85rem 1.25rem;
+            border-radius: 1.25rem;
+            border: 1px solid #e2e8f0;
+            background-color: #f8fafc;
+            font-size: 0.875rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        .django-form-wrapper input:focus, .django-form-wrapper textarea:focus {
+            border-color: #3b82f6;
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.08);
+        }
+        .django-form-wrapper label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.6rem;
+            margin-left: 0.5rem;
+        }
+    </style>
+</head>
+
+<body class="font-sans">
+
+<div class="max-w-md mx-auto p-5">
+
+    <div class="flex items-center justify-between mb-8">
+        <a href="javascript:history.back()" class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-gray-400">
+            <i class="fa-solid fa-chevron-left"></i>
+        </a>
+        <h1 class="text-lg font-bold text-gray-800">Clinical Evaluation</h1>
+        <div class="w-10"></div>
+    </div>
+
+    <div class="bg-white soft-card p-8 shadow-sm border border-white">
+        <div class="flex items-center gap-4 mb-8">
+            <div class="w-14 h-14 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-600 shadow-lg shadow-emerald-50">
+                <i class="fa-solid fa-clipboard-check text-xl"></i>
+            </div>
+            <div>
+                <h2 class="text-md font-extrabold text-gray-800">Wound Metrics</h2>
+                <p class="text-xs text-gray-400 font-medium">New Assessment Entry</p>
+            </div>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="django-form-wrapper">
+                {{ form.as_p }}
+            </div>
+
+            <div class="mt-10">
+                <button type="submit" 
+                    class="w-full bg-blue-600 text-white flex items-center justify-center gap-3 py-4 soft-card shadow-lg shadow-blue-200 text-sm font-bold active:scale-95 transition-all">
+                    Submit Assessment
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="mt-8 flex items-start gap-3 bg-blue-50/50 p-4 rounded-2xl border border-blue-100/50">
+        <i class="fa-solid fa-circle-info text-blue-400 mt-0.5"></i>
+        <p class="text-[11px] text-blue-700 leading-relaxed">
+            Assessments help calculate the <span class="font-bold">healing trajectory</span>. Ensure measurements are recorded in centimeters (cm).
+        </p>
+    </div>
+
+</div>
+
+</body>
+</html>

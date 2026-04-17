@@ -1,0 +1,69 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logged Out | WoundPro_Ke</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+
+<style>
+    body { 
+        background-color: #f8fafc; 
+        background-image: radial-gradient(at 0% 100%, rgba(59, 130, 246, 0.08) 0px, transparent 50%), 
+                          radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.7);
+    }
+</style>
+
+
+</head>
+
+<body class="flex items-center justify-center min-h-screen p-6">
+
+
+<div class="max-w-sm w-full text-center">
+    <div class="mb-8">
+        <div class="w-20 h-20 bg-white rounded-[2rem] flex items-center justify-center mx-auto shadow-xl shadow-blue-100 mb-4 transition-transform hover:scale-110 duration-500">
+            <img src="{% static 'images/logo.png' %}" alt="Logo" class="h-10 object-contain">
+        </div>
+        <h1 class="font-extrabold text-gray-900 tracking-tight text-2xl">WoundPro<span class="text-blue-600">_Ke</span></h1>
+    </div>
+
+    <div class="glass-card p-8 rounded-[2.5rem] shadow-2xl shadow-blue-900/5 border border-white">
+        <div class="mb-6">
+            <h2 class="text-xl font-800 text-gray-800 mb-2">Session Ended</h2>
+            <p class="text-gray-500 text-sm leading-relaxed">
+                You have been safely logged out. <br>See you soon!
+            </p>
+        </div>
+
+        <a href="/login/" 
+           class="group relative flex items-center justify-center gap-3 bg-gray-900 text-white w-full py-4 rounded-2xl font-bold active:scale-95 transition-all shadow-lg shadow-gray-200">
+            <span>Login Again</span>
+            <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+        </a>
+        
+        <p class="mt-6 text-[11px] text-gray-400 font-medium uppercase tracking-widest">
+            Secure Portal
+        </p>
+    </div>
+
+    <p class="mt-8 text-gray-400 text-xs">
+        Need help? <a href="#" class="text-blue-600 font-bold hover:underline">Contact Support</a>
+    </p>
+</div>
+
+
+</body>
+</html>
