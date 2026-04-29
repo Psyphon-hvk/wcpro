@@ -1,101 +1,674 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wound Details - {{ wound.wound_number }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body { background-color: #F0F7F9; }
-        .soft-card { border-radius: 2rem; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wound Details - {{ wound.wound_number }}</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+    :root {
+        --olive:      #5a6e1f;
+        --olive-mid:  #6b7d24;
+        --teal-dark:  #2e6b6b;
+        --teal:       #3a7d6e;
+        --navy:       #2c4a7c;
+        --navy-deep:  #1e3560;
+        --surface:    #f4f6f2;
+        --card:       #ffffff;
+        --border:     #e5eae0;
+        --text-main:  #1a2112;
+        --text-sub:   #637060;
+        --text-muted: #a8b5a3;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        background: var(--surface);
+        font-family: 'DM Sans', sans-serif;
+        color: var(--text-main);
+        padding-bottom: 48px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+        background: linear-gradient(160deg, var(--olive) 0%, var(--teal) 55%, var(--navy) 100%);
+        padding: 24px 20px 28px;
+        position: relative;
+        overflow: hidden;
+    }
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: -50px; right: -50px;
+        width: 180px; height: 180px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.05);
+        pointer-events: none;
+    }
+    .hero::after {
+        content: '';
+        position: absolute;
+        bottom: -30px; left: 20px;
+        width: 110px; height: 110px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.04);
+        pointer-events: none;
+    }
+
+    .hero-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 22px;
+    }
+    .nav-btn {
+        width: 38px; height: 38px;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.22);
+        display: flex; align-items: center; justify-content: center;
+        color: rgba(255,255,255,0.9);
+        font-size: 13px;
+        text-decoration: none;
+    }
+    .nav-label {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.55);
+    }
+    .nav-title {
+        font-family: 'DM Serif Display', serif;
+        font-size: 16px;
+        color: white;
+        text-align: center;
+        margin-top: 1px;
+    }
+
+    .hero-body {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 16px;
+    }
+    .hero-patient-label {
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.55);
+        margin-bottom: 4px;
+    }
+    .hero-patient-name {
+        font-family: 'DM Serif Display', serif;
+        font-size: 20px;
+        color: white;
+        line-height: 1.2;
+    }
+    .hero-wound-num {
+        font-size: 12px;
+        color: rgba(255,255,255,0.65);
+        margin-top: 4px;
+        font-weight: 500;
+    }
+    .hero-icon {
+        width: 48px; height: 48px;
+        border-radius: 16px;
+        background: rgba(255,255,255,0.18);
+        border: 1.5px solid rgba(255,255,255,0.25);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 20px;
+        color: white;
+        flex-shrink: 0;
+    }
+    .hero-location {
+        background: rgba(255,255,255,0.12);
+        border: 1px solid rgba(255,255,255,0.18);
+        border-radius: 14px;
+        padding: 10px 14px;
+    }
+    .hero-location-lbl {
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.55);
+        margin-bottom: 4px;
+    }
+    .hero-location-val {
+        font-size: 13px;
+        font-weight: 700;
+        color: white;
+        line-height: 1.4;
+    }
+
+    /* ── CONTENT ── */
+    .content {
+        max-width: 480px;
+        margin: 0 auto;
+        padding: 18px 16px;
+    }
+
+    /* ── ACTION TOOLBAR ── */
+    .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 18px;
+    }
+    .tool-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px; height: 42px;
+        border-radius: 13px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        color: var(--text-sub);
+        font-size: 14px;
+        text-decoration: none;
+        transition: border-color 0.2s;
+        cursor: pointer;
+    }
+    .tool-btn:hover { border-color: var(--teal); }
+    .tool-btn.whatsapp { background: #25d366; border-color: #25d366; color: white; }
+
+    /* ── QUICK ACTIONS ── */
+    .quick-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 18px;
+    }
+    .q-btn {
+        background: var(--card);
+        border-radius: 18px;
+        border: 1px solid var(--border);
+        padding: 16px 10px;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+        transition: border-color 0.18s, transform 0.12s;
+    }
+    .q-btn:active { transform: scale(0.97); }
+    .q-icon {
+        width: 40px; height: 40px;
+        border-radius: 13px;
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 8px;
+        font-size: 15px;
+    }
+    .ic-teal   { background: #d8eeeb; color: var(--teal-dark); }
+    .ic-olive  { background: #eef1dc; color: var(--olive); }
+    .ic-navy   { background: #dde5f4; color: var(--navy); }
+    .q-label {
+        font-size: 11px;
+        font-weight: 800;
+        color: var(--text-main);
+        letter-spacing: 0.02em;
+    }
+
+    /* ── SECTION CARD ── */
+    .s-card {
+        background: var(--card);
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        overflow: hidden;
+        margin-bottom: 14px;
+    }
+    .s-head {
+        padding: 9px 18px 7px;
+        background: #f8faf6;
+        border-bottom: 1px solid var(--border);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+    }
+    .s-body { padding: 16px 18px; }
+
+    /* ── CLINICAL OVERVIEW ── */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    .stat-box {
+        background: var(--surface);
+        border-radius: 14px;
+        padding: 14px 12px;
+    }
+    .stat-lbl {
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 4px;
+    }
+    .stat-num {
+        font-family: 'DM Serif Display', serif;
+        font-size: 28px;
+        color: var(--text-main);
+        line-height: 1;
+    }
+
+    /* ── ASSESSMENT CARDS ── */
+    .a-card {
+        background: var(--card);
+        border-radius: 18px;
+        border: 1px solid var(--border);
+        padding: 16px;
+        margin-bottom: 12px;
+    }
+    .a-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+    }
+    .a-badge {
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        background: #d8eeeb;
+        color: var(--teal-dark);
+        padding: 3px 10px;
+        border-radius: 999px;
+    }
+    .a-date {
+        font-size: 10px;
+        color: var(--text-muted);
+        font-weight: 600;
+    }
+
+    .a-field {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 6px 0;
+        border-bottom: 1px solid #f5f7f3;
+        font-size: 12px;
+        gap: 10px;
+    }
+    .a-field:last-of-type { border-bottom: none; }
+    .a-field-lbl { color: var(--text-muted); font-weight: 600; flex-shrink: 0; }
+    .a-field-val { color: var(--text-main); font-weight: 700; text-align: right; }
+
+    /* ── TISSUE BARS ── */
+    .tissue-section {
+        margin-top: 14px;
+        padding-top: 12px;
+        border-top: 1px solid #f1f5f0;
+    }
+    .tissue-lbl {
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 12px;
+    }
+    .tissue-row { margin-bottom: 10px; }
+    .tissue-row-header {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-sub);
+        margin-bottom: 5px;
+    }
+    .tissue-track {
+        height: 7px;
+        background: #f1f5f0;
+        border-radius: 999px;
+        overflow: hidden;
+    }
+    .tissue-fill { height: 100%; border-radius: 999px; }
+    .fill-epithelial { background: linear-gradient(90deg, var(--teal), var(--olive)); }
+    .fill-granulation { background: linear-gradient(90deg, #f87171, #fb923c); }
+    .fill-slough      { background: linear-gradient(90deg, #fbbf24, #d97706); }
+    .fill-necrosis    { background: linear-gradient(90deg, #475569, #1e293b); }
+
+    /* ── NOTES ── */
+    .notes-box {
+        margin-top: 12px;
+        background: var(--surface);
+        border-radius: 12px;
+        padding: 12px;
+        font-size: 12px;
+        color: var(--text-sub);
+        line-height: 1.6;
+    }
+
+    /* ── IMAGE GALLERY ── */
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+    .img-card {
+        background: var(--card);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        padding: 8px;
+        overflow: hidden;
+    }
+    .img-wrap { position: relative; }
+    .img-wrap img {
+        width: 100%;
+        height: 130px;
+        object-fit: cover;
+        border-radius: 12px;
+        display: block;
+    }
+    .measure-btn {
+        position: absolute;
+        bottom: 8px; right: 8px;
+        width: 34px; height: 34px;
+        border-radius: 10px;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        display: flex; align-items: center; justify-content: center;
+        color: var(--teal-dark);
+        text-decoration: none;
+        font-size: 12px;
+    }
+    .img-caption {
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        text-align: center;
+        margin-top: 6px;
+    }
+
+    /* ── EMPTY STATES ── */
+    .empty-box {
+        background: var(--card);
+        border-radius: 18px;
+        border: 2px dashed var(--border);
+        padding: 40px 20px;
+        text-align: center;
+    }
+    .empty-box i { font-size: 28px; color: #c8d5c4; display: block; margin-bottom: 10px; }
+    .empty-box p { font-size: 13px; color: var(--text-muted); font-weight: 600; }
+    .empty-box span { font-size: 11px; color: var(--text-muted); font-style: italic; }
+
+    /* ── SECTION ROW ── */
+    .sec-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+    .sec-row h3 { font-size: 13px; font-weight: 800; color: var(--text-main); }
+    .sec-row a {
+        font-size: 11px;
+        font-weight: 800;
+        color: var(--teal-dark);
+        text-decoration: none;
+    }
+    .sec-row span { font-size: 11px; font-weight: 700; color: var(--text-muted); }
+
+    /* ── ACTIVE BADGE ── */
+    .active-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: #eef1dc;
+        color: var(--olive);
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 10px;
+        font-weight: 800;
+    }
+    .dot-olive {
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: var(--olive);
+        display: inline-block;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(14px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    .content > * {
+        animation: fadeUp 0.35s ease both;
+    }
+    .content > *:nth-child(1) { animation-delay: 0.05s; }
+    .content > *:nth-child(2) { animation-delay: 0.10s; }
+    .content > *:nth-child(3) { animation-delay: 0.15s; }
+    .content > *:nth-child(4) { animation-delay: 0.20s; }
+    .content > *:nth-child(5) { animation-delay: 0.25s; }
+    .content > *:nth-child(6) { animation-delay: 0.30s; }
+</style>
 </head>
 
-<body class="font-sans pb-10">
+<body>
+<div id="captureArea">
 
-<div class="max-w-md mx-auto p-5">
-
-    <div class="flex items-center justify-between mb-6">
-        <a href="/patient/{{ wound.patient.id }}/" class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-gray-600">
-            <i class="fa-solid fa-arrow-left"></i>
-        </a>
-        <h1 class="text-lg font-bold text-gray-800">Wound #{{ wound.wound_number }}</h1>
-        <div class="w-10"></div>
-    </div>
-
-    <div class="bg-white soft-card p-5 shadow-sm border border-white mb-6">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500">
-                <i class="fa-solid fa-location-dot"></i>
-            </div>
+    <!-- ══════════ HERO ══════════ -->
+    <div class="hero">
+        <div class="hero-nav">
+            <a href="/patient/{{ wound.patient.id }}/" class="nav-btn">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
             <div>
-                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Anatomical Location</p>
-                <p class="text-md font-bold text-gray-700">{{ wound.location }}</p>
+                <div class="nav-label" style="text-align:center;">Wound Record</div>
+                <div class="nav-title">Wound #{{ wound.wound_number }}</div>
             </div>
+            <div style="width:38px;"></div>
+        </div>
+
+        <div class="hero-body">
+            <div>
+                <div class="hero-patient-label">Patient</div>
+                <div class="hero-patient-name">{{ wound.patient.first_name }} {{ wound.patient.surname }}</div>
+                <div class="hero-wound-num">Wound #{{ wound.wound_number }}</div>
+            </div>
+            <div class="hero-icon"><i class="fa-solid fa-bandage"></i></div>
+        </div>
+
+        <div class="hero-location">
+            <div class="hero-location-lbl">Anatomical Location</div>
+            <div class="hero-location-val">{{ wound.location }}</div>
         </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-3 mb-8">
-        <a href="/add-assessment/{{ wound.id }}/" 
-           class="bg-blue-600 text-white flex flex-col items-center justify-center gap-2 py-4 soft-card shadow-lg shadow-blue-100 text-[11px] font-bold">
-            <i class="fa-solid fa-clipboard-check text-lg"></i> New Assessment
-        </a>
-        <a href="/camera/{{ wound.id }}/" 
-           class="bg-emerald-500 text-white flex flex-col items-center justify-center gap-2 py-4 soft-card shadow-lg shadow-emerald-100 text-[11px] font-bold">
-            <i class="fa-solid fa-camera text-lg"></i> Take Photo
-        </a>
-    </div>
+    <!-- ══════════ CONTENT ══════════ -->
+    <div class="content">
 
-    <h3 class="text-md font-bold text-gray-800 mb-4 px-2">Assessment History</h3>
-    <div class="space-y-3 mb-8">
+        <!-- Toolbar: download / share -->
+        <div class="toolbar">
+            <button onclick="downloadScreenshot()" class="tool-btn" title="Download Screenshot">
+                <i class="fa-solid fa-camera"></i>
+            </button>
+            <a href="/wound/{{ wound.id }}/pdf/" class="tool-btn" title="Download PDF">
+                <i class="fa-solid fa-file-arrow-down"></i>
+            </a>
+            <a href="https://wa.me/?text=Check%20this%20wound%20report%20here:%20http://127.0.0.1:8000/wound/{{ wound.id }}/pdf/"
+               target="_blank" class="tool-btn whatsapp" title="Share on WhatsApp">
+                <i class="fa-brands fa-whatsapp"></i>
+            </a>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-grid">
+            <a href="/add-assessment/{{ wound.id }}/" class="q-btn">
+                <div class="q-icon ic-teal"><i class="fa-solid fa-clipboard-check"></i></div>
+                <div class="q-label">Assess</div>
+            </a>
+            <a href="/camera/{{ wound.id }}/" class="q-btn">
+                <div class="q-icon ic-olive"><i class="fa-solid fa-camera"></i></div>
+                <div class="q-label">Camera</div>
+            </a>
+            <a href="/upload-image/{{ wound.id }}/" class="q-btn">
+                <div class="q-icon ic-navy"><i class="fa-solid fa-image"></i></div>
+                <div class="q-label">Upload</div>
+            </a>
+        </div>
+
+        <!-- Clinical Overview -->
+        <div class="s-card">
+            <div class="s-head">Clinical Overview</div>
+            <div class="s-body">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+                    <span style="font-size:13px;font-weight:800;color:var(--text-main);">Status</span>
+                    <span class="active-badge"><span class="dot-olive"></span> Active</span>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-lbl">Assessments</div>
+                        <div class="stat-num">{{ assessments|length }}</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-lbl">Images</div>
+                        <div class="stat-num">{{ images|length }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assessment History -->
+        <div class="sec-row">
+            <h3>Assessment History</h3>
+            <span>{{ assessments|length }} records</span>
+        </div>
+
         {% for a in assessments %}
-        <div class="bg-white p-4 soft-card shadow-sm border border-transparent">
-            <div class="flex justify-between items-center mb-3">
-                <span class="text-[10px] font-bold text-blue-500 bg-blue-50 px-2 py-0.5 rounded-full">Report</span>
-                <span class="text-[10px] text-gray-400 font-medium">Recently Updated</span>
+        <div class="a-card">
+            <div class="a-card-header">
+                <span class="a-badge">Assessment</span>
+                <span class="a-date">{{ a.date_assessed|date:"M d, Y H:i" }}</span>
             </div>
-            <div class="grid grid-cols-3 gap-2 text-center">
-                <div class="bg-gray-50 p-2 rounded-2xl">
-                    <p class="text-[9px] text-gray-400 font-bold uppercase">Length</p>
-                    <p class="text-sm font-bold text-gray-800">{{ a.length }}cm</p>
+
+            {% if a.wound_type %}
+            <div class="a-field">
+                <span class="a-field-lbl">Type</span>
+                <span class="a-field-val">{{ a.wound_type }}</span>
+            </div>
+            {% endif %}
+            {% if a.aetiology %}
+            <div class="a-field">
+                <span class="a-field-lbl">Cause</span>
+                <span class="a-field-val">{{ a.aetiology }}</span>
+            </div>
+            {% endif %}
+            {% if a.duration %}
+            <div class="a-field">
+                <span class="a-field-lbl">Duration</span>
+                <span class="a-field-val">{{ a.duration }}</span>
+            </div>
+            {% endif %}
+            {% if a.progression %}
+            <div class="a-field">
+                <span class="a-field-lbl">Progress</span>
+                <span class="a-field-val">{{ a.progression }}</span>
+            </div>
+            {% endif %}
+
+            <!-- Tissue Composition -->
+            <div class="tissue-section">
+                <div class="tissue-lbl">Tissue Composition</div>
+
+                <div class="tissue-row">
+                    <div class="tissue-row-header">
+                        <span>Epithelial</span><span>{{ a.tissue_epithelial }}%</span>
+                    </div>
+                    <div class="tissue-track">
+                        <div class="tissue-fill fill-epithelial" style="width:{{ a.tissue_epithelial }}%"></div>
+                    </div>
                 </div>
-                <div class="bg-gray-50 p-2 rounded-2xl">
-                    <p class="text-[9px] text-gray-400 font-bold uppercase">Width</p>
-                    <p class="text-sm font-bold text-gray-800">{{ a.width }}cm</p>
+                <div class="tissue-row">
+                    <div class="tissue-row-header">
+                        <span>Granulation</span><span>{{ a.tissue_granulation }}%</span>
+                    </div>
+                    <div class="tissue-track">
+                        <div class="tissue-fill fill-granulation" style="width:{{ a.tissue_granulation }}%"></div>
+                    </div>
                 </div>
-                <div class="bg-gray-50 p-2 rounded-2xl">
-                    <p class="text-[9px] text-gray-400 font-bold uppercase">Pain</p>
-                    <p class="text-sm font-bold text-red-500">{{ a.pain_score }}/10</p>
+                <div class="tissue-row">
+                    <div class="tissue-row-header">
+                        <span>Slough</span><span>{{ a.tissue_slough }}%</span>
+                    </div>
+                    <div class="tissue-track">
+                        <div class="tissue-fill fill-slough" style="width:{{ a.tissue_slough }}%"></div>
+                    </div>
+                </div>
+                <div class="tissue-row">
+                    <div class="tissue-row-header">
+                        <span>Necrosis</span><span>{{ a.tissue_necrosis }}%</span>
+                    </div>
+                    <div class="tissue-track">
+                        <div class="tissue-fill fill-necrosis" style="width:{{ a.tissue_necrosis }}%"></div>
+                    </div>
                 </div>
             </div>
+
+            {% if a.notes %}
+            <div class="notes-box">{{ a.notes }}</div>
+            {% endif %}
         </div>
         {% empty %}
-        <p class="text-center text-gray-400 text-xs py-4">No assessments recorded yet.</p>
-        {% endfor %}
-    </div>
-
-    <div class="flex justify-between items-center mb-4 px-2">
-        <h3 class="text-md font-bold text-gray-800">Wound Images</h3>
-        <a href="/upload-image/{{ wound.id }}/" class="text-xs text-blue-500 font-bold">+ Upload</a>
-    </div>
-
-    <div class="grid grid-cols-2 gap-4">
-        {% for img in images %}
-        <div class="bg-white p-2 soft-card shadow-sm overflow-hidden group">
-            <div class="relative">
-                <img src="{{ img.image.url }}" class="w-full h-32 object-cover rounded-2xl mb-2" alt="Wound progress">
-                <a href="/measure/{{ img.id }}/" 
-                   class="absolute bottom-2 right-2 bg-white/90 backdrop-blur shadow-sm p-2 rounded-xl text-blue-600 text-xs hover:bg-blue-600 hover:text-white transition-all">
-                    <i class="fa-solid fa-ruler-combined"></i>
-                </a>
-            </div>
-            <p class="text-[10px] text-center font-bold text-gray-400 uppercase tracking-tighter">Analysis Ready</p>
+        <div class="empty-box" style="margin-bottom:14px;">
+            <i class="fa-solid fa-clipboard"></i>
+            <p>No assessments yet</p>
         </div>
         {% endfor %}
-    </div>
 
-</div>
+        <!-- Image Gallery -->
+        <div class="sec-row" style="margin-top:8px;">
+            <h3>Wound Images</h3>
+            <a href="/upload-image/{{ wound.id }}/">+ Upload</a>
+        </div>
 
+        {% if images %}
+        <div class="gallery-grid">
+            {% for img in images %}
+            <div class="img-card">
+                <div class="img-wrap">
+                    <img src="{{ img.image.url }}" alt="Wound image">
+                    <a href="/measure/{{ img.id }}/" class="measure-btn">
+                        <i class="fa-solid fa-ruler-combined"></i>
+                    </a>
+                </div>
+                <div class="img-caption">Progress Image</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-box">
+            <i class="fa-solid fa-image"></i>
+            <p>No wound images uploaded</p>
+            <span>Use Camera or Upload above</span>
+        </div>
+        {% endif %}
+
+    </div><!-- /content -->
+</div><!-- /captureArea -->
+
+<script>
+function downloadScreenshot() {
+    const element = document.getElementById("captureArea");
+    html2canvas(element, { scale: 2, useCORS: true }).then(canvas => {
+        const link = document.createElement("a");
+        link.href = canvas.toDataURL("image/png");
+        link.download = "wound_report.png";
+        link.click();
+    });
+}
+</script>
 </body>
 </html>

@@ -2,175 +2,498 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Measure Wound - WoundPro_Ke</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Measure Wound — WoundPro KE</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+
     <style>
-        body { background-color: #0F172A; } /* Dark theme for precision measurement */
-        #container { position: relative; display: inline-block; overflow: hidden; border-radius: 1.5rem; }
-        #canvas { position: absolute; left: 0; top: 0; cursor: crosshair; touch-action: none; }
-        .soft-card { border-radius: 2rem; }
-        .active-mode { background-color: #3b82f6 !important; color: white !important; }
+        :root {
+            --olive:      #5a6e1f;
+            --teal:       #3a7d6e;
+            --teal-dark:  #2e6b6b;
+            --navy:       #2c4a7c;
+            --navy-deep:  #1e3560;
+            --surface:    #111612;   /* dark surface matching camera page */
+            --card:       #1a2118;
+            --border:     #2a3528;
+            --text-main:  #e8ede4;
+            --text-sub:   #8a9e85;
+            --text-muted: #536050;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; touch-action: none; }
+
+        html, body {
+            height: 100%;
+            font-family: 'DM Sans', sans-serif;
+            background: var(--surface);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        .page {
+            max-width: 480px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            min-height: 100dvh;
+            padding: 0 0 env(safe-area-inset-bottom);
+        }
+
+        /* ── TOP NAV ── */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            padding-top: max(16px, env(safe-area-inset-top));
+            background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%);
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            z-index: 20;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+        .nav-btn {
+            width: 38px; height: 38px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.8);
+            font-size: 13px;
+            text-decoration: none;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .nav-center { text-align: center; }
+        .nav-label {
+            font-size: 9px; font-weight: 800;
+            letter-spacing: 0.14em; text-transform: uppercase;
+            color: rgba(255,255,255,0.45);
+        }
+        .nav-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 15px; color: white;
+        }
+        .clear-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            color: rgba(255,255,255,0.7);
+            font-size: 11px; font-weight: 700;
+            font-family: 'DM Sans', sans-serif;
+            padding: 6px 12px; cursor: pointer;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        /* ── CANVAS AREA ── */
+        .canvas-wrap {
+            position: relative;
+            background: #000;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        #woundImage {
+            display: block;
+            width: 100%;
+            max-height: 52vh;
+            object-fit: contain;
+        }
+        #canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%; height: 100%;
+        }
+
+        /* Hint overlay */
+        .hint-overlay {
+            position: absolute;
+            bottom: 14px; left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 10px; font-weight: 800;
+            letter-spacing: 0.1em; text-transform: uppercase;
+            padding: 5px 14px;
+            border-radius: 999px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.5);
+            color: rgba(255,255,255,0.75);
+            border: 1px solid rgba(255,255,255,0.12);
+            pointer-events: none;
+        }
+
+        /* ── BOTTOM PANEL ── */
+        .bottom-panel {
+            flex: 1;
+            background: var(--surface);
+            padding: 16px 18px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            overflow-y: auto;
+        }
+
+        /* Results row */
+        .results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .result-box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 14px 14px 12px;
+        }
+        .result-lbl {
+            font-size: 9px; font-weight: 800;
+            letter-spacing: 0.12em; text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+        .result-val {
+            font-family: 'DM Serif Display', serif;
+            font-size: 26px; line-height: 1;
+            color: var(--text-main);
+        }
+        .result-val.teal { color: #5bc4b0; }
+        .result-val.olive { color: #a3bf4a; }
+        .unit { font-size: 12px; font-weight: 500; color: var(--text-sub); font-family: 'DM Sans', sans-serif; }
+
+        /* Mode tabs */
+        .tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .tab {
+            padding: 13px 10px;
+            border-radius: 14px;
+            border: 1.5px solid var(--border);
+            background: var(--card);
+            color: var(--text-sub);
+            font-size: 12px; font-weight: 800;
+            font-family: 'DM Sans', sans-serif;
+            display: flex; align-items: center; justify-content: center;
+            gap: 8px; cursor: pointer;
+            transition: background 0.18s, border-color 0.18s, color 0.18s;
+            letter-spacing: 0.02em;
+        }
+        .tab.on-dist {
+            background: rgba(58,125,110,0.15);
+            border-color: var(--teal);
+            color: #5bc4b0;
+        }
+        .tab.on-area {
+            background: rgba(90,110,31,0.18);
+            border-color: var(--olive);
+            color: #a3bf4a;
+        }
+
+        /* Save button */
+        .save-btn {
+            width: 100%;
+            padding: 15px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--teal) 0%, var(--navy) 100%);
+            border: none;
+            color: white;
+            font-size: 14px; font-weight: 800;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            gap: 10px;
+            box-shadow: 0 6px 22px rgba(44,74,124,0.3);
+            transition: opacity 0.2s, transform 0.12s;
+        }
+        .save-btn:active { transform: scale(0.97); }
+        .save-btn:disabled {
+            background: var(--card);
+            color: var(--text-muted);
+            box-shadow: none;
+            cursor: default;
+        }
+
+        /* Records */
+        .records-head {
+            font-size: 9px; font-weight: 800;
+            letter-spacing: 0.14em; text-transform: uppercase;
+            color: var(--text-muted);
+        }
+        .record {
+            display: flex;
+            align-items: center;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 12px 14px;
+            gap: 12px;
+        }
+        .record + .record { margin-top: 8px; }
+        .record-icon {
+            width: 36px; height: 36px;
+            border-radius: 11px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; font-size: 14px;
+        }
+        .ri-teal  { background: rgba(58,125,110,0.15); color: #5bc4b0; }
+        .ri-olive { background: rgba(90,110,31,0.15);  color: #a3bf4a; }
+        .record-body { flex: 1; min-width: 0; }
+        .record-val {
+            font-family: 'DM Serif Display', serif;
+            font-size: 17px; line-height: 1;
+        }
+        .record-val.d { color: #5bc4b0; }
+        .record-val.a { color: #a3bf4a; }
+        .record-sub {
+            font-size: 10px; color: var(--text-muted);
+            font-weight: 600; margin-top: 3px;
+        }
+        .del-btn {
+            background: none; border: none;
+            color: var(--text-muted); font-size: 13px;
+            cursor: pointer; padding: 6px;
+            transition: color 0.15s;
+        }
+        .del-btn:hover { color: #f87171; }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: var(--border);
+        }
     </style>
 </head>
 
-<body class="font-sans text-gray-200 overflow-x-hidden">
+<body>
+<div class="page">
 
-<div class="max-w-md mx-auto p-5 min-h-screen flex flex-col">
-
-    <div class="flex items-center justify-between mb-6">
-        <a href="javascript:history.back()" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-gray-400">
+    <!-- NAV (absolute over image) -->
+    <div class="top-nav">
+        <a href="javascript:history.back()" class="nav-btn">
             <i class="fa-solid fa-chevron-left"></i>
         </a>
-        <h1 class="text-lg font-bold">Wound Analyzer</h1>
-        <button onclick="resetCanvas()" class="text-xs font-bold text-red-400 uppercase tracking-widest">Reset</button>
-    </div>
-
-    <div class="bg-gray-800/50 backdrop-blur-md soft-card p-6 border border-gray-700 mb-6 text-center">
-        <p id="result-label" class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Select Mode to Begin</p>
-        <div id="result" class="text-2xl font-extrabold text-blue-400">—</div>
-    </div>
-
-    <div class="flex-1 flex items-center justify-center">
-        <div id="container" class="shadow-2xl shadow-blue-900/20 border border-gray-700">
-            <img id="woundImage" src="{{ image.image.url }}" class="max-w-full block">
-            <canvas id="canvas"></canvas>
+        <div class="nav-center">
+            <div class="nav-label">WoundPro</div>
+            <div class="nav-title">Measure Wound</div>
         </div>
+        <button class="clear-btn" onclick="resetCanvas()">Clear</button>
     </div>
 
-    <div class="mt-8 bg-gray-800 soft-card p-4 flex gap-3 shadow-xl">
-        <button onclick="setMode('distance')" id="btn-distance"
-            class="flex-1 py-4 rounded-2xl bg-gray-700 text-gray-400 flex flex-col items-center gap-2 transition-all">
-            <i class="fa-solid fa-ruler"></i>
-            <span class="text-[10px] font-bold uppercase">Distance</span>
-        </button>
-        
-        <button onclick="setMode('curve')" id="btn-curve"
-            class="flex-1 py-4 rounded-2xl bg-gray-700 text-gray-400 flex flex-col items-center gap-2 transition-all">
-            <i class="fa-solid fa-draw-polygon"></i>
-            <span class="text-[10px] font-bold uppercase">Area</span>
-        </button>
+    <!-- CANVAS AREA -->
+    <div class="canvas-wrap">
+        <img id="woundImage" src="{{ image.image.url }}" alt="wound" crossorigin="anonymous">
+        <canvas id="canvas"></canvas>
+        <div class="hint-overlay" id="hint">Select a mode below</div>
     </div>
 
+    <!-- BOTTOM PANEL -->
+    <div class="bottom-panel">
+
+        <!-- Results -->
+        <div class="results">
+            <div class="result-box">
+                <div class="result-lbl">Length / Peri</div>
+                <div class="result-val teal" id="v-dist">—</div>
+            </div>
+            <div class="result-box">
+                <div class="result-lbl">Area</div>
+                <div class="result-val olive" id="v-area">—</div>
+            </div>
+        </div>
+
+        <!-- Mode tabs -->
+        <div class="tabs">
+            <button class="tab" id="tab-dist" onclick="setMode('dist')">
+                <i class="fa-solid fa-ruler"></i> Length
+            </button>
+            <button class="tab" id="tab-area" onclick="setMode('area')">
+                <i class="fa-solid fa-draw-polygon"></i> Area
+            </button>
+        </div>
+
+        <!-- Save -->
+        <button class="save-btn" id="save-btn" onclick="saveRecord()" disabled>
+            <i class="fa-solid fa-floppy-disk"></i> Save Measurement
+        </button>
+
+        <!-- History -->
+        <div id="records-wrap" style="display:none;">
+            <div class="divider" style="margin-bottom:14px;"></div>
+            <div class="records-head" style="margin-bottom:10px;">Measurement History</div>
+            <div id="records-list"></div>
+        </div>
+
+    </div>
 </div>
 
 <script>
-    let points = [];
-    let draggingPoint = null;
-    let mode = "distance";
+const IMAGE_ID  = "{{ image.pk }}";
+const STORE_KEY = "wound_records_" + IMAGE_ID;
+const PX_PER_CM = 37.8;
 
-    const img = document.getElementById("woundImage");
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d");
+let mode = null;
+let pts  = [];
+let isDrawing = false;
+let lastMeasure = null;
+let records = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
 
-    img.onload = function () {
-        canvas.width = img.width;
-        canvas.height = img.height;
+const img    = document.getElementById('woundImage');
+const canvas = document.getElementById('canvas');
+const ctx    = canvas.getContext('2d');
+
+function sizeCanvas() {
+    canvas.width  = img.offsetWidth;
+    canvas.height = img.offsetHeight;
+    draw();
+}
+img.onload = sizeCanvas;
+window.addEventListener('resize', sizeCanvas);
+if (img.complete) sizeCanvas();
+
+renderRecords();
+
+// ── Mode ──
+function setMode(m) {
+    mode = m;
+    resetCanvas();
+    document.getElementById('tab-dist').className = 'tab' + (m === 'dist' ? ' on-dist' : '');
+    document.getElementById('tab-area').className = 'tab' + (m === 'area' ? ' on-area' : '');
+    document.getElementById('hint').textContent =
+        m === 'dist' ? 'Drag to draw a line' : 'Trace around the wound';
+}
+
+function resetCanvas() {
+    pts = []; isDrawing = false; lastMeasure = null;
+    document.getElementById('save-btn').disabled = true;
+    document.getElementById('v-dist').innerHTML = '—';
+    document.getElementById('v-area').innerHTML = '—';
+    draw();
+}
+
+function getPos(e) {
+    const rect  = canvas.getBoundingClientRect();
+    const touch = e.touches ? e.touches[0] : e;
+    return {
+        x: (touch.clientX - rect.left) * (canvas.width  / rect.width),
+        y: (touch.clientY - rect.top)  * (canvas.height / rect.height)
     };
+}
 
-    function setMode(newMode) {
-        mode = newMode;
-        points = [];
-        
-        // Update UI Buttons
-        document.getElementById('btn-distance').classList.remove('active-mode');
-        document.getElementById('btn-curve').classList.remove('active-mode');
-        document.getElementById('btn-' + newMode).classList.add('active-mode');
-        
-        document.getElementById("result-label").innerHTML = "Ready to Measure " + newMode;
-        document.getElementById("result").innerHTML = "—";
-        draw();
+// ── Touch / Mouse Events ──
+canvas.addEventListener('touchstart', e => { if (!mode) return; e.preventDefault(); isDrawing = true; pts = [getPos(e)]; }, { passive: false });
+canvas.addEventListener('touchmove',  e => { if (!isDrawing) return; e.preventDefault(); const p = getPos(e); mode === 'dist' ? pts[1] = p : pts.push(p); draw(); calcResults(); }, { passive: false });
+canvas.addEventListener('touchend',   () => { isDrawing = false; if (pts.length > 1) document.getElementById('save-btn').disabled = false; });
+
+canvas.addEventListener('mousedown', e => { if (!mode) return; isDrawing = true; pts = [getPos(e)]; });
+canvas.addEventListener('mousemove', e => { if (!isDrawing) return; const p = getPos(e); mode === 'dist' ? pts[1] = p : pts.push(p); draw(); calcResults(); });
+canvas.addEventListener('mouseup',   () => { isDrawing = false; if (pts.length > 1) document.getElementById('save-btn').disabled = false; });
+
+// ── Draw ──
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (pts.length < 2) return;
+
+    const color = mode === 'area' ? '#a3bf4a' : '#5bc4b0';
+    ctx.strokeStyle = color;
+    ctx.lineWidth   = 2.5;
+    ctx.lineCap     = 'round';
+    ctx.lineJoin    = 'round';
+
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+
+    if (mode === 'area') {
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(163,191,74,0.15)';
+        ctx.fill();
     }
+    ctx.stroke();
 
-    function resetCanvas() {
-        points = [];
-        draw();
-        document.getElementById("result").innerHTML = "—";
-    }
-
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        if (points.length > 1) {
-            ctx.beginPath();
-            ctx.moveTo(points[0].x, points[0].y);
-
-            for (let i = 1; i < points.length; i++) {
-                ctx.lineTo(points[i].x, points[i].y);
-            }
-
-            if (mode === "curve") {
-                ctx.closePath();
-                ctx.fillStyle = "rgba(59, 130, 246, 0.3)";
-                ctx.fill();
-            }
-
-            ctx.strokeStyle = "#3b82f6";
-            ctx.setLineDash(mode === "distance" ? [5, 5] : []);
-            ctx.lineWidth = 3;
-            ctx.stroke();
-        }
-
-        points.forEach(p => {
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, 6, 0, 2 * Math.PI);
-            ctx.fillStyle = "white";
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = "rgba(0,0,0,0.5)";
-            ctx.fill();
-            ctx.strokeStyle = "#3b82f6";
-            ctx.lineWidth = 2;
-            ctx.stroke();
-        });
-
-        calculateResults();
-    }
-
-    function calculateResults() {
-        const resultEl = document.getElementById("result");
-        const labelEl = document.getElementById("result-label");
-
-        if (mode === "distance" && points.length === 2) {
-            let dx = points[0].x - points[1].x;
-            let dy = points[0].y - points[1].y;
-            let distance = Math.sqrt(dx * dx + dy * dy);
-            let cm = distance * 0.026;
-            labelEl.innerHTML = "Calculated Length";
-            resultEl.innerHTML = cm.toFixed(2) + " <span class='text-sm font-normal text-gray-400'>cm</span>";
-        }
-
-        if (mode === "curve" && points.length > 2) {
-            let area = 0;
-            for (let i = 0; i < points.length; i++) {
-                let j = (i + 1) % points.length;
-                area += points[i].x * points[j].y;
-                area -= points[j].x * points[i].y;
-            }
-            area = Math.abs(area / 2);
-            let cm2 = area * (0.026 * 0.026);
-            labelEl.innerHTML = "Calculated Area";
-            resultEl.innerHTML = cm2.toFixed(2) + " <span class='text-sm font-normal text-gray-400'>cm²</span>";
-        }
-    }
-
-    // Reuse your existing desktop/mobile event logic here...
-    // (Ensure you use getTouchPos and standard event listeners as in your original code)
-
-    // ===== Quick Desktop Click logic for testing =====
-    canvas.addEventListener("click", function(event) {
-        const rect = canvas.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-        if (mode === "distance") {
-            if (points.length < 2) points.push({x, y});
-            else points = [{x, y}];
-        }
-        draw();
+    // Endpoints
+    [pts[0], pts[pts.length - 1]].forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+        ctx.fillStyle = '#fff';
+        ctx.fill();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.stroke();
     });
+}
 
-    // Default to distance mode on load
-    setMode('distance');
+// ── Calculations ──
+function calcResults() {
+    if (pts.length < 2) return;
+    if (mode === 'dist') {
+        const d  = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+        const cm = (d / PX_PER_CM).toFixed(2);
+        document.getElementById('v-dist').innerHTML = `${cm} <span class="unit">cm</span>`;
+        lastMeasure = { type: 'dist', length_cm: parseFloat(cm) };
+    } else if (mode === 'area' && pts.length > 2) {
+        let area = 0, peri = 0;
+        for (let i = 0; i < pts.length; i++) {
+            const j = (i + 1) % pts.length;
+            area += pts[i].x * pts[j].y - pts[j].x * pts[i].y;
+            peri += Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y);
+        }
+        const cm2 = (Math.abs(area / 2) / (PX_PER_CM ** 2)).toFixed(2);
+        const pCm = (peri / PX_PER_CM).toFixed(2);
+        document.getElementById('v-area').innerHTML = `${cm2} <span class="unit">cm²</span>`;
+        document.getElementById('v-dist').innerHTML = `${pCm} <span class="unit">cm</span>`;
+        lastMeasure = { type: 'area', area_cm2: parseFloat(cm2), perimeter_cm: parseFloat(pCm) };
+    }
+}
+
+// ── Records ──
+function saveRecord() {
+    if (!lastMeasure) return;
+    const time = new Date().toLocaleString('en-KE', { dateStyle: 'short', timeStyle: 'short' });
+    records.unshift({ ...lastMeasure, time });
+    localStorage.setItem(STORE_KEY, JSON.stringify(records));
+    renderRecords();
+
+    const btn = document.getElementById('save-btn');
+    btn.innerHTML = '<i class="fa-solid fa-check"></i> Saved!';
+    setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Measurement'; }, 1500);
+}
+
+function renderRecords() {
+    const wrap = document.getElementById('records-wrap');
+    const list = document.getElementById('records-list');
+    wrap.style.display = records.length ? 'block' : 'none';
+    list.innerHTML = records.map((r, i) => {
+        const isDist = r.type === 'dist';
+        return `
+        <div class="record">
+            <div class="record-icon ${isDist ? 'ri-teal' : 'ri-olive'}">
+                <i class="fa-solid ${isDist ? 'fa-ruler' : 'fa-draw-polygon'}"></i>
+            </div>
+            <div class="record-body">
+                <div class="record-val ${isDist ? 'd' : 'a'}">
+                    ${isDist ? r.length_cm + ' cm' : r.area_cm2 + ' cm²'}
+                </div>
+                <div class="record-sub">
+                    ${isDist ? r.time : 'Peri: ' + r.perimeter_cm + 'cm · ' + r.time}
+                </div>
+            </div>
+            <button class="del-btn" onclick="delRecord(${i})">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+        </div>`;
+    }).join('');
+}
+
+function delRecord(i) {
+    records.splice(i, 1);
+    localStorage.setItem(STORE_KEY, JSON.stringify(records));
+    renderRecords();
+}
 </script>
 
 </body>

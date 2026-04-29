@@ -5,163 +5,261 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WoundPro_Ke Dashboard</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <style>
-        body { 
-            background-color: #f8fafc; 
-            background-image: radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.05) 0px, transparent 50%), 
-                              radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+        :root {
+            --olive:      #4a5e1a;
+            --olive-mid:  #5a7020;
+            --olive-light:#7a9030;
+            --teal-mid:   #2a7a5a;
+            --teal-dark:  #1a5a45;
+            --navy:       #1a3a6a;
+            --navy-dark:  #0f2550;
+            --navy-mid:   #2a4a80;
+        }
+
+        body {
+            background-color: #f2f5ee;
+            background-image:
+                radial-gradient(at 0% 0%,   rgba(74,94,26,.06)  0px, transparent 50%),
+                radial-gradient(at 100% 0%,  rgba(26,58,106,.06) 0px, transparent 50%);
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
+
         .glass-card {
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255,255,255,.85);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255,255,255,.8);
         }
+
         .soft-shadow {
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 10px 30px -10px rgba(26,58,106,.07);
         }
+
+        /* ── Stat label colours ── */
+        .label-navy  { color: var(--navy-mid); }
+        .label-teal  { color: var(--teal-dark); }
+        .label-olive { color: var(--olive); }
     </style>
 </head>
 
 <body class="pb-28">
 
-
+<!-- TOP NAV -->
 <nav class="sticky top-0 z-50 px-6 py-5 bg-white/70 backdrop-blur-md border-b border-gray-100">
     <div class="max-w-md mx-auto flex justify-between items-center">
+
         <div class="flex items-center gap-3">
             <div class="h-11 w-11 bg-white rounded-xl flex items-center justify-center shadow-sm border border-gray-50 overflow-hidden">
                 <img src="{% static 'images/logo.png' %}" alt="WoundPro Logo" class="h-full w-full object-contain p-1.5">
             </div>
+
             <div class="flex flex-col -space-y-1">
                 <span class="font-extrabold text-gray-900 tracking-tight text-lg">
-                    WoundPro<span class="text-blue-600">_Ke</span>
+                    WoundPro<span style="color:var(--navy)">_Ke</span>
                 </span>
-                <span class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Clinical Portal</span>
+                <span class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">
+                    Clinical Portal
+                </span>
             </div>
         </div>
 
         <div class="flex items-center gap-3">
-            <button class="w-10 h-10 flex items-center justify-center rounded-2xl bg-gray-50 text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-all relative">
+            <!-- Notification bell -->
+            <button class="w-10 h-10 flex items-center justify-center rounded-2xl relative transition-all"
+                    style="background:#f0f4e8; color:var(--olive);"
+                    onmouseover="this.style.background='#e2ecd4'"
+                    onmouseout="this.style.background='#f0f4e8'">
                 <i class="fa-solid fa-bell text-sm"></i>
                 <span class="absolute top-3 right-3 w-2 h-2 bg-red-500 rounded-full border-2 border-white shadow-sm"></span>
             </button>
-            
+
+            <!-- Avatar -->
             <a href="{% url 'profile' %}">
-            <div class="h-10 w-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 p-[1.5px] shadow-lg shadow-blue-100">
-                <div class="h-full w-full rounded-[calc(1rem-1.5px)] bg-white flex items-center justify-center">
-                    <i class="fa-solid fa-user-doctor text-blue-600 text-xs"></i>
+                <div class="h-10 w-10 rounded-2xl p-[1.5px] shadow-lg"
+                     style="background: linear-gradient(135deg, var(--olive-mid), var(--navy));">
+                    <div class="h-full w-full rounded-[calc(1rem-1.5px)] bg-white flex items-center justify-center">
+                        <i class="fa-solid fa-user-doctor text-xs" style="color:var(--navy);"></i>
+                    </div>
                 </div>
-            </div>
             </a>
         </div>
     </div>
 </nav>
 
+<!-- MAIN -->
 <main class="max-w-md mx-auto px-6 mt-6">
-    
-    <div class="mb-8">
-    <h1 class="text-2xl font-800 text-gray-900 tracking-tight">
-        Health Overview
-    </h1>
-    <p class="text-sm text-gray-500 font-medium">
-        Hello, {{ request.user.first_name|default:request.user.username }},
-    </p>
-</div>
 
-    <div class="grid grid-cols-3 gap-3 mb-8">
-        <div class="glass-card p-4 rounded-3xl text-center soft-shadow">
-            <p class="text-[10px] uppercase font-bold text-blue-500 tracking-widest mb-1">Patients</p>
-            <h2 class="text-2xl font-800 text-gray-800">{{ total_patients|default:"24" }}</h2>
-        </div>
-        <div class="glass-card p-4 rounded-3xl text-center soft-shadow">
-            <p class="text-[10px] uppercase font-bold text-emerald-500 tracking-widest mb-1">Wounds</p>
-            <h2 class="text-2xl font-800 text-gray-800">{{ total_wounds|default:"12" }}</h2>
-        </div>
-        <div class="glass-card p-4 rounded-3xl text-center soft-shadow">
-            <p class="text-[10px] uppercase font-bold text-orange-500 tracking-widest mb-1">Reports</p>
-            <h2 class="text-2xl font-800 text-gray-800">{{ total_assessments|default:"8" }}</h2>
-        </div>
+    <!-- GREETING -->
+    <div class="mb-2">
+        <h1 class="text-2xl font-extrabold text-gray-900 tracking-tight">
+            Health Overview
+        </h1>
+        <p class="text-sm text-gray-500 font-medium">
+            Hello, {{ request.user.first_name|default:request.user.username }},
+        </p>
     </div>
 
+    <!-- Accent divider -->
+    <div class="mb-7 h-[3px] w-8 rounded-full"
+         style="background: linear-gradient(90deg, var(--olive-mid), var(--navy));"></div>
+
+    <!-- STATS -->
+    <div class="grid grid-cols-3 gap-3 mb-8">
+
+        <div class="glass-card p-4 rounded-3xl text-center soft-shadow">
+            <p class="text-[10px] uppercase font-bold tracking-widest mb-1 label-navy">Patients</p>
+            <h2 class="text-2xl font-extrabold text-gray-800">{{ total_patients }}</h2>
+        </div>
+
+        <div class="glass-card p-4 rounded-3xl text-center soft-shadow">
+            <p class="text-[10px] uppercase font-bold tracking-widest mb-1 label-teal">Wounds</p>
+            <h2 class="text-2xl font-extrabold text-gray-800">{{ total_wounds }}</h2>
+        </div>
+
+        <div class="glass-card p-4 rounded-3xl text-center soft-shadow">
+            <p class="text-[10px] uppercase font-bold tracking-widest mb-1 label-olive">Reports</p>
+            <h2 class="text-2xl font-extrabold text-gray-800">{{ total_assessments }}</h2>
+        </div>
+
+    </div>
+
+    <!-- QUICK ACTIONS -->
     <div class="grid grid-cols-2 gap-4 mb-10">
-        <a href="/patients/" class="group relative overflow-hidden bg-gray-900 p-5 rounded-[2rem] shadow-xl active:scale-95 transition-all">
+
+        <!-- Registry — deep forest green -->
+        <a href="{% url 'patient_list' %}"
+           class="group relative overflow-hidden p-5 rounded-[2rem] shadow-xl active:scale-95 transition-all"
+           style="background: linear-gradient(145deg, #1a2a1a, #2a3a2a);
+                  box-shadow: 0 8px 24px rgba(26,42,26,.3);">
             <div class="relative z-10">
-                <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-white mb-3">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white mb-3"
+                     style="background:rgba(255,255,255,.10);">
                     <i class="fa-solid fa-users text-sm"></i>
                 </div>
-                <span class="text-white font-bold text-sm">Registry</span>
-                <p class="text-gray-400 text-[10px]">View all patients</p>
+                <span class="text-white font-bold text-sm block">Registry</span>
+                <p class="text-[10px]" style="color:rgba(255,255,255,.5);">View all patients</p>
             </div>
-            <div class="absolute -right-4 -bottom-4 text-white/5 text-6xl group-hover:scale-110 transition-transform">
+            <div class="absolute -right-4 -bottom-4 text-6xl group-hover:scale-110 transition-transform"
+                 style="color:rgba(255,255,255,.06);">
                 <i class="fa-solid fa-users"></i>
             </div>
         </a>
 
-        <a href="/add/" class="group relative overflow-hidden bg-blue-600 p-5 rounded-[2rem] shadow-xl shadow-blue-200 active:scale-95 transition-all">
+        <!-- New Entry — navy -->
+        <a href="{% url 'add_patient' %}"
+           class="group relative overflow-hidden p-5 rounded-[2rem] shadow-xl active:scale-95 transition-all"
+           style="background: linear-gradient(145deg, var(--navy-dark), var(--navy-mid));
+                  box-shadow: 0 8px 24px rgba(26,58,106,.3);">
             <div class="relative z-10">
-                <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-white mb-3">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white mb-3"
+                     style="background:rgba(255,255,255,.15);">
                     <i class="fa-solid fa-plus text-sm"></i>
                 </div>
-                <span class="text-white font-bold text-sm">New Entry</span>
-                <p class="text-blue-100 text-[10px]">Add assessment</p>
+                <span class="text-white font-bold text-sm block">New Entry</span>
+                <p class="text-[10px]" style="color:rgba(255,255,255,.55);">Add patient</p>
             </div>
-            <div class="absolute -right-4 -bottom-4 text-white/10 text-6xl group-hover:scale-110 transition-transform">
+            <div class="absolute -right-4 -bottom-4 text-6xl group-hover:scale-110 transition-transform"
+                 style="color:rgba(255,255,255,.08);">
                 <i class="fa-solid fa-file-medical"></i>
             </div>
         </a>
+
     </div>
 
+    <!-- RECENT ACTIVITY -->
     <div class="flex justify-between items-center mb-5 px-1">
-        <h3 class="text-lg font-800 text-gray-800 tracking-tight">Recent Activity</h3>
-        <a href="/patients/" class="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-full hover:bg-blue-100 transition-colors">See all</a>
+        <h3 class="text-lg font-extrabold text-gray-800 tracking-tight">Recent Activity</h3>
+        <a href="{% url 'patient_list' %}"
+           class="text-xs font-bold px-3 py-1.5 rounded-full transition-colors"
+           style="color:var(--navy-mid); background:rgba(42,74,128,.08);"
+           onmouseover="this.style.background='rgba(42,74,128,.15)'"
+           onmouseout="this.style.background='rgba(42,74,128,.08)'">
+            See all
+        </a>
     </div>
 
     <div class="space-y-4">
+
         {% for patient in recent_patients %}
-        <a href="/patient/{{ patient.id }}/" class="flex items-center gap-4 bg-white p-4 rounded-[1.5rem] soft-shadow border border-gray-50 hover:border-blue-100 transition-all active:scale-[0.98]">
-            <div class="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
+
+        <a href="{% url 'patient_detail' patient.id %}"
+           class="flex items-center gap-4 bg-white p-4 rounded-[1.5rem] soft-shadow border border-gray-50 hover:border-blue-100 transition-all active:scale-[0.98]">
+
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center"
+                 style="background: linear-gradient(135deg, rgba(90,112,32,.1), rgba(42,122,90,.14));
+                        color: var(--teal-dark);">
                 <i class="fa-solid fa-user-injured text-xl"></i>
             </div>
+
             <div class="flex-1">
-                <h4 class="text-sm font-bold text-gray-900 mb-0.5">{{ patient.name }}</h4>
+                <h4 class="text-sm font-bold text-gray-900 mb-0.5">
+                    {{ patient.first_name }} {{ patient.surname }}
+                </h4>
                 <div class="flex items-center gap-2">
-                    <span class="text-[11px] font-medium text-gray-400 bg-gray-50 px-2 py-0.5 rounded">{{ patient.diagnosis|default:"Routine Checkup" }}</span>
+                    <span class="text-[11px] font-medium text-gray-400 bg-gray-50 px-2 py-0.5 rounded">
+                        {{ patient.diagnosis|default:"Routine Checkup" }}
+                    </span>
                 </div>
             </div>
+
             <div class="h-8 w-8 rounded-full flex items-center justify-center bg-gray-50 text-gray-300">
                 <i class="fa-solid fa-chevron-right text-[10px]"></i>
             </div>
+
         </a>
+
         {% empty %}
+
         <div class="bg-white rounded-[2rem] py-16 text-center soft-shadow border border-dashed border-gray-200">
             <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i class="fa-solid fa-folder-open text-gray-300 text-2xl"></i>
             </div>
             <p class="text-gray-400 text-sm font-medium">No activity recorded today</p>
         </div>
+
         {% endfor %}
+
     </div>
+
 </main>
 
+<!-- BOTTOM NAV -->
 <nav class="fixed bottom-6 left-6 right-6 max-w-md mx-auto">
-    <div class="bg-gray-900/90 backdrop-blur-xl rounded-[2.5rem] p-3 flex justify-between items-center shadow-2xl border border-white/10">
-        <a href="#" class="flex flex-col items-center justify-center w-16 h-12 text-blue-400">
+    <div class="p-3 flex justify-between items-center shadow-2xl rounded-[2.5rem] border"
+         style="background: rgba(20,30,20,.92);
+                backdrop-filter: blur(20px);
+                border-color: rgba(255,255,255,.08);">
+
+        <a href="{% url 'dashboard' %}"
+           class="flex flex-col items-center justify-center w-16 h-12"
+           style="color:#9abf40;">
             <i class="fa-solid fa-house-chimney text-lg"></i>
             <span class="text-[9px] font-bold mt-1">Home</span>
         </a>
-        <a href="/patients/" class="flex flex-col items-center justify-center w-16 h-12 text-gray-500 hover:text-blue-500 transition-colors group">
-    <i class="fa-solid fa-address-book text-lg group-hover:scale-110 transition-transform"></i>
-    <span class="text-[9px] font-bold mt-1">Registry</span>
-</a>
-        
-        <a href="{% url 'profile' %}" class="flex flex-col items-center justify-center w-16 h-12 text-gray-500 hover:text-gray-300">
+
+        <a href="{% url 'patient_list' %}"
+           class="flex flex-col items-center justify-center w-16 h-12 transition-colors group"
+           style="color:rgba(255,255,255,.35);"
+           onmouseover="this.style.color='#9abf40'"
+           onmouseout="this.style.color='rgba(255,255,255,.35)'">
+            <i class="fa-solid fa-address-book text-lg group-hover:scale-110 transition-transform"></i>
+            <span class="text-[9px] font-bold mt-1">Registry</span>
+        </a>
+
+        <a href="{% url 'profile' %}"
+           class="flex flex-col items-center justify-center w-16 h-12 transition-colors"
+           style="color:rgba(255,255,255,.35);"
+           onmouseover="this.style.color='rgba(255,255,255,.7)'"
+           onmouseout="this.style.color='rgba(255,255,255,.35)'">
             <i class="fa-solid fa-circle-user text-lg"></i>
             <span class="text-[9px] font-bold mt-1">Account</span>
         </a>
+
     </div>
 </nav>
 

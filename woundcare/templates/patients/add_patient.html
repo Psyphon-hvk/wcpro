@@ -2,138 +2,926 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Patient | WoundPro_Ke</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        body { 
-            background-color: #f8fafc; 
-            background-image: radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.05) 0px, transparent 50%), 
-                              radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patient Intake | WoundPro_Ke</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: #f8fafc;
+}
+.step {
+    display: none;
+    animation: fadeSlide 0.4s ease;
+}
+.step.active {
+    display: block;
+}
+@keyframes fadeSlide {
+    from { opacity: 0; transform: translateX(25px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+.progress-bar {
+    height: 6px;
+    background: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(to right, #3b82f6, #6366f1);
+    transition: width 0.4s ease;
+}
+input, select {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 1rem;
+    border: 1px solid #e2e8f0;
+    outline: none;
+    margin-top: 10px;
+}
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.7);
-            border-radius: 3rem;
-        }
+/* Reg number input special styling */
+#regNumber {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-align: center;
+    color: #1e3a5f;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    transition: border-color 0.2s;
+}
+#regNumber:focus {
+    border-color: #3b82f6;
+    background: white;
+}
+#regNumber::placeholder {
+    color: #cbd5e1;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+}
+.reg-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #2563eb;
+    margin-top: 12px;
+}
 
-        /* Enhanced Django form styling */
-        .django-form-wrapper p {
-            margin-bottom: 1.5rem;
-            position: relative;
-        }
+/* Health Info styles */
+.section-header {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #94a3b8;
+    text-transform: uppercase;
+    padding: 12px 0 6px;
+    background: #f1f5f9;
+    margin: 0 -1.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+.health-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid #f1f5f9;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.health-row:last-child {
+    border-bottom: none;
+}
+.health-row:hover {
+    background: #f8fafc;
+    margin: 0 -1.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    border-radius: 0;
+}
+.health-row-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 2px;
+}
+.health-row-sub {
+    font-size: 12px;
+    color: #94a3b8;
+}
+.health-add-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #0ea5e9;
+    white-space: nowrap;
+}
+.health-add-btn svg {
+    width: 14px;
+    height: 14px;
+}
 
-        .django-form-wrapper label {
-            display: block;
-            font-size: 0.65rem;
-            font-weight: 800;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 0.6rem;
-            margin-left: 0.75rem;
-        }
-
-        .django-form-wrapper input, 
-        .django-form-wrapper select, 
-        .django-form-wrapper textarea {
-            width: 100%;
-            padding: 1rem 1.25rem;
-            border-radius: 1.5rem;
-            border: 1px solid #f1f5f9;
-            background-color: #ffffff;
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #1e293b;
-            outline: none;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.01);
-        }
-
-        .django-form-wrapper input:focus,
-        .django-form-wrapper select:focus {
-            border-color: #3b82f6;
-            background-color: #ffffff;
-            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.1);
-            transform: translateY(-1px);
-        }
-
-        .django-form-wrapper textarea {
-            min-height: 100px;
-            resize: none;
-        }
-    </style>
+/* Modal overlay */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 50;
+    justify-content: flex-end;
+    flex-direction: column;
+}
+.modal-overlay.open {
+    display: flex;
+}
+.modal-sheet {
+    background: white;
+    border-radius: 1.5rem 1.5rem 0 0;
+    padding: 1.5rem;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+}
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+.modal-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 1rem;
+}
+.chip-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 1.25rem;
+}
+.chip {
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1.5px solid #e2e8f0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: white;
+}
+.chip.selected {
+    background: #0ea5e9;
+    border-color: #0ea5e9;
+    color: white;
+}
+</style>
 </head>
 
-<body class="pb-12">
+<body>
 
 <div class="max-w-md mx-auto p-6">
 
-    <div class="flex items-center justify-between mb-10">
-        <a href="/" class="group w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm text-gray-400 hover:text-blue-600 transition-all active:scale-90">
-            <i class="fa-solid fa-chevron-left text-sm group-hover:-translate-x-0.5 transition-transform"></i>
-        </a>
-        <div class="text-center">
-            <h1 class="text-sm font-800 text-gray-800 uppercase tracking-widest">Admission</h1>
-            <p class="text-[10px] text-blue-500 font-bold">WoundPro Registry</p>
-        </div>
-        <div class="w-12"></div>
+    <!-- HEADER -->
+    <div class="mb-6">
+        <h1 class="text-lg font-extrabold text-gray-800">New Patient</h1>
+        <p class="text-sm text-gray-400">WoundPro Intake Flow</p>
     </div>
 
-    <div class="glass-card p-8 shadow-2xl shadow-blue-900/5 relative overflow-hidden">
-        <div class="absolute -top-6 -right-6 w-32 h-32 bg-blue-600/5 rounded-full blur-2xl"></div>
+    <!-- PROGRESS -->
+    <div class="progress-bar mb-6">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
 
-        <div class="relative z-10">
-            <div class="flex items-center gap-4 mb-10">
-                <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-xl shadow-blue-200">
-                    <i class="fa-solid fa-user-plus text-xl"></i>
+    <form method="POST">
+        {% csrf_token %}
+
+        <!-- STEP 1: First Name -->
+        <div class="step active">
+            <label class="text-xs font-bold text-gray-500">First Name</label>
+            <input type="text" id="firstName" name="first_name">
+            <button type="button" onclick="nextStep()" class="mt-6 w-full bg-black text-white py-3 rounded-xl">
+                Continue
+            </button>
+        </div>
+
+        <!-- STEP 2: Surname -->
+        <div class="step">
+            <label class="text-xs font-bold text-gray-500">Surname</label>
+            <input type="text" id="surname" name="surname">
+            <div class="flex gap-3 mt-6">
+                <button type="button" onclick="prevStep()" class="w-1/2 border py-3 rounded-xl">Back</button>
+                <button type="button" onclick="nextStep()" class="w-1/2 bg-black text-white py-3 rounded-xl">Next</button>
+            </div>
+        </div>
+
+        <!-- STEP 3: Patient Registration Number (NEW) -->
+        <div class="step">
+            <label class="text-xs font-bold text-gray-500">Patient Registration Number</label>
+            <input
+                type="text"
+                id="regNumber"
+                name="reg_number"
+                placeholder="e.g. KH0017575"
+                autocomplete="off"
+                spellcheck="false"
+                maxlength="20"
+                oninput="this.value = this.value.toUpperCase()"
+                onkeydown="if(event.key==='Enter') nextStep()"
+            >
+            <p class="text-xs text-gray-400 mt-3 text-center">Format: letters followed by digits &nbsp;·&nbsp; e.g. KH0017575</p>
+            <div id="regPreview" class="hidden flex justify-center mt-2">
+                <span class="reg-badge">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                    <span id="regPreviewText"></span>
+                </span>
+            </div>
+            <div class="flex gap-3 mt-6">
+                <button type="button" onclick="prevStep()" class="w-1/2 border py-3 rounded-xl">Back</button>
+                <button type="button" onclick="nextStep()" class="w-1/2 bg-black text-white py-3 rounded-xl">Next</button>
+            </div>
+        </div>
+
+        <!-- STEP 4: Gender -->
+        <div class="step">
+            <label class="text-xs font-bold text-gray-500">Gender</label>
+            <select id="gender" name="gender">
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+            <div class="flex gap-3 mt-6">
+                <button type="button" onclick="prevStep()" class="w-1/2 border py-3 rounded-xl">Back</button>
+                <button type="button" onclick="nextStep()" class="w-1/2 bg-black text-white py-3 rounded-xl">Next</button>
+            </div>
+        </div>
+
+        <!-- STEP 5: Date of Birth -->
+        <div class="step">
+            <label class="text-xs font-bold text-gray-500">Date of Birth</label>
+            <input type="date" id="dob" name="date_of_birth" onchange="calculateAge()">
+            <p id="ageText" class="text-blue-600 mt-2 text-sm font-semibold"></p>
+            <div class="flex gap-3 mt-6">
+                <button type="button" onclick="prevStep()" class="w-1/2 border py-3 rounded-xl">Back</button>
+                <button type="button" onclick="nextStep()" class="w-1/2 bg-black text-white py-3 rounded-xl">Next</button>
+            </div>
+        </div>
+
+        <!-- STEP 6: Consent Summary -->
+        <div class="step">
+            <div class="text-center mb-6">
+                <h2 class="text-lg font-extrabold text-gray-800">Patient Approval</h2>
+                <p class="text-sm text-gray-400 mt-1">
+                    Hello <span id="displayName">Patient</span> 👋
+                </p>
+                <!-- Show reg number as a badge in consent screen -->
+                <div id="consentRegBadge" class="hidden flex justify-center mt-2">
+                    <span class="reg-badge">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l2 2"/></svg>
+                        Reg: <span id="consentRegText"></span>
+                    </span>
                 </div>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-xl space-y-3 text-sm text-gray-600">
+                <div class="flex gap-3"><span>🧑‍⚕️</span><p>Caregivers can track wound progress</p></div>
+                <div class="flex gap-3"><span>📁</span><p>Your data is stored securely</p></div>
+                <div class="flex gap-3"><span>🔒</span><p>Only authorized personnel can access</p></div>
+                <div class="flex gap-3"><span>✋</span><p>You can withdraw consent anytime</p></div>
+            </div>
+            <div class="mt-8 space-y-4">
+                <button type="button" onclick="agreeConsent()" class="w-full bg-blue-600 text-white py-4 rounded-2xl">
+                    I Agree
+                </button>
+                <button type="button" onclick="refuseConsent()" class="w-full text-gray-500 underline text-sm">
+                    I refuse
+                </button>
+                <button type="button" onclick="showFullConsent()" class="w-full text-blue-600 text-sm underline">
+                    Read full consent form
+                </button>
+            </div>
+        </div>
+
+        <!-- STEP 7: Full Consent -->
+        <div class="step">
+            <h2 class="text-lg font-bold text-gray-800 mb-4">Complete Consent</h2>
+            <div class="bg-gray-50 p-4 rounded-xl text-xs text-gray-600 space-y-3 max-h-[300px] overflow-y-auto">
+                <p>I, <span id="fullNameDisplay" class="font-bold"></span>, consent to the processing of my personal and health data.</p>
+                <p>Data will be securely stored and accessed only by healthcare professionals.</p>
+                <p>I understand I can withdraw consent at any time.</p>
+            </div>
+            <div class="mt-6 flex gap-3">
+                <button type="button" onclick="prevStep()" class="w-1/2 border py-3 rounded-xl">Back</button>
+                <button type="button" onclick="nextStep()" class="w-1/2 bg-green-600 text-white py-3 rounded-xl">
+                    Accept &amp; Continue
+                </button>
+            </div>
+        </div>
+
+        <!-- STEP 8: HEALTH INFO -->
+        <div class="step" id="healthInfoStep">
+            <div class="flex items-center justify-between mb-5">
                 <div>
-                    <h2 class="text-lg font-800 text-gray-900 tracking-tight">Patient Intake</h2>
-                    <p class="text-xs text-gray-400 font-medium">Create a new clinical profile</p>
+                    <h2 class="text-lg font-extrabold text-gray-800">Health info</h2>
+                    <p class="text-xs text-gray-400 mt-0.5">Optional — complete now or later</p>
+                </div>
+                <button type="button" onclick="nextStep()" class="text-gray-400 text-xl font-light leading-none">&times;</button>
+            </div>
+
+            <!-- FACTORS AFFECTING HEALING -->
+            <div class="section-header">Factors Affecting Healing</div>
+            <div class="health-row" onclick="openGeneralModal()">
+                <div>
+                    <div class="health-row-title">General factors</div>
+                    <div class="health-row-sub" id="general-summary">Not specified</div>
+                </div>
+                <div class="health-add-btn">
+                    Add
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                </div>
+            </div>
+            <div class="health-row" onclick="openToggleModal('metabolic')">
+                <div>
+                    <div class="health-row-title">Metabolic factors</div>
+                    <div class="health-row-sub" id="metabolic-summary">Not specified</div>
+                </div>
+                <div class="health-add-btn">
+                    Add
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
                 </div>
             </div>
 
-            <form method="POST">
-                {% csrf_token %}
-                
-                <div class="django-form-wrapper">
-                    {{ form.as_p }}
+            <!-- PATHOLOGIES -->
+            <div class="section-header">Pathologies</div>
+            <div class="health-row" onclick="openToggleModal('pathologies')">
+                <div>
+                    <div class="health-row-title">Pathologies</div>
+                    <div class="health-row-sub" id="pathologies-summary">Not specified</div>
                 </div>
-
-                <div class="mt-12">
-                    <button type="submit" 
-                        class="group w-full bg-gray-900 text-white flex items-center justify-center gap-3 py-5 rounded-[2rem] shadow-xl shadow-gray-200 text-sm font-bold active:scale-[0.97] transition-all hover:bg-blue-600 hover:shadow-blue-200">
-                        <span>Complete Registration</span>
-                        <i class="fa-solid fa-arrow-right text-[10px] opacity-50 group-hover:translate-x-1 group-hover:opacity-100 transition-all"></i>
-                    </button>
-                    
-                    <a href="/" class="block text-center mt-6 text-xs font-bold text-gray-400 hover:text-gray-600 transition-colors">
-                        Cancel and Go Back
-                    </a>
+                <div class="health-add-btn">
+                    Add
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
                 </div>
-            </form>
-        </div>
-    </div>
+            </div>
+            <div class="health-row" onclick="openToggleModal('surgical')">
+                <div>
+                    <div class="health-row-title">Surgical history</div>
+                    <div class="health-row-sub" id="surgical-summary">Not specified</div>
+                </div>
+                <div class="health-add-btn">
+                    Add
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                </div>
+            </div>
+            <div class="health-row" onclick="openToggleModal('allergies')">
+                <div>
+                    <div class="health-row-title">Allergies / Skin sensitivities</div>
+                    <div class="health-row-sub" id="allergies-summary">Not specified</div>
+                </div>
+                <div class="health-add-btn">
+                    Add
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                </div>
+            </div>
 
-    <div class="mt-10 text-center px-10">
-        <div class="inline-flex items-center gap-2 mb-3 bg-white px-3 py-1 rounded-full shadow-sm border border-gray-50">
-            <i class="fa-solid fa-shield-halved text-blue-500 text-[10px]"></i>
-            <span class="text-[9px] font-bold text-gray-500 uppercase tracking-tighter">HIPAA Compliant Entry</span>
-        </div>
-        <p class="text-[11px] text-gray-400 font-medium leading-relaxed">
-            Data saved here is encrypted and added to the <span class="text-blue-600 font-bold">WoundPro_Ke</span> active monitoring registry.
-        </p>
-    </div>
+            <!-- TREATMENTS -->
+            <div class="section-header">Treatments / Medication</div>
+            <div class="health-row" onclick="openToggleModal('medication')">
+                <div>
+                    <div class="health-row-title">Treatments / Medication</div>
+                    <div class="health-row-sub" id="medication-summary">Not specified</div>
+                </div>
+                <div class="health-add-btn">
+                    Add
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                </div>
+            </div>
 
+            <!-- COMPLIANCE -->
+            <div class="section-header">Compliance and Ability</div>
+            <div class="health-row" onclick="openComplianceModal()">
+                <div>
+                    <div class="health-row-title">Compliance and ability</div>
+                    <div class="health-row-sub" id="compliance-summary">Not specified</div>
+                </div>
+                <div class="health-add-btn">
+                    Add
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                </div>
+            </div>
+
+            <!-- ADDITIONAL INFO -->
+            <div class="section-header">Additional Information</div>
+            <div class="health-row" onclick="openAdditionalModal()">
+                <div>
+                    <div class="health-row-title">Additional information</div>
+                    <div class="health-row-sub" id="additional-summary">Not specified</div>
+                </div>
+                <div class="health-add-btn">
+                    Add
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                </div>
+            </div>
+
+            <!-- Hidden fields for health data -->
+            <input type="hidden" name="general_factors" id="general_factors_input">
+            <input type="hidden" name="metabolic_factors" id="metabolic_factors_input">
+            <input type="hidden" name="pathologies" id="pathologies_input">
+            <input type="hidden" name="surgical_history" id="surgical_input">
+            <input type="hidden" name="allergies" id="allergies_input">
+            <input type="hidden" name="medication" id="medication_input">
+            <input type="hidden" name="compliance" id="compliance_input">
+            <input type="hidden" name="additional_info" id="additional_input">
+
+            <div class="mt-8">
+                <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold">
+                    Save &amp; Create Patient
+                </button>
+                <button type="button" onclick="nextStep()" class="w-full text-gray-400 text-sm mt-3 underline">
+                    Skip for now
+                </button>
+            </div>
+        </div>
+
+        <!-- STEP 9: Done -->
+        <div class="step text-center py-10">
+            <div class="text-5xl mb-4">✅</div>
+            <h2 class="text-xl font-extrabold text-gray-800">Patient Created</h2>
+            <p class="text-sm text-gray-400 mt-2">Health info can be updated anytime from the patient profile.</p>
+            <div id="doneSummaryReg" class="hidden flex justify-center mt-4">
+                <span class="reg-badge text-sm px-4 py-2">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                    Reg No: <strong id="doneSummaryRegText"></strong>
+                </span>
+            </div>
+        </div>
+
+    </form>
 </div>
+
+<!-- REUSABLE FULL-PAGE TOGGLE MODAL -->
+<div id="toggleModal" style="display:none; position:fixed; inset:0; background:#f0f4f8; z-index:60; overflow-y:auto; font-family:'Plus Jakarta Sans',sans-serif;">
+    <div style="max-width:480px; margin:0 auto;">
+        <div style="display:flex; align-items:center; gap:12px; padding:20px 20px 12px; background:#f0f4f8; position:sticky; top:0; z-index:10;">
+            <button type="button" onclick="closeToggleModal()" style="background:none; border:none; cursor:pointer; padding:4px;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1e3a5f" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <span id="toggleModalTitle" style="font-size:17px; font-weight:800; color:#1e3a5f;"></span>
+        </div>
+        <div style="background:white; margin:0 0 12px;">
+            <div id="toggleModalList" style="padding:0 20px;"></div>
+        </div>
+        <div style="background:white; padding:16px 20px; margin:0 0 12px;">
+            <div style="font-size:13px; color:#64748b; font-weight:600; margin-bottom:8px;">Other</div>
+            <textarea id="toggleModalOther" placeholder="Specify" rows="4"
+                style="width:100%; border:1px solid #e2e8f0; border-radius:10px; padding:12px; font-size:14px; color:#334155; font-family:'Plus Jakarta Sans',sans-serif; resize:none; outline:none; box-sizing:border-box;"></textarea>
+        </div>
+        <div style="padding:0 20px 16px; font-size:12px; color:#94a3b8; line-height:1.6;">
+            These criteria help you to have a holistic view of the patient and thus optimize the quality of care (adapted therapeutic strategy to reduce healing time).<br>
+            These are needed for the holistic assessment of the wound.
+        </div>
+        <div style="padding:0 20px 32px;">
+            <button type="button" onclick="saveToggleModal()" style="width:100%; background:#2563eb; color:white; border:none; border-radius:16px; padding:16px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif;">
+                Save
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- COMPLIANCE MODAL -->
+<div id="complianceModal" style="display:none; position:fixed; inset:0; background:#f0f4f8; z-index:60; overflow-y:auto; font-family:'Plus Jakarta Sans',sans-serif;">
+    <div style="max-width:480px; margin:0 auto;">
+        <div style="display:flex; align-items:center; gap:12px; padding:20px 20px 12px; background:#f0f4f8; position:sticky; top:0; z-index:10;">
+            <button type="button" onclick="closeComplianceModal()" style="background:none; border:none; cursor:pointer; padding:4px;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1e3a5f" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <span style="font-size:17px; font-weight:800; color:#1e3a5f;">Compliance and ability</span>
+        </div>
+        <div style="background:white; padding:16px 20px; margin:0 0 4px;">
+            <div style="font-size:13px; color:#1e3a5f; font-weight:600; margin-bottom:8px;">Impact of the wound on quality of life (physical, social and emotional)</div>
+            <textarea id="compQoL" placeholder="Specify" rows="4" style="width:100%; border:1px solid #e2e8f0; border-radius:10px; padding:12px; font-size:14px; color:#334155; font-family:'Plus Jakarta Sans',sans-serif; resize:none; outline:none; box-sizing:border-box;"></textarea>
+        </div>
+        <div style="padding:8px 20px 12px; font-size:12px; color:#94a3b8; line-height:1.5;">
+            These criteria help you to have a holistic view of the patient and thus optimize the quality of care (adapted therapeutic strategy to reduce healing time). These are needed for the holistic assessment of the wound.
+        </div>
+        <div style="background:white; padding:16px 20px; margin:0 0 4px;">
+            <div style="font-size:13px; color:#1e3a5f; font-weight:600; margin-bottom:8px;">Social environment</div>
+            <textarea id="compSocial" placeholder="Specify" rows="4" style="width:100%; border:1px solid #e2e8f0; border-radius:10px; padding:12px; font-size:14px; color:#334155; font-family:'Plus Jakarta Sans',sans-serif; resize:none; outline:none; box-sizing:border-box;"></textarea>
+        </div>
+        <div style="padding:8px 20px 12px; font-size:12px; color:#94a3b8; line-height:1.5;">
+            These criteria help you to have a holistic view of the patient and thus optimize the quality of care (adapted therapeutic strategy to reduce healing time). These are needed for the holistic assessment of the wound.
+        </div>
+        <div style="background:white; padding:16px 20px; margin:0 0 4px;">
+            <div style="font-size:13px; color:#1e3a5f; font-weight:600; margin-bottom:8px;">Dependency</div>
+            <textarea id="compDependency" placeholder="Specify" rows="4" style="width:100%; border:1px solid #e2e8f0; border-radius:10px; padding:12px; font-size:14px; color:#334155; font-family:'Plus Jakarta Sans',sans-serif; resize:none; outline:none; box-sizing:border-box;"></textarea>
+        </div>
+        <div style="padding:8px 20px 12px; font-size:12px; color:#94a3b8; line-height:1.5;">
+            These criteria help you to have a holistic view of the patient and thus optimize the quality of care (adapted therapeutic strategy to reduce healing time). These are needed for the holistic assessment of the wound.
+        </div>
+        <div style="background:white; padding:0 20px; margin:0 0 12px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:18px 0;border-bottom:1px solid #f1f5f9;gap:16px;">
+                <span style="font-size:14px;color:#1e3a5f;">Compliance to treatment</span>
+                <button type="button" onclick="toggleComp(this,'compT1')" id="compT1" data-on="false"
+                    style="flex-shrink:0;width:52px;height:28px;border-radius:999px;border:none;cursor:pointer;position:relative;background:#cbd5e1;transition:background 0.2s;">
+                    <span style="position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:white;transition:left 0.2s;display:block;"></span>
+                </button>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:18px 0;border-bottom:1px solid #f1f5f9;gap:16px;">
+                <span style="font-size:14px;color:#1e3a5f;">Compliance and ability to be educated</span>
+                <button type="button" onclick="toggleComp(this,'compT2')" id="compT2" data-on="false"
+                    style="flex-shrink:0;width:52px;height:28px;border-radius:999px;border:none;cursor:pointer;position:relative;background:#cbd5e1;transition:background 0.2s;">
+                    <span style="position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:white;transition:left 0.2s;display:block;"></span>
+                </button>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:18px 0;gap:16px;">
+                <span style="font-size:14px;color:#1e3a5f;">Compliance and ability to self care</span>
+                <button type="button" onclick="toggleComp(this,'compT3')" id="compT3" data-on="false"
+                    style="flex-shrink:0;width:52px;height:28px;border-radius:999px;border:none;cursor:pointer;position:relative;background:#cbd5e1;transition:background 0.2s;">
+                    <span style="position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:white;transition:left 0.2s;display:block;"></span>
+                </button>
+            </div>
+        </div>
+        <div style="padding:0 20px 32px;">
+            <button type="button" onclick="saveComplianceModal()" style="width:100%; background:#2563eb; color:white; border:none; border-radius:16px; padding:16px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif;">
+                Save
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ADDITIONAL INFO MODAL -->
+<div id="additionalModal" style="display:none; position:fixed; inset:0; background:#f0f4f8; z-index:60; overflow-y:auto; font-family:'Plus Jakarta Sans',sans-serif;">
+    <div style="max-width:480px; margin:0 auto;">
+        <div style="display:flex; align-items:center; gap:12px; padding:20px 20px 12px; background:#f0f4f8; position:sticky; top:0; z-index:10;">
+            <button type="button" onclick="closeAdditionalModal()" style="background:none; border:none; cursor:pointer; padding:4px;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1e3a5f" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <span style="font-size:17px; font-weight:800; color:#1e3a5f;">Additional information</span>
+        </div>
+        <div style="background:white; padding:16px 20px; margin:0 0 12px;">
+            <textarea id="additionalText" placeholder="Specify any additional information relevant to the patient's wound care..." rows="6"
+                style="width:100%; border:1px solid #e2e8f0; border-radius:10px; padding:12px; font-size:14px; color:#334155; font-family:'Plus Jakarta Sans',sans-serif; resize:none; outline:none; box-sizing:border-box;"></textarea>
+        </div>
+        <div style="padding:0 20px 16px; font-size:12px; color:#94a3b8; line-height:1.6;">
+            These criteria help you to have a holistic view of the patient and thus optimize the quality of care (adapted therapeutic strategy to reduce healing time).<br>
+            These are needed for the holistic assessment of the wound.
+        </div>
+        <div style="padding:0 20px 32px;">
+            <button type="button" onclick="saveAdditionalModal()" style="width:100%; background:#2563eb; color:white; border:none; border-radius:16px; padding:16px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif;">
+                Save
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- GENERAL FACTORS MODAL -->
+<div id="generalModal" style="display:none; position:fixed; inset:0; background:#f0f4f8; z-index:60; overflow-y:auto; font-family:'Plus Jakarta Sans',sans-serif;">
+    <div style="max-width:480px; margin:0 auto;">
+        <div style="display:flex; align-items:center; gap:12px; padding:20px 20px 12px; background:#f0f4f8; position:sticky; top:0; z-index:10;">
+            <button type="button" onclick="closeGeneralModal()" style="background:none; border:none; cursor:pointer; padding:4px;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1e3a5f" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <span style="font-size:17px; font-weight:800; color:#1e3a5f;">General factors</span>
+        </div>
+        <div style="background:white; margin:0 0 12px; border-radius:0;">
+            <div id="generalToggleList" style="padding:0 20px;"></div>
+        </div>
+        <div style="background:white; padding:16px 20px; margin:0 0 12px;">
+            <div style="font-size:13px; color:#64748b; font-weight:600; margin-bottom:8px;">Other</div>
+            <textarea id="generalOtherText" placeholder="Specify" rows="4"
+                style="width:100%; border:1px solid #e2e8f0; border-radius:10px; padding:12px; font-size:14px; color:#334155; font-family:'Plus Jakarta Sans',sans-serif; resize:none; outline:none; box-sizing:border-box;"></textarea>
+        </div>
+        <div style="padding:0 20px 16px; font-size:12px; color:#94a3b8; line-height:1.6;">
+            These criteria help you to have a holistic view of the patient and thus optimize the quality of care (adapted therapeutic strategy to reduce healing time).<br>
+            These are needed for the holistic assessment of the wound.
+        </div>
+        <div style="padding:0 20px 32px;">
+            <button type="button" onclick="saveGeneralModal()" style="width:100%; background:#2563eb; color:white; border:none; border-radius:16px; padding:16px; font-size:15px; font-weight:700; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif;">
+                Save
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentStep = 0;
+const steps = document.querySelectorAll(".step");
+const progress = document.getElementById("progressFill");
+
+const generalFactorItems = [
+    "Age > 65 years",
+    "Reduced mobility",
+    "Mechanical pressures",
+    "Suboptimal compliance with local treatement and/or management of other conditions that affect wound healing",
+    "Psychological stress",
+    "Pain",
+    "Smoking",
+    "Alcoholism",
+    "Substance misuse",
+    "Incontinence",
+    "Cognitive impairment",
+    "Unsuitable or poor living conditions"
+];
+
+let generalToggles = {};
+let generalOther = "";
+
+function openGeneralModal() {
+    const list = document.getElementById("generalToggleList");
+    list.innerHTML = "";
+    generalFactorItems.forEach((item, i) => {
+        const isOn = generalToggles[item] || false;
+        const row = document.createElement("div");
+        const isLast = i === generalFactorItems.length - 1;
+        row.style.cssText = `display:flex;justify-content:space-between;align-items:center;padding:16px 0;${isLast ? '' : 'border-bottom:1px solid #f1f5f9;'}gap:16px;`;
+        row.innerHTML = `
+            <span style="font-size:14px;color:#1e3a5f;line-height:1.4;flex:1;">${item}</span>
+            <button type="button" onclick="toggleGeneral(this,'${item.replace(/'/g,"\\'")}')"
+                style="flex-shrink:0;width:52px;height:28px;border-radius:999px;border:none;cursor:pointer;position:relative;transition:background 0.2s;background:${isOn ? '#2563eb' : '#cbd5e1'};">
+                <span style="position:absolute;top:3px;left:${isOn ? '26px' : '3px'};width:22px;height:22px;border-radius:50%;background:white;transition:left 0.2s;display:block;"></span>
+            </button>`;
+        list.appendChild(row);
+    });
+    document.getElementById("generalOtherText").value = generalOther;
+    document.getElementById("generalModal").style.display = "block";
+    document.body.style.overflow = "hidden";
+}
+
+function toggleGeneral(btn, item) {
+    const isOn = !generalToggles[item];
+    generalToggles[item] = isOn;
+    btn.style.background = isOn ? "#2563eb" : "#cbd5e1";
+    btn.querySelector("span").style.left = isOn ? "26px" : "3px";
+}
+
+function saveGeneralModal() {
+    generalOther = document.getElementById("generalOtherText").value.trim();
+    const selected = Object.entries(generalToggles).filter(([,v]) => v).map(([k]) => k);
+    if (generalOther) selected.push("Other: " + generalOther);
+    const summary = selected.length > 0 ? selected.slice(0,2).join(", ") + (selected.length > 2 ? ` +${selected.length-2} more` : "") : "Not specified";
+    document.getElementById("general-summary").textContent = summary;
+    document.getElementById("general_factors_input").value = selected.join("|");
+    closeGeneralModal();
+}
+
+function closeGeneralModal() {
+    document.getElementById("generalModal").style.display = "none";
+    document.body.style.overflow = "";
+}
+
+// ── Reusable toggle modal ──────────────────────────────────────────────────
+const toggleModalData = {
+    metabolic: {
+        title: "Metabolic factors",
+        summaryId: "metabolic-summary",
+        inputId: "metabolic_factors_input",
+        items: ["Malnutrition","Dehydration","Renal failure","Hepatic insufficiency","Diabetes type 1","Diabetes type 2","Obesity","Infectious State","High blood pressure","Anaemia"]
+    },
+    pathologies: {
+        title: "Pathologies",
+        summaryId: "pathologies-summary",
+        inputId: "pathologies_input",
+        items: ["Arteriosclerosis","Arteritis of lower limbs","Acute illness","Deep venous thrombosis","Venous insufficiency","Arterial insufficiency","Pulmonary insufficiency","Myocardial infarction / Heart Failure","Malignant tumour","Immunosuppression","Autoimmune disease","Previous chronic wound"]
+    },
+    surgical: {
+        title: "Surgical history",
+        summaryId: "surgical-summary",
+        inputId: "surgical_input",
+        items: ["Amputation","Varicose Veins surgery","Sclerotherapy","Orthopaedic Surgery"]
+    },
+    allergies: {
+        title: "Allergies/Skin sensitivities",
+        summaryId: "allergies-summary",
+        inputId: "allergies_input",
+        items: ["Antibiotics","Anesthetic","Iodine","Sticking plaster","Latex"]
+    },
+    medication: {
+        title: "Treatments/Medication",
+        summaryId: "medication-summary",
+        inputId: "medication_input",
+        items: ["Chemotherapy","Radiotherapy","Corticotherapy","Immunosuppressants","Anti-coagulants","Antianginal","Antineoplastic","Non-steroidal anti-inflammatory drugs (NSAIDs)"]
+    }
+};
+
+let activeToggleKey = null;
+let toggleStates = {};
+let toggleOthers = {};
+
+function openToggleModal(key) {
+    activeToggleKey = key;
+    const cfg = toggleModalData[key];
+    document.getElementById("toggleModalTitle").textContent = cfg.title;
+    const list = document.getElementById("toggleModalList");
+    list.innerHTML = "";
+    const states = toggleStates[key] || {};
+    cfg.items.forEach((item, i) => {
+        const isOn = states[item] || false;
+        const row = document.createElement("div");
+        const isLast = i === cfg.items.length - 1;
+        row.style.cssText = `display:flex;justify-content:space-between;align-items:center;padding:16px 0;${isLast ? '' : 'border-bottom:1px solid #f1f5f9;'}gap:16px;`;
+        const safeItem = item.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+        row.innerHTML = `
+            <span style="font-size:14px;color:#1e3a5f;line-height:1.4;flex:1;">${item}</span>
+            <button type="button" onclick="toggleItem(this,'${key}','${safeItem}')"
+                style="flex-shrink:0;width:52px;height:28px;border-radius:999px;border:none;cursor:pointer;position:relative;transition:background 0.2s;background:${isOn ? '#2563eb' : '#cbd5e1'};">
+                <span style="position:absolute;top:3px;left:${isOn ? '26px' : '3px'};width:22px;height:22px;border-radius:50%;background:white;transition:left 0.2s;display:block;"></span>
+            </button>`;
+        list.appendChild(row);
+    });
+    document.getElementById("toggleModalOther").value = toggleOthers[key] || "";
+    document.getElementById("toggleModal").style.display = "block";
+    document.body.style.overflow = "hidden";
+}
+
+function toggleItem(btn, key, item) {
+    if (!toggleStates[key]) toggleStates[key] = {};
+    const isOn = !toggleStates[key][item];
+    toggleStates[key][item] = isOn;
+    btn.style.background = isOn ? "#2563eb" : "#cbd5e1";
+    btn.querySelector("span").style.left = isOn ? "26px" : "3px";
+}
+
+function saveToggleModal() {
+    const cfg = toggleModalData[activeToggleKey];
+    const other = document.getElementById("toggleModalOther").value.trim();
+    toggleOthers[activeToggleKey] = other;
+    const states = toggleStates[activeToggleKey] || {};
+    const selected = cfg.items.filter(i => states[i]);
+    if (other) selected.push("Other: " + other);
+    const summary = selected.length > 0 ? selected.slice(0,2).join(", ") + (selected.length > 2 ? ` +${selected.length-2} more` : "") : "Not specified";
+    document.getElementById(cfg.summaryId).textContent = summary;
+    document.getElementById(cfg.inputId).value = selected.join("|");
+    closeToggleModal();
+}
+
+function closeToggleModal() {
+    document.getElementById("toggleModal").style.display = "none";
+    document.body.style.overflow = "";
+    activeToggleKey = null;
+}
+
+// ── Compliance modal ─────────────────────────────────────────────────────────
+function openComplianceModal() {
+    document.getElementById("complianceModal").style.display = "block";
+    document.body.style.overflow = "hidden";
+}
+
+function toggleComp(btn, id) {
+    const isOn = btn.dataset.on !== "true";
+    btn.dataset.on = isOn ? "true" : "false";
+    btn.style.background = isOn ? "#2563eb" : "#cbd5e1";
+    btn.querySelector("span").style.left = isOn ? "26px" : "3px";
+}
+
+function saveComplianceModal() {
+    const qol = document.getElementById("compQoL").value.trim();
+    const social = document.getElementById("compSocial").value.trim();
+    const dep = document.getElementById("compDependency").value.trim();
+    const t1 = document.getElementById("compT1").dataset.on === "true" ? "Compliance to treatment" : null;
+    const t2 = document.getElementById("compT2").dataset.on === "true" ? "Compliance and ability to be educated" : null;
+    const t3 = document.getElementById("compT3").dataset.on === "true" ? "Compliance and ability to self care" : null;
+    const parts = [];
+    if (qol) parts.push("QoL: " + qol.substring(0,30));
+    if (social) parts.push("Social: " + social.substring(0,20));
+    if (dep) parts.push("Dependency: " + dep.substring(0,20));
+    [t1,t2,t3].filter(Boolean).forEach(t => parts.push(t));
+    const summary = parts.length > 0 ? parts.slice(0,2).join(", ") + (parts.length > 2 ? ` +${parts.length-2} more` : "") : "Not specified";
+    document.getElementById("compliance-summary").textContent = summary;
+    document.getElementById("compliance_input").value = parts.join("|");
+    closeComplianceModal();
+}
+
+function closeComplianceModal() {
+    document.getElementById("complianceModal").style.display = "none";
+    document.body.style.overflow = "";
+}
+
+// ── Additional info modal ────────────────────────────────────────────────────
+function openAdditionalModal() {
+    document.getElementById("additionalModal").style.display = "block";
+    document.body.style.overflow = "hidden";
+}
+
+function saveAdditionalModal() {
+    const text = document.getElementById("additionalText").value.trim();
+    document.getElementById("additional-summary").textContent = text ? text.substring(0, 50) + (text.length > 50 ? "..." : "") : "Not specified";
+    document.getElementById("additional_input").value = text;
+    closeAdditionalModal();
+}
+
+function closeAdditionalModal() {
+    document.getElementById("additionalModal").style.display = "none";
+    document.body.style.overflow = "";
+}
+
+// ── Live reg number preview ──────────────────────────────────────────────────
+document.getElementById("regNumber").addEventListener("input", function() {
+    const val = this.value.trim();
+    const preview = document.getElementById("regPreview");
+    const previewText = document.getElementById("regPreviewText");
+    if (val.length >= 3) {
+        previewText.textContent = val;
+        preview.classList.remove("hidden");
+        preview.classList.add("flex");
+    } else {
+        preview.classList.add("hidden");
+        preview.classList.remove("flex");
+    }
+});
+
+// ── Step navigation ──────────────────────────────────────────────────────────
+function updateProgress() {
+    let percent = ((currentStep + 1) / steps.length) * 100;
+    progress.style.width = percent + "%";
+}
+
+function showStep(index) {
+    steps.forEach((step, i) => {
+        step.classList.remove("active");
+        if (i === index) step.classList.add("active");
+    });
+    updateProgress();
+}
+
+function validateStep() {
+    if (currentStep === 0 && !document.getElementById("firstName").value.trim()) { alert("Enter first name"); return false; }
+    if (currentStep === 1 && !document.getElementById("surname").value.trim()) { alert("Enter surname"); return false; }
+    // Step 2 is reg number — optional, allow skip
+    if (currentStep === 3 && !document.getElementById("gender").value) { alert("Select gender"); return false; }
+    if (currentStep === 4 && !document.getElementById("dob").value) { alert("Select date of birth"); return false; }
+    return true;
+}
+
+function nextStep() {
+    if (!validateStep()) return;
+    currentStep++;
+    updateNames();
+    showStep(currentStep);
+}
+
+function prevStep() {
+    currentStep--;
+    showStep(currentStep);
+}
+
+function calculateAge() {
+    let d = new Date(document.getElementById("dob").value);
+    let t = new Date();
+    let age = t.getFullYear() - d.getFullYear();
+    let m = t.getMonth() - d.getMonth();
+    if (m < 0 || (m === 0 && t.getDate() < d.getDate())) age--;
+    document.getElementById("ageText").innerText = "Age: " + age + " years";
+}
+
+function updateNames() {
+    const first = document.getElementById("firstName").value || "Patient";
+    const last = document.getElementById("surname").value || "";
+    const reg = document.getElementById("regNumber").value.trim();
+
+    document.getElementById("displayName").innerText = first;
+    document.getElementById("fullNameDisplay").innerText = first + " " + last;
+
+    // Show reg badge on consent screen if available
+    const consentBadge = document.getElementById("consentRegBadge");
+    const consentRegText = document.getElementById("consentRegText");
+    if (reg) {
+        consentRegText.textContent = reg;
+        consentBadge.classList.remove("hidden");
+        consentBadge.classList.add("flex");
+    } else {
+        consentBadge.classList.add("hidden");
+        consentBadge.classList.remove("flex");
+    }
+
+    // Show reg on done screen
+    const doneBadge = document.getElementById("doneSummaryReg");
+    const doneRegText = document.getElementById("doneSummaryRegText");
+    if (reg) {
+        doneRegText.textContent = reg;
+        doneBadge.classList.remove("hidden");
+        doneBadge.classList.add("flex");
+    }
+}
+
+function agreeConsent() { nextStep(); }
+function refuseConsent() { alert("Consent required to proceed."); }
+function showFullConsent() { nextStep(); }
+
+updateProgress();
+</script>
 
 </body>
 </html>

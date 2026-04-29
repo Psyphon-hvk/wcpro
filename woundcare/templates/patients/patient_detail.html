@@ -1,88 +1,742 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient Details - {{ patient.name }}</title>
+    <title>{{ patient.first_name }} {{ patient.surname }} — WoundPro_Ke</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+
     <style>
-        body { background-color: #F0F7F9; }
-        .soft-card { border-radius: 2rem; }
+        :root {
+            --olive:      #5a6e1f;
+            --olive-mid:  #6b7d24;
+            --teal-dark:  #2e6b6b;
+            --teal:       #3a7d6e;
+            --navy:       #2c4a7c;
+            --navy-deep:  #1e3560;
+            --surface:    #f4f6f2;
+            --card:       #ffffff;
+            --border:     #e5eae0;
+            --text-main:  #1a2112;
+            --text-sub:   #637060;
+            --text-muted: #a8b5a3;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--surface);
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            background: linear-gradient(160deg, var(--olive) 0%, var(--teal) 55%, var(--navy) 100%);
+            padding: 24px 20px 32px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -60px; right: -60px;
+            width: 200px; height: 200px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -40px; left: 30px;
+            width: 120px; height: 120px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.04);
+        }
+
+        .hero-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+        .nav-btn {
+            width: 38px; height: 38px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.9);
+            font-size: 13px;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .nav-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.55);
+        }
+
+        .avatar {
+            width: 68px; height: 68px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.18);
+            border: 2px solid rgba(255,255,255,0.3);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'DM Serif Display', serif;
+            font-size: 26px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .patient-name {
+            font-family: 'DM Serif Display', serif;
+            font-size: 22px;
+            color: white;
+            line-height: 1.2;
+            margin-bottom: 6px;
+        }
+
+        .hero-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .pill-active {
+            background: rgba(255,255,255,0.18);
+            border: 1px solid rgba(255,255,255,0.28);
+            color: rgba(255,255,255,0.9);
+        }
+        .pill-id {
+            background: rgba(0,0,0,0.15);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.7);
+        }
+        .dot-green {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: #a3e635;
+            display: inline-block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .stat-box {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 14px;
+            padding: 12px 10px;
+            text-align: center;
+        }
+        .stat-val {
+            font-family: 'DM Serif Display', serif;
+            font-size: 20px;
+            color: white;
+            line-height: 1;
+        }
+        .stat-lbl {
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.5);
+            margin-top: 4px;
+        }
+
+        /* ─── WRAPPER ─── */
+        .content {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 20px 16px;
+        }
+
+        /* ─── MESSAGES ─── */
+        .msg { padding: 10px 14px; border-radius: 12px; font-size: 13px; font-weight: 600; margin-bottom: 10px; }
+        .msg-success { background: #ecfdf5; color: #065f46; }
+        .msg-error   { background: #fef2f2; color: #991b1b; }
+        .msg-warn    { background: #fefce8; color: #78350f; }
+
+        /* ─── SECTION CARD ─── */
+        .s-card {
+            background: var(--card);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            margin-bottom: 14px;
+        }
+        .s-head {
+            padding: 9px 18px 7px;
+            background: #f8faf6;
+            border-bottom: 1px solid var(--border);
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        /* ─── DATA ROWS ─── */
+        .d-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 12px 18px;
+            border-bottom: 1px solid #f5f7f3;
+            gap: 12px;
+        }
+        .d-row:last-child { border-bottom: none; }
+        .d-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            min-width: 100px;
+            padding-top: 2px;
+        }
+        .d-val {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-main);
+            text-align: right;
+            line-height: 1.5;
+        }
+        .d-val.muted { color: var(--text-muted); font-weight: 400; font-style: italic; }
+
+        /* ─── CHIPS / TAGS ─── */
+        .chip {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            margin: 2px 2px 0 0;
+        }
+        .chip-olive  { background: #eef1dc; color: var(--olive); }
+        .chip-teal   { background: #d8eeeb; color: var(--teal-dark); }
+        .chip-navy   { background: #dde5f4; color: var(--navy-deep); }
+        .chip-red    { background: #fee2e2; color: #b91c1c; }
+        .chip-green  { background: #dcfce7; color: #166534; }
+        .chip-gray   { background: #f1f5f1; color: #475547; }
+
+        .badge-consent {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #d8eeeb;
+            color: var(--teal-dark);
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        /* ─── SHARE CARD ─── */
+        .share-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 16px 18px;
+            margin-bottom: 14px;
+        }
+        .share-card h3 {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--text-sub);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .share-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            font-size: 13px;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text-main);
+            background: var(--surface);
+            outline: none;
+            transition: border-color 0.2s;
+            margin-bottom: 10px;
+        }
+        .share-input:focus { border-color: var(--teal); }
+        .share-btn {
+            width: 100%;
+            padding: 11px;
+            background: linear-gradient(135deg, var(--teal) 0%, var(--navy) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            letter-spacing: 0.04em;
+        }
+
+        /* ─── COLLAPSIBLE HEALTH ROWS ─── */
+        .h-section { cursor: pointer; }
+        .h-chevron { transition: transform 0.25s; flex-shrink: 0; }
+        .h-section.open .h-chevron { transform: rotate(90deg); }
+        .h-body { display: none; padding: 10px 18px 14px; background: #fafbf8; }
+        .h-body.open { display: block; }
+
+        .h-icon {
+            width: 32px; height: 32px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            font-size: 13px;
+        }
+        .ic-olive  { background: #eef1dc; color: var(--olive); }
+        .ic-amber  { background: #fef3c7; color: #92400e; }
+        .ic-red    { background: #fee2e2; color: #b91c1c; }
+        .ic-purple { background: #ede9fe; color: #6d28d9; }
+        .ic-pink   { background: #fce7f3; color: #be185d; }
+        .ic-teal   { background: #d8eeeb; color: var(--teal-dark); }
+        .ic-green  { background: #dcfce7; color: #166534; }
+
+        .h-row-title { font-size: 13px; font-weight: 700; color: var(--text-main); }
+        .h-row-sub   { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+        /* ─── FAB ─── */
+        .fab {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--teal) 0%, var(--navy) 100%);
+            color: white;
+            border-radius: 18px;
+            padding: 16px 24px;
+            font-size: 14px;
+            font-weight: 800;
+            box-shadow: 0 8px 28px rgba(44,74,124,0.28);
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: transform 0.15s, box-shadow 0.15s;
+            letter-spacing: 0.02em;
+        }
+        .fab:active { transform: scale(0.97); box-shadow: 0 4px 12px rgba(44,74,124,0.18); }
+
+        /* ─── WOUND CARDS ─── */
+        .wound-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            background: white;
+            border-radius: 16px;
+            border: 1.5px solid var(--border);
+            text-decoration: none;
+            margin-bottom: 10px;
+            transition: border-color 0.15s, transform 0.1s;
+        }
+        .wound-card:active { transform: scale(0.98); border-color: #9cb8b0; }
+        .wound-icon {
+            width: 44px; height: 44px;
+            border-radius: 14px;
+            background: #d8eeeb;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--teal-dark);
+            flex-shrink: 0;
+        }
+        .wound-num { font-size: 13px; font-weight: 800; color: var(--text-main); }
+        .wound-loc { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+
+        /* ─── WOUND EMPTY STATE ─── */
+        .wound-empty {
+            background: white;
+            border-radius: 18px;
+            border: 2px dashed var(--border);
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        /* ─── DELETE BTN ─── */
+        .del-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #fef2f2;
+            color: #b91c1c;
+            border: 1.5px solid #fecaca;
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            font-family: 'DM Sans', sans-serif;
+            text-decoration: none;
+            margin-top: 8px;
+        }
+
+        /* ─── SECTION HEADER ROW ─── */
+        .sec-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .sec-row h3 { font-size: 13px; font-weight: 800; color: var(--text-main); }
+        .sec-row span { font-size: 11px; font-weight: 700; color: var(--text-muted); }
+
+        /* animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .content > * {
+            animation: fadeUp 0.35s ease both;
+        }
+        .content > *:nth-child(1) { animation-delay: 0.05s; }
+        .content > *:nth-child(2) { animation-delay: 0.10s; }
+        .content > *:nth-child(3) { animation-delay: 0.15s; }
+        .content > *:nth-child(4) { animation-delay: 0.20s; }
+        .content > *:nth-child(5) { animation-delay: 0.25s; }
     </style>
 </head>
 
-<body class="font-sans pb-10">
+{% if messages %}
+<div style="max-width:480px;margin:0 auto;padding:12px 16px 0;">
+    {% for message in messages %}
+        <div class="msg {% if message.tags == 'success' %}msg-success{% elif message.tags == 'error' %}msg-error{% else %}msg-warn{% endif %}">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
 
-<div class="max-w-md mx-auto p-5">
+<body>
 
-    <div class="flex items-center justify-between mb-6">
-        <a href="/" class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-gray-600">
-            <i class="fa-solid fa-chevron-left"></i>
-        </a>
-        <h1 class="text-lg font-bold text-gray-800">Patient Profile</h1>
-        <div class="w-10"></div> </div>
+    <!-- ══════════ HERO ══════════ -->
+    <div class="hero">
+        <div class="hero-nav">
+            <a href="/" class="nav-btn"><i class="fa-solid fa-chevron-left"></i></a>
+            <span class="nav-label">Patient Profile</span>
+            <a href="/edit/{{ patient.id }}/" class="nav-btn"><i class="fa-solid fa-pen"></i></a>
+        </div>
 
-    <div class="bg-white soft-card p-6 shadow-sm border border-white mb-6">
-        <div class="flex items-center gap-4 mb-4">
-            <div class="w-16 h-16 rounded-3xl bg-blue-100 flex items-center justify-center text-blue-600 text-2xl">
-                <i class="fa-solid fa-user-injured"></i>
-            </div>
+        <div style="display:flex;align-items:flex-start;gap:16px;margin-bottom:20px;">
+            <div class="avatar">{{ patient.first_name|first }}{{ patient.surname|first }}</div>
             <div>
-                <h2 class="text-xl font-extrabold text-gray-800 leading-tight">{{ patient.name }}</h2>
-                <span class="bg-blue-50 text-blue-600 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Active Patient</span>
+                <h1 class="patient-name">{{ patient.first_name }} {{ patient.surname }}</h1>
+                <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;">
+                    <span class="hero-pill pill-active">
+                        <span class="dot-green"></span> Active
+                    </span>
+                    {% if patient.reg_number %}
+                        <span class="hero-pill pill-id">
+                            <i class="fa-solid fa-id-card" style="font-size:9px;"></i>
+                            {{ patient.reg_number }}
+                        </span>
+                    {% else %}
+                        <span class="hero-pill pill-id">#{{ patient.id|stringformat:"04d" }}</span>
+                    {% endif %}
+                </div>
             </div>
         </div>
-        
-        <div class="border-t border-gray-50 pt-4">
-            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Primary Diagnosis</p>
-            <p class="text-sm font-medium text-gray-700 mt-1">{{ patient.diagnosis }}</p>
+
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-val">{% if patient.date_of_birth %}{{ patient.age }}{% else %}—{% endif %}</div>
+                <div class="stat-lbl">Age</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val">
+                    {% if patient.gender %}
+                        {% if patient.gender == 'Male' %}♂{% elif patient.gender == 'Female' %}♀{% else %}—{% endif %}
+                    {% else %}—{% endif %}
+                </div>
+                <div class="stat-lbl">Gender</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val">{{ wounds|length }}</div>
+                <div class="stat-lbl">Wounds</div>
+            </div>
         </div>
     </div>
 
-    <div class="mb-8">
-        <a href="/add-wound/{{ patient.id }}/" 
-           class="w-full bg-blue-600 text-white flex items-center justify-center gap-3 py-4 soft-card shadow-lg shadow-blue-100 text-sm font-bold">
-            <i class="fa-solid fa-plus-circle text-lg"></i> Register New Wound
+    <!-- ══════════ CONTENT ══════════ -->
+    <div class="content">
+
+        <!-- Personal Details -->
+        <div class="s-card">
+            <div class="s-head">Personal Details</div>
+
+            <div class="d-row">
+                <span class="d-label">Full Name</span>
+                <span class="d-val">{{ patient.first_name }} {{ patient.surname }}</span>
+            </div>
+            <div class="d-row">
+                <span class="d-label">Reg Number</span>
+                <span class="d-val">
+                    {% if patient.reg_number %}
+                        <span class="chip chip-navy" style="letter-spacing:0.06em;">{{ patient.reg_number }}</span>
+                    {% else %}
+                        <span class="muted">Not assigned</span>
+                    {% endif %}
+                </span>
+            </div>
+            <div class="d-row">
+                <span class="d-label">Date of Birth</span>
+                <span class="d-val">{% if patient.date_of_birth %}{{ patient.date_of_birth }}{% else %}<span class="muted">Not specified</span>{% endif %}</span>
+            </div>
+            <div class="d-row">
+                <span class="d-label">Age</span>
+                <span class="d-val">{% if patient.age %}{{ patient.age }} years{% else %}<span class="muted">—</span>{% endif %}</span>
+            </div>
+            <div class="d-row">
+                <span class="d-label">Gender</span>
+                <span class="d-val">
+                    {% if patient.gender %}
+                        <span class="chip {% if patient.gender == 'Male' %}chip-navy{% elif patient.gender == 'Female' %}chip-red{% else %}chip-gray{% endif %}">
+                            {{ patient.gender }}
+                        </span>
+                    {% else %}<span class="muted">Not specified</span>{% endif %}
+                </span>
+            </div>
+            <div class="d-row">
+                <span class="d-label">Consent</span>
+                <span class="d-val">
+                    <span class="badge-consent">
+                        <i class="fa-solid fa-check" style="font-size:9px;"></i> Given
+                    </span>
+                </span>
+            </div>
+        </div>
+
+        <!-- Share Patient -->
+        <div class="share-card">
+            <h3><i class="fa-solid fa-share-nodes" style="margin-right:6px;color:var(--teal);"></i>Share Patient</h3>
+            <form method="POST" action="{% url 'share_patient' patient.id %}">
+                {% csrf_token %}
+                <input type="text"
+                       name="registration_number"
+                       placeholder="Enter Registration Number (e.g. PS12345)"
+                       class="share-input">
+                <button type="submit" class="share-btn">Share Patient</button>
+            </form>
+        </div>
+
+        <!-- Health Information -->
+        <div class="s-card">
+            <div class="s-head">Health Information</div>
+
+            <!-- General Factors -->
+            <div class="h-section" onclick="toggleSection(this)">
+                <div class="d-row" style="cursor:pointer;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <span class="h-icon ic-olive"><i class="fa-solid fa-person-walking"></i></span>
+                        <div>
+                            <div class="h-row-title">General factors</div>
+                            <div class="h-row-sub">{% if patient.general_factors %}{{ patient.general_factors|truncatechars:38 }}{% else %}Not specified{% endif %}</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs h-chevron" style="color:var(--text-muted);margin-top:8px;"></i>
+                </div>
+            </div>
+            <div class="h-body">
+                {% if patient.general_factors %}{% for item in patient.general_factors_list %}<span class="chip chip-olive">{{ item }}</span>{% endfor %}
+                {% else %}<p style="font-size:12px;color:var(--text-muted);">No general factors recorded.</p>{% endif %}
+            </div>
+
+            <!-- Metabolic Factors -->
+            <div class="h-section" onclick="toggleSection(this)">
+                <div class="d-row" style="cursor:pointer;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <span class="h-icon ic-amber"><i class="fa-solid fa-dna"></i></span>
+                        <div>
+                            <div class="h-row-title">Metabolic factors</div>
+                            <div class="h-row-sub">{% if patient.metabolic_factors %}{{ patient.metabolic_factors|truncatechars:38 }}{% else %}Not specified{% endif %}</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs h-chevron" style="color:var(--text-muted);margin-top:8px;"></i>
+                </div>
+            </div>
+            <div class="h-body">
+                {% if patient.metabolic_factors %}{% for item in patient.metabolic_factors_list %}<span class="chip" style="background:#fef3c7;color:#92400e;">{{ item }}</span>{% endfor %}
+                {% else %}<p style="font-size:12px;color:var(--text-muted);">No metabolic factors recorded.</p>{% endif %}
+            </div>
+
+            <!-- Pathologies -->
+            <div class="h-section" onclick="toggleSection(this)">
+                <div class="d-row" style="cursor:pointer;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <span class="h-icon ic-red"><i class="fa-solid fa-heart-pulse"></i></span>
+                        <div>
+                            <div class="h-row-title">Pathologies</div>
+                            <div class="h-row-sub">{% if patient.pathologies %}{{ patient.pathologies|truncatechars:38 }}{% else %}Not specified{% endif %}</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs h-chevron" style="color:var(--text-muted);margin-top:8px;"></i>
+                </div>
+            </div>
+            <div class="h-body">
+                {% if patient.pathologies %}{% for item in patient.pathologies_list %}<span class="chip chip-red">{{ item }}</span>{% endfor %}
+                {% else %}<p style="font-size:12px;color:var(--text-muted);">No pathologies recorded.</p>{% endif %}
+            </div>
+
+            <!-- Surgical History -->
+            <div class="h-section" onclick="toggleSection(this)">
+                <div class="d-row" style="cursor:pointer;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <span class="h-icon ic-purple"><i class="fa-solid fa-scalpel"></i></span>
+                        <div>
+                            <div class="h-row-title">Surgical history</div>
+                            <div class="h-row-sub">{% if patient.surgical_history %}{{ patient.surgical_history|truncatechars:38 }}{% else %}Not specified{% endif %}</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs h-chevron" style="color:var(--text-muted);margin-top:8px;"></i>
+                </div>
+            </div>
+            <div class="h-body">
+                {% if patient.surgical_history %}{% for item in patient.surgical_history_list %}<span class="chip" style="background:#ede9fe;color:#6d28d9;">{{ item }}</span>{% endfor %}
+                {% else %}<p style="font-size:12px;color:var(--text-muted);">No surgical history recorded.</p>{% endif %}
+            </div>
+
+            <!-- Allergies -->
+            <div class="h-section" onclick="toggleSection(this)">
+                <div class="d-row" style="cursor:pointer;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <span class="h-icon ic-pink"><i class="fa-solid fa-triangle-exclamation"></i></span>
+                        <div>
+                            <div class="h-row-title">Allergies / Skin sensitivities</div>
+                            <div class="h-row-sub">{% if patient.allergies %}{{ patient.allergies|truncatechars:38 }}{% else %}Not specified{% endif %}</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs h-chevron" style="color:var(--text-muted);margin-top:8px;"></i>
+                </div>
+            </div>
+            <div class="h-body">
+                {% if patient.allergies %}{% for item in patient.allergies_list %}<span class="chip chip-red">{{ item }}</span>{% endfor %}
+                {% else %}<p style="font-size:12px;color:var(--text-muted);">No allergies recorded.</p>{% endif %}
+            </div>
+        </div>
+
+        <!-- Treatment & Compliance -->
+        <div class="s-card">
+            <div class="s-head">Treatment &amp; Compliance</div>
+
+            <!-- Medication -->
+            <div class="h-section" onclick="toggleSection(this)">
+                <div class="d-row" style="cursor:pointer;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <span class="h-icon ic-green"><i class="fa-solid fa-pills"></i></span>
+                        <div>
+                            <div class="h-row-title">Treatments / Medication</div>
+                            <div class="h-row-sub">{% if patient.medication %}{{ patient.medication|truncatechars:38 }}{% else %}Not specified{% endif %}</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs h-chevron" style="color:var(--text-muted);margin-top:8px;"></i>
+                </div>
+            </div>
+            <div class="h-body">
+                {% if patient.medication %}{% for item in patient.medication_list %}<span class="chip chip-green">{{ item }}</span>{% endfor %}
+                {% else %}<p style="font-size:12px;color:var(--text-muted);">No medication recorded.</p>{% endif %}
+            </div>
+
+            <!-- Compliance -->
+            <div class="h-section" onclick="toggleSection(this)">
+                <div class="d-row" style="cursor:pointer;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <span class="h-icon ic-teal"><i class="fa-solid fa-clipboard-check"></i></span>
+                        <div>
+                            <div class="h-row-title">Compliance and ability</div>
+                            <div class="h-row-sub">{% if patient.compliance %}{{ patient.compliance|truncatechars:38 }}{% else %}Not specified{% endif %}</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs h-chevron" style="color:var(--text-muted);margin-top:8px;"></i>
+                </div>
+            </div>
+            <div class="h-body">
+                {% if patient.compliance %}
+                    <p style="font-size:13px;color:#334155;line-height:1.7;white-space:pre-line;">{{ patient.compliance }}</p>
+                {% else %}
+                    <p style="font-size:12px;color:var(--text-muted);">No compliance data recorded.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Additional Info -->
+        {% if patient.additional_info %}
+        <div class="s-card">
+            <div class="s-head">Additional Information</div>
+            <div style="padding:16px 18px;">
+                <p style="font-size:13px;color:#334155;line-height:1.7;">{{ patient.additional_info }}</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Register Wound CTA -->
+        <a href="/add-wound/{{ patient.id }}/" class="fab">
+            <i class="fa-solid fa-plus-circle" style="font-size:16px;"></i>
+            Register New Wound
         </a>
-    </div>
 
-    <div class="flex justify-between items-center mb-4 px-2">
-        <h3 class="text-md font-bold text-gray-800">Tracked Wounds</h3>
-        <span class="text-xs text-gray-400 font-bold">{{ wounds|length }} Total</span>
-    </div>
+        <!-- Wounds List -->
+        <div class="sec-row">
+            <h3>Tracked Wounds</h3>
+            <span>{{ wounds|length }} total</span>
+        </div>
 
-    <div class="space-y-3">
         {% for wound in wounds %}
-        <a href="/wound/{{ wound.id }}/"
-           class="flex items-center gap-4 bg-white p-4 soft-card shadow-sm border border-transparent hover:border-blue-200 transition-all group">
-            
-            <div class="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-500 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+        <a href="/wound/{{ wound.id }}/" class="wound-card">
+            <div class="wound-icon">
                 <i class="fa-solid fa-droplet"></i>
             </div>
-
-            <div class="flex-1">
-                <p class="text-sm font-bold text-gray-800">
-                    Wound #{{ wound.wound_number }}
-                </p>
-                <p class="text-xs font-medium text-gray-400">
-                    Location: {{ wound.location }}
+            <div style="flex:1;min-width:0;">
+                <p class="wound-num">Wound #{{ wound.wound_number }}</p>
+                <p class="wound-loc">
+                    <i class="fa-solid fa-location-dot" style="font-size:10px;margin-right:3px;"></i>{{ wound.location }}
                 </p>
             </div>
-
-            <div class="text-gray-300 group-hover:text-blue-500 transition-colors">
-                <i class="fa-solid fa-chevron-right text-xs"></i>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;">
+                {% if wound.status %}
+                <span class="chip chip-teal" style="font-size:10px;">{{ wound.status }}</span>
+                {% endif %}
+                <i class="fa-solid fa-chevron-right text-xs" style="color:var(--text-muted);"></i>
             </div>
         </a>
         {% empty %}
-        <div class="bg-white/50 border-2 border-dashed border-gray-200 soft-card p-10 text-center">
-            <i class="fa-solid fa-folder-open text-gray-300 text-3xl mb-3"></i>
-            <p class="text-gray-400 text-sm font-medium">No wounds recorded yet.</p>
+        <div class="wound-empty">
+            <i class="fa-solid fa-folder-open" style="font-size:32px;color:#c8d5c4;margin-bottom:12px;display:block;"></i>
+            <p style="font-size:13px;color:var(--text-muted);font-weight:600;">No wounds recorded yet.</p>
+            <p style="font-size:11px;color:var(--text-muted);margin-top:4px;font-style:italic;">Use the button above to register one.</p>
         </div>
         {% endfor %}
-    </div>
 
-</div>
+        <!-- Delete -->
+        <a href="{% url 'delete_patient' patient.id %}" class="del-btn">
+            <i class="fa-solid fa-trash-can"></i> Delete Patient
+        </a>
 
+    </div><!-- /content -->
 </body>
+
+<script>
+function toggleSection(el) {
+    el.classList.toggle('open');
+    const body = el.nextElementSibling;
+    if (body && body.classList.contains('h-body')) {
+        body.classList.toggle('open');
+    }
+}
+</script>
 </html>

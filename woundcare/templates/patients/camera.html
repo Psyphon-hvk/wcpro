@@ -2,131 +2,354 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Capture Wound - WoundPro_Ke</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+
     <style>
-        body { background-color: #F0F7F9; }
-        .soft-card { border-radius: 2.5rem; }
-        .camera-container {
+        :root {
+            --olive:     #5a6e1f;
+            --teal:      #3a7d6e;
+            --teal-dark: #2e6b6b;
+            --navy:      #2c4a7c;
+            --surface:   #f4f6f2;
+            --card:      #ffffff;
+            --border:    #e5eae0;
+            --text-main: #1a2112;
+            --text-muted:#a8b5a3;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            height: 100%;
+            font-family: 'DM Sans', sans-serif;
+            background: #0d0d0d; /* dark bg so camera fills nicely on mobile */
+            color: var(--text-main);
+            overscroll-behavior: none;
+        }
+
+        /* ── FULL-SCREEN LAYOUT ── */
+        .screen {
+            display: flex;
+            flex-direction: column;
+            height: 100dvh; /* dynamic viewport height — key for mobile */
+            max-width: 480px;
+            margin: 0 auto;
             position: relative;
-            width: 100%;
-            aspect-ratio: 1 / 1;
+        }
+
+        /* ── TOP NAV (floats over camera) ── */
+        .top-nav {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            padding-top: max(16px, env(safe-area-inset-top));
+            background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, transparent 100%);
+        }
+        .nav-btn {
+            width: 40px; height: 40px;
+            border-radius: 13px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.22);
+            display: flex; align-items: center; justify-content: center;
+            color: white;
+            font-size: 13px;
+            text-decoration: none;
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+        }
+        .nav-center {
+            text-align: center;
+        }
+        .nav-label {
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.55);
+        }
+        .nav-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 15px;
+            color: white;
+        }
+
+        /* ── CAMERA VIEWPORT (fills all available space) ── */
+        .camera-wrap {
+            flex: 1;
+            position: relative;
             overflow: hidden;
-            border-radius: 2.5rem;
             background: #000;
         }
         #video {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
         }
-        /* Viewfinder overlay */
+
+        /* Viewfinder corners */
         .viewfinder {
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 80%;
-            height: 80%;
-            border: 2px dashed rgba(255, 255, 255, 0.4);
-            border-radius: 2rem;
+            width: 72%; height: 52%;
             pointer-events: none;
+        }
+        .vf-corner {
+            position: absolute;
+            width: 24px; height: 24px;
+            border-color: rgba(255,255,255,0.75);
+            border-style: solid;
+        }
+        .vf-tl { top:0; left:0;  border-width: 3px 0 0 3px; border-radius: 4px 0 0 0; }
+        .vf-tr { top:0; right:0; border-width: 3px 3px 0 0; border-radius: 0 4px 0 0; }
+        .vf-bl { bottom:0; left:0;  border-width: 0 0 3px 3px; border-radius: 0 0 0 4px; }
+        .vf-br { bottom:0; right:0; border-width: 0 3px 3px 0; border-radius: 0 0 4px 0; }
+
+        /* Center crosshair */
+        .crosshair {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 18px; height: 18px;
+            pointer-events: none;
+        }
+        .crosshair::before, .crosshair::after {
+            content: '';
+            position: absolute;
+            background: rgba(255,255,255,0.5);
+            border-radius: 2px;
+        }
+        .crosshair::before { width: 100%; height: 1.5px; top: 50%; transform: translateY(-50%); }
+        .crosshair::after  { width: 1.5px; height: 100%; left: 50%; transform: translateX(-50%); }
+
+        /* Status badge */
+        .status-badge {
+            position: absolute;
+            bottom: 16px; left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 5px 14px;
+            border-radius: 999px;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.45);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.15);
+            transition: background 0.3s;
+        }
+        .status-badge.captured {
+            background: rgba(58,125,110,0.85);
+            border-color: rgba(255,255,255,0.25);
+        }
+        .status-badge.error {
+            background: rgba(185,28,28,0.85);
+        }
+
+        /* Preview flash */
+        .flash {
+            position: absolute;
+            inset: 0;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.08s;
+        }
+        .flash.go { opacity: 0.6; }
+
+        /* ── BOTTOM CONTROLS ── */
+        .controls {
+            background: #0d0d0d;
+            padding: 20px 28px;
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* Hint text */
+        .hint {
+            font-size: 11px;
+            color: rgba(255,255,255,0.38);
+            text-align: center;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        /* Shutter row */
+        .shutter-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            height: 72px;
+        }
+
+        /* Shutter button */
+        .shutter {
+            width: 72px; height: 72px;
+            border-radius: 50%;
+            background: transparent;
+            border: 3px solid rgba(255,255,255,0.7);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: transform 0.1s;
+            flex-shrink: 0;
+        }
+        .shutter:active { transform: scale(0.93); }
+        .shutter-inner {
+            width: 54px; height: 54px;
+            border-radius: 50%;
+            background: white;
+            transition: background 0.2s;
+        }
+        .shutter.captured .shutter-inner {
+            background: linear-gradient(135deg, var(--teal), var(--navy));
+        }
+
+        /* Save button */
+        .save-btn {
+            width: 100%;
+            padding: 15px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, var(--teal) 0%, var(--navy) 100%);
+            color: white;
+            font-size: 14px;
+            font-weight: 800;
+            font-family: 'DM Sans', sans-serif;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            letter-spacing: 0.02em;
+            box-shadow: 0 6px 24px rgba(44,74,124,0.35);
+            transition: transform 0.12s, box-shadow 0.12s, opacity 0.3s;
+        }
+        .save-btn:active { transform: scale(0.97); }
+        .save-btn:disabled {
+            opacity: 0.35;
+            pointer-events: none;
+            box-shadow: none;
         }
     </style>
 </head>
 
-<body class="font-sans">
+<body>
+<div class="screen">
 
-<div class="max-w-md mx-auto p-5">
-
-    <div class="flex items-center justify-between mb-6">
-        <a href="javascript:history.back()" class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-gray-400">
+    <!-- TOP NAV -->
+    <div class="top-nav">
+        <a href="javascript:history.back()" class="nav-btn">
             <i class="fa-solid fa-chevron-left"></i>
         </a>
-        <h1 class="text-lg font-bold text-gray-800">Wound Camera</h1>
-        <div class="w-10"></div>
+        <div class="nav-center">
+            <div class="nav-label">WoundPro</div>
+            <div class="nav-title">Wound Camera</div>
+        </div>
+        <div style="width:40px;"></div>
     </div>
 
-    <div class="bg-white p-3 soft-card shadow-sm mb-6 border border-white">
-        <div class="camera-container shadow-inner">
-            <video id="video" autoplay playsinline></video>
-            <div class="viewfinder"></div>
-            
-            <div class="absolute bottom-4 left-0 right-0 text-center">
-                <span id="status-badge" class="bg-black/50 backdrop-blur-md text-white text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-wider">
-                    Camera Active
-                </span>
-            </div>
+    <!-- CAMERA VIEWPORT -->
+    <div class="camera-wrap">
+        <video id="video" autoplay playsinline muted></video>
+
+        <!-- Viewfinder -->
+        <div class="viewfinder">
+            <div class="vf-corner vf-tl"></div>
+            <div class="vf-corner vf-tr"></div>
+            <div class="vf-corner vf-bl"></div>
+            <div class="vf-corner vf-br"></div>
+            <div class="crosshair"></div>
+        </div>
+
+        <!-- Flash overlay -->
+        <div class="flash" id="flash"></div>
+
+        <!-- Status badge -->
+        <div class="status-badge" id="statusBadge">
+            <i class="fa-solid fa-circle" style="font-size:6px;color:#4ade80;margin-right:5px;vertical-align:middle;"></i>
+            Camera Active
         </div>
     </div>
 
-    <div class="space-y-4">
-        <button onclick="takePhoto()" 
-            class="w-full bg-white text-gray-800 flex items-center justify-center gap-3 py-5 soft-card shadow-sm border border-gray-100 font-bold active:scale-95 transition-all">
-            <div class="w-10 h-10 rounded-full border-4 border-blue-600 flex items-center justify-center">
-                <div class="w-6 h-6 bg-blue-600 rounded-full"></div>
-            </div>
-            Capture Photo
-        </button>
+    <!-- BOTTOM CONTROLS -->
+    <div class="controls">
+        <div class="hint">Center the wound within the viewfinder for accurate analysis</div>
 
-        <form method="POST" enctype="multipart/form-data" id="save-form" class="opacity-50 pointer-events-none transition-all duration-300">
+        <div class="shutter-row">
+            <button class="shutter" id="shutterBtn" onclick="takePhoto()">
+                <div class="shutter-inner" id="shutterInner"></div>
+            </button>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data" id="save-form">
             {% csrf_token %}
             <input type="hidden" name="image_data" id="image_data">
-            <button type="submit" 
-                class="w-full bg-blue-600 text-white flex items-center justify-center gap-3 py-4 soft-card shadow-lg shadow-blue-200 text-sm font-bold active:scale-95 transition-all">
-                <i class="fa-solid fa-cloud-arrow-up"></i> Save to Patient File
+            <button type="submit" class="save-btn" id="saveBtn" disabled>
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                Save to Patient File
             </button>
         </form>
     </div>
 
-    <canvas id="canvas" style="display:none;"></canvas>
-
-    <p class="text-center text-[11px] text-gray-400 mt-8 px-8 leading-relaxed">
-        Center the wound within the <span class="font-bold">viewfinder</span> for the most accurate analysis.
-    </p>
-
 </div>
 
-<script>
-    const video = document.getElementById('video');
-    const statusBadge = document.getElementById('status-badge');
-    const saveForm = document.getElementById('save-form');
+<canvas id="canvas" style="display:none;"></canvas>
 
-    // Access camera with high resolution preference
-    navigator.mediaDevices.getUserMedia({ 
-        video: { facingMode: "environment" } // Prefers back camera on mobile
+<script>
+    const video       = document.getElementById('video');
+    const statusBadge = document.getElementById('statusBadge');
+    const shutterBtn  = document.getElementById('shutterBtn');
+    const saveBtn     = document.getElementById('saveBtn');
+    const flash       = document.getElementById('flash');
+
+    navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment", width: { ideal: 1920 }, height: { ideal: 1080 } }
     })
     .then(stream => {
         video.srcObject = stream;
     })
-    .catch(err => {
-        statusBadge.innerHTML = "Camera Error";
-        statusBadge.classList.replace('bg-black/50', 'bg-red-500');
+    .catch(() => {
+        statusBadge.textContent = "Camera unavailable";
+        statusBadge.classList.add('error');
     });
 
     function takePhoto() {
-        const canvas = document.getElementById('canvas');
+        const canvas  = document.getElementById('canvas');
         const context = canvas.getContext('2d');
 
-        canvas.width = video.videoWidth;
+        canvas.width  = video.videoWidth;
         canvas.height = video.videoHeight;
-
         context.drawImage(video, 0, 0);
 
-        const dataURL = canvas.toDataURL('image/png');
-        document.getElementById('image_data').value = dataURL;
+        document.getElementById('image_data').value = canvas.toDataURL('image/png');
 
-        // Visual Feedback
-        statusBadge.innerHTML = "✅ Captured Successfully";
-        statusBadge.classList.replace('bg-black/50', 'bg-emerald-500');
-        
-        // Enable Save Button
-        saveForm.classList.remove('opacity-50', 'pointer-events-none');
-        
-        // Haptic feedback (if supported)
-        if (window.navigator.vibrate) window.navigator.vibrate(50);
+        // Flash effect
+        flash.classList.add('go');
+        setTimeout(() => flash.classList.remove('go'), 150);
+
+        // Update UI
+        statusBadge.innerHTML = '<i class="fa-solid fa-check" style="margin-right:5px;"></i>Captured';
+        statusBadge.classList.add('captured');
+        shutterBtn.classList.add('captured');
+        saveBtn.disabled = false;
+
+        // Haptic
+        if (window.navigator.vibrate) window.navigator.vibrate(40);
     }
 </script>
 

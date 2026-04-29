@@ -1,92 +1,732 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Wound - WoundPro_Ke</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body { background-color: #F0F7F9; }
-        .soft-card { border-radius: 2.5rem; }
-        
-        /* Styling the default Django form fields */
-        .django-form-wrapper p {
-            margin-bottom: 1.25rem;
-        }
-        .django-form-wrapper input, 
-        .django-form-wrapper select, 
-        .django-form-wrapper textarea {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border-radius: 1rem;
-            border: 1px solid #e2e8f0;
-            background-color: #f8fafc;
-            font-size: 0.875rem;
-            outline: none;
-            transition: all 0.2s;
-        }
-        .django-form-wrapper input:focus {
-            border-color: #3b82f6;
-            background-color: #fff;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.05);
-        }
-        .django-form-wrapper label {
-            display: block;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #64748b;
-            text-transform: uppercase;
-            margin-bottom: 0.5rem;
-            margin-left: 0.25rem;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Add Wound - WoundPro_Ke</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --olive:      #5a6e1f;
+        --teal:       #3a7d6e;
+        --teal-dark:  #2e6b6b;
+        --navy:       #2c4a7c;
+        --navy-deep:  #1e3560;
+        --surface:    #f4f6f2;
+        --card:       #ffffff;
+        --border:     #e5eae0;
+        --text-main:  #1a2112;
+        --text-sub:   #637060;
+        --text-muted: #a8b5a3;
+        --body-fill:  #c8d4c0;   /* uniform muted sage — the figure base */
+        --body-stroke:#96aa8c;
+        --zone-hover: rgba(58,125,110,0.22);
+        --zone-sel:   rgba(58,125,110,0.55);
+        --zone-sel-stroke: #3a7d6e;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        background: var(--surface);
+        font-family: 'DM Sans', sans-serif;
+        color: var(--text-main);
+        min-height: 100dvh;
+        padding-bottom: 32px;
+    }
+
+    /* ── TOP NAV ── */
+    .top-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 20px 14px;
+        padding-top: max(18px, env(safe-area-inset-top));
+        max-width: 480px;
+        margin: 0 auto;
+    }
+    .nav-btn {
+        width: 40px; height: 40px;
+        border-radius: 13px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        display: flex; align-items: center; justify-content: center;
+        color: var(--text-sub);
+        font-size: 13px;
+        text-decoration: none;
+    }
+    .nav-title {
+        font-family: 'DM Serif Display', serif;
+        font-size: 17px;
+        color: var(--text-main);
+    }
+
+    /* ── MAIN CARD ── */
+    .main-card {
+        background: var(--card);
+        border-radius: 24px;
+        border: 1px solid var(--border);
+        padding: 20px 20px 24px;
+        max-width: 480px;
+        margin: 0 auto 0;
+        padding-left: 20px; padding-right: 20px;
+    }
+    .card-eyebrow {
+        font-size: 9px; font-weight: 800;
+        letter-spacing: 0.14em; text-transform: uppercase;
+        color: var(--text-muted);
+        text-align: center;
+        margin-bottom: 4px;
+    }
+    .card-title {
+        font-family: 'DM Serif Display', serif;
+        font-size: 19px;
+        color: var(--text-main);
+        text-align: center;
+        margin-bottom: 4px;
+    }
+    .card-sub {
+        font-size: 12px;
+        color: var(--text-muted);
+        text-align: center;
+        margin-bottom: 16px;
+    }
+
+    /* ── VIEW TOGGLE ── */
+    .view-toggle {
+        display: flex;
+        background: var(--surface);
+        border-radius: 13px;
+        padding: 4px;
+        gap: 4px;
+        margin-bottom: 18px;
+        border: 1px solid var(--border);
+    }
+    .view-btn {
+        flex: 1; padding: 9px 0;
+        border: none; border-radius: 10px;
+        font-size: 12px; font-weight: 700;
+        font-family: 'DM Sans', sans-serif;
+        cursor: pointer; transition: all 0.18s;
+        background: transparent;
+        color: var(--text-muted);
+        display: flex; align-items: center; justify-content: center;
+        gap: 7px;
+        letter-spacing: 0.02em;
+    }
+    .view-btn.active {
+        background: var(--card);
+        color: var(--teal-dark);
+        box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+    }
+
+    /* ── SVG FIGURE ── */
+    .svg-wrap {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 14px;
+    }
+    .svg-wrap svg {
+        width: 160px;
+        height: auto;
+        display: block;
+        filter: drop-shadow(0 4px 12px rgba(90,110,31,0.10));
+    }
+
+    /* All base anatomy paths share the uniform body color */
+    .body-base { fill: var(--body-fill); stroke: var(--body-stroke); stroke-width: 0.8; }
+    .body-dark  { fill: #afc0a4; stroke: var(--body-stroke); stroke-width: 0.6; }
+    .body-acc   { fill: #b8c9b0; stroke: var(--body-stroke); stroke-width: 0.5; }
+
+    /* Clickable zones — transparent by default, teal on hover/select */
+    .zone {
+        fill: transparent;
+        stroke: transparent;
+        cursor: pointer;
+        transition: fill 0.15s, stroke 0.15s;
+    }
+    .zone:hover { fill: var(--zone-hover); stroke: var(--zone-sel-stroke); stroke-width: 1.5; }
+    .zone.selected {
+        fill: var(--zone-sel) !important;
+        stroke: var(--zone-sel-stroke) !important;
+        stroke-width: 2;
+    }
+
+    /* ── TOOLTIP ── */
+    #tooltip {
+        position: fixed;
+        background: var(--navy);
+        color: white;
+        font-size: 11px; font-weight: 700;
+        padding: 5px 12px;
+        border-radius: 8px;
+        pointer-events: none;
+        display: none;
+        white-space: nowrap;
+        z-index: 9999;
+        font-family: 'DM Sans', sans-serif;
+        letter-spacing: 0.02em;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    }
+    #tooltip::after {
+        content: '';
+        position: absolute;
+        bottom: -5px; left: 50%;
+        transform: translateX(-50%);
+        width: 0; height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid var(--navy);
+    }
+
+    /* ── SELECTION BADGE ── */
+    .sel-badge {
+        display: none;
+        align-items: center;
+        gap: 12px;
+        background: #d8eeeb;
+        border: 1.5px solid #9fcfc7;
+        border-radius: 16px;
+        padding: 13px 16px;
+        margin-bottom: 14px;
+        animation: fadeUp 0.22s ease;
+    }
+    .sel-badge.show { display: flex; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+    .sel-pin {
+        width: 36px; height: 36px;
+        border-radius: 11px;
+        background: var(--teal);
+        display: flex; align-items: center; justify-content: center;
+        color: white; font-size: 15px;
+        flex-shrink: 0;
+    }
+    .sel-title {
+        font-size: 13px; font-weight: 800;
+        color: var(--teal-dark);
+    }
+    .sel-sub {
+        font-size: 11px;
+        color: #5ba89b;
+        margin-top: 2px;
+    }
+    .sel-clear {
+        margin-left: auto;
+        background: none; border: none;
+        color: #9fcfc7; font-size: 16px;
+        cursor: pointer; padding: 4px 6px;
+        border-radius: 8px;
+        transition: color 0.15s, background 0.15s;
+    }
+    .sel-clear:hover { color: #b91c1c; background: #fee2e2; }
+
+    /* ── SUB-PICKER ── */
+    .sub-section { display: none; margin-bottom: 16px; }
+    .sub-lbl {
+        font-size: 9px; font-weight: 800;
+        letter-spacing: 0.14em; text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 10px;
+    }
+    .sub-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+    .sub-btn {
+        background: var(--surface);
+        border: 1.5px solid var(--border);
+        border-radius: 9px;
+        padding: 6px 12px;
+        font-size: 11.5px; font-weight: 600;
+        color: var(--text-sub);
+        cursor: pointer;
+        font-family: 'DM Sans', sans-serif;
+        transition: all 0.15s;
+    }
+    .sub-btn:hover { border-color: var(--teal); color: var(--teal-dark); background: #d8eeeb; }
+    .sub-btn.active {
+        background: var(--teal);
+        border-color: var(--teal);
+        color: white;
+    }
+
+    /* ── SAVE BUTTON ── */
+    .save-btn {
+        width: 100%;
+        padding: 15px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, var(--teal) 0%, var(--navy) 100%);
+        border: none;
+        color: white;
+        font-size: 14px; font-weight: 800;
+        font-family: 'DM Sans', sans-serif;
+        cursor: pointer;
+        box-shadow: 0 6px 22px rgba(44,74,124,0.28);
+        letter-spacing: 0.02em;
+        transition: transform 0.12s, box-shadow 0.12s;
+        margin-top: 4px;
+    }
+    .save-btn:active { transform: scale(0.97); }
+
+    /* ── ERROR ── */
+    .form-error {
+        display: none;
+        text-align: center;
+        font-size: 12px; font-weight: 700;
+        color: #b91c1c;
+        background: #fee2e2;
+        border-radius: 10px;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    /* wrapper max-width */
+    .wrap { max-width: 480px; margin: 0 auto; padding: 0 16px; }
+</style>
 </head>
+<body>
 
-<body class="font-sans">
+<div id="tooltip"></div>
 
-<div class="max-w-md mx-auto p-5">
-
-    <div class="flex items-center justify-between mb-8">
-        <a href="javascript:history.back()" class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-gray-600">
-            <i class="fa-solid fa-xmark"></i>
-        </a>
-        <h1 class="text-lg font-bold text-gray-800">New Wound Record</h1>
-        <div class="w-10"></div>
-    </div>
-
-    <div class="bg-white soft-card p-8 shadow-sm border border-white">
-        <div class="flex items-center gap-4 mb-8">
-            <div class="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center text-blue-600">
-                <i class="fa-solid fa-file-medical text-xl"></i>
-            </div>
-            <div>
-                <h2 class="text-md font-bold text-gray-800">Registration</h2>
-                <p class="text-xs text-gray-400 font-medium">Entry Detail</p>
-            </div>
-        </div>
-
-        <form method="POST">
-            {% csrf_token %}
-            
-            <div class="django-form-wrapper">
-                {{ form.as_p }}
-            </div>
-
-            <div class="mt-8">
-                <button type="submit" 
-                    class="w-full bg-blue-600 text-white flex items-center justify-center gap-3 py-4 soft-card shadow-lg shadow-blue-100 text-sm font-bold active:transform active:scale-95 transition-all">
-                    Save Record
-                </button>
-            </div>
-        </form>
-    </div>
-
-    <p class="text-center text-[11px] text-gray-400 mt-6 px-10">
-        Ensure all clinical parameters are entered correctly before saving.
-    </p>
-
+<!-- TOP NAV -->
+<div class="top-nav">
+    <a href="javascript:history.back()" class="nav-btn">
+        <i class="fa-solid fa-xmark"></i>
+    </a>
+    <span class="nav-title">Add a Wound</span>
+    <div style="width:40px;"></div>
 </div>
+
+<!-- MAIN CARD -->
+<div class="wrap">
+<div class="main-card">
+
+    <div class="card-eyebrow">Step 1 of 1</div>
+    <div class="card-title">Where is the wound?</div>
+    <div class="card-sub">Tap a zone on the body, then choose the exact spot</div>
+
+    <!-- Front / Back Toggle -->
+    <div class="view-toggle">
+        <button class="view-btn active" id="btn-front" onclick="setView('front')">
+            <i class="fa-solid fa-user"></i> Front View
+        </button>
+        <button class="view-btn" id="btn-back" onclick="setView('back')">
+            <i class="fa-solid fa-user" style="transform:scaleX(-1);display:inline-block;"></i> Back View
+        </button>
+    </div>
+
+    <!-- SVG Body Figure -->
+    <div class="svg-wrap">
+
+        <!-- ══════════ FRONT SVG ══════════ -->
+        <svg id="svg-front" viewBox="0 0 200 490" xmlns="http://www.w3.org/2000/svg">
+
+            <!-- HEAD -->
+            <ellipse class="body-base" cx="100" cy="36" rx="27" ry="30"/>
+            <!-- Ear L -->
+            <ellipse class="body-acc" cx="73" cy="36" rx="5" ry="8"/>
+            <!-- Ear R -->
+            <ellipse class="body-acc" cx="127" cy="36" rx="5" ry="8"/>
+            <!-- Neck -->
+            <rect class="body-dark" x="91" y="63" width="18" height="17" rx="5"/>
+
+            <!-- TORSO — shoulders, chest, waist taper -->
+            <path class="body-base" d="
+                M68 80
+                Q60 82 56 90
+                L54 120
+                Q54 130 58 138
+                L62 162
+                Q64 168 70 170
+                L130 170
+                Q136 168 138 162
+                L142 138
+                Q146 130 146 120
+                L144 90
+                Q140 82 132 80
+                Z
+            "/>
+
+            <!-- PELVIS -->
+            <path class="body-dark" d="
+                M68 168 Q70 195 86 200 L114 200 Q130 195 132 168 Z
+            "/>
+
+            <!-- LEFT UPPER ARM -->
+            <path class="body-base" d="
+                M54 90 Q44 92 40 100 L37 148 Q37 156 44 158 L56 158 Q62 154 62 146 L60 96 Z
+            " rx="10"/>
+            <!-- LEFT FOREARM -->
+            <path class="body-base" d="
+                M44 156 Q38 158 37 166 L37 200 Q37 206 42 208 L54 208 Q60 206 60 200 L58 158 Z
+            "/>
+            <!-- LEFT HAND -->
+            <ellipse class="body-dark" cx="48" cy="213" rx="12" ry="9"/>
+            <!-- Fingers L -->
+            <rect class="body-acc" x="38" y="220" width="5" height="10" rx="2.5"/>
+            <rect class="body-acc" x="44" y="222" width="5" height="11" rx="2.5"/>
+            <rect class="body-acc" x="50" y="222" width="5" height="11" rx="2.5"/>
+            <rect class="body-acc" x="56" y="220" width="5" height="10" rx="2.5"/>
+
+            <!-- RIGHT UPPER ARM -->
+            <path class="body-base" d="
+                M146 90 Q156 92 160 100 L163 148 Q163 156 156 158 L144 158 Q138 154 138 146 L140 96 Z
+            "/>
+            <!-- RIGHT FOREARM -->
+            <path class="body-base" d="
+                M156 156 Q162 158 163 166 L163 200 Q163 206 158 208 L146 208 Q140 206 140 200 L142 158 Z
+            "/>
+            <!-- RIGHT HAND -->
+            <ellipse class="body-dark" cx="152" cy="213" rx="12" ry="9"/>
+            <!-- Fingers R -->
+            <rect class="body-acc" x="139" y="220" width="5" height="10" rx="2.5"/>
+            <rect class="body-acc" x="145" y="222" width="5" height="11" rx="2.5"/>
+            <rect class="body-acc" x="151" y="222" width="5" height="11" rx="2.5"/>
+            <rect class="body-acc" x="157" y="220" width="5" height="10" rx="2.5"/>
+
+            <!-- LEFT THIGH -->
+            <path class="body-base" d="
+                M70 198 Q68 200 68 204 L70 278 Q70 286 78 288 L94 288 Q100 286 100 280 L100 204 Q96 196 86 196 Z
+            "/>
+            <!-- LEFT KNEE CAP -->
+            <ellipse class="body-dark" cx="84" cy="290" rx="16" ry="11"/>
+            <!-- LEFT SHIN -->
+            <path class="body-base" d="
+                M72 298 Q70 300 70 306 L72 370 Q72 378 80 380 L90 380 Q96 378 96 370 L94 306 Q92 298 84 298 Z
+            "/>
+            <!-- LEFT ANKLE -->
+            <ellipse class="body-dark" cx="83" cy="378" rx="13" ry="8"/>
+            <!-- LEFT FOOT -->
+            <path class="body-dark" d="M70 382 Q68 392 82 396 Q94 398 98 390 Q100 382 90 380 Z"/>
+
+            <!-- RIGHT THIGH -->
+            <path class="body-base" d="
+                M100 204 Q100 196 114 196 L130 198 Q132 200 132 204 L130 280 Q130 286 122 288 L106 288 Q100 286 100 280 Z
+            "/>
+            <!-- RIGHT KNEE CAP -->
+            <ellipse class="body-dark" cx="116" cy="290" rx="16" ry="11"/>
+            <!-- RIGHT SHIN -->
+            <path class="body-base" d="
+                M104 298 Q104 298 116 298 Q126 300 128 306 L128 370 Q128 378 120 380 L110 380 Q104 378 104 370 Z
+            "/>
+            <!-- RIGHT ANKLE -->
+            <ellipse class="body-dark" cx="117" cy="378" rx="13" ry="8"/>
+            <!-- RIGHT FOOT -->
+            <path class="body-dark" d="M110 380 Q100 382 102 390 Q106 398 118 396 Q132 392 130 382 Z"/>
+
+            <!-- FACE FEATURES — subtle -->
+            <ellipse cx="91" cy="34" rx="2.5" ry="3" fill="#8a9e85" opacity="0.6"/>
+            <ellipse cx="109" cy="34" rx="2.5" ry="3" fill="#8a9e85" opacity="0.6"/>
+            <path d="M94 46 Q100 51 106 46" stroke="#8a9e85" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.5"/>
+            <!-- Collar line -->
+            <path d="M90 80 L100 92 L110 80" stroke="#96aa8c" stroke-width="0.8" fill="none" opacity="0.6"/>
+            <!-- Navel -->
+            <ellipse cx="100" cy="148" rx="2.5" ry="3" fill="#96aa8c" opacity="0.35"/>
+
+            <!-- ══ FRONT CLICKABLE ZONES ══ -->
+            <ellipse class="zone" data-id="head"       data-label="Head"              cx="100" cy="36" rx="30" ry="33"/>
+            <rect    class="zone" data-id="neck"       data-label="Neck"              x="87" y="62" width="26" height="20" rx="7"/>
+            <rect    class="zone" data-id="chest"      data-label="Chest"             x="54" y="79" width="92" height="48" rx="10"/>
+            <rect    class="zone" data-id="abdomen"    data-label="Abdomen"           x="56" y="126" width="88" height="44" rx="10"/>
+            <path    class="zone" data-id="pelvis"     data-label="Pelvis / Groin"    d="M66 166 Q70 202 88 206 L112 206 Q130 202 134 166 Z"/>
+            <!-- Arms -->
+            <rect    class="zone" data-id="l-upper-arm" data-label="Left Upper Arm"  x="35" y="88" width="28" height="68" rx="12"/>
+            <ellipse class="zone" data-id="l-elbow"    data-label="Left Elbow"        cx="47" cy="158" rx="15" ry="10"/>
+            <rect    class="zone" data-id="l-forearm"  data-label="Left Forearm"      x="35" y="166" width="26" height="44" rx="11"/>
+            <ellipse class="zone" data-id="l-hand"     data-label="Left Hand"         cx="48" cy="220" rx="16" ry="14"/>
+            <rect    class="zone" data-id="r-upper-arm" data-label="Right Upper Arm" x="137" y="88" width="28" height="68" rx="12"/>
+            <ellipse class="zone" data-id="r-elbow"    data-label="Right Elbow"       cx="153" cy="158" rx="15" ry="10"/>
+            <rect    class="zone" data-id="r-forearm"  data-label="Right Forearm"     x="139" y="166" width="26" height="44" rx="11"/>
+            <ellipse class="zone" data-id="r-hand"     data-label="Right Hand"        cx="152" cy="220" rx="16" ry="14"/>
+            <!-- Legs -->
+            <rect    class="zone" data-id="l-thigh"    data-label="Left Thigh"        x="66" y="194" width="36" height="88" rx="14"/>
+            <ellipse class="zone" data-id="l-knee"     data-label="Left Knee"         cx="84" cy="290" rx="18" ry="13"/>
+            <rect    class="zone" data-id="l-lower-leg" data-label="Left Lower Leg"  x="68" y="300" width="30" height="78" rx="13"/>
+            <ellipse class="zone" data-id="l-ankle"    data-label="Left Ankle"        cx="83" cy="380" rx="15" ry="10"/>
+            <path    class="zone" data-id="l-foot"     data-label="Left Foot"         d="M66 382 Q64 400 82 402 Q100 402 102 386 Z"/>
+            <rect    class="zone" data-id="r-thigh"    data-label="Right Thigh"       x="98" y="194" width="36" height="88" rx="14"/>
+            <ellipse class="zone" data-id="r-knee"     data-label="Right Knee"        cx="116" cy="290" rx="18" ry="13"/>
+            <rect    class="zone" data-id="r-lower-leg" data-label="Right Lower Leg" x="102" y="300" width="30" height="78" rx="13"/>
+            <ellipse class="zone" data-id="r-ankle"    data-label="Right Ankle"       cx="117" cy="380" rx="15" ry="10"/>
+            <path    class="zone" data-id="r-foot"     data-label="Right Foot"        d="M98 386 Q100 402 118 402 Q136 400 134 382 Z"/>
+        </svg>
+
+        <!-- ══════════ BACK SVG ══════════ -->
+        <svg id="svg-back" viewBox="0 0 200 490" xmlns="http://www.w3.org/2000/svg" style="display:none;">
+
+            <!-- HEAD back -->
+            <ellipse class="body-base" cx="100" cy="36" rx="27" ry="30"/>
+            <ellipse class="body-acc" cx="73" cy="36" rx="5" ry="8"/>
+            <ellipse class="body-acc" cx="127" cy="36" rx="5" ry="8"/>
+            <!-- Hair back -->
+            <path fill="#afc0a4" stroke="#96aa8c" stroke-width="0.5" opacity="0.7" d="M73 20 Q76 2 100 3 Q124 2 127 20 Q122 44 100 44 Q78 44 73 20"/>
+            <!-- Neck back -->
+            <rect class="body-dark" x="91" y="63" width="18" height="17" rx="5"/>
+
+            <!-- BACK TORSO -->
+            <path class="body-base" d="
+                M68 80 Q60 82 56 90 L54 120 Q54 130 58 138 L62 162 Q64 168 70 170 L130 170 Q136 168 138 162 L142 138 Q146 130 146 120 L144 90 Q140 82 132 80 Z
+            "/>
+            <!-- Spine hint -->
+            <line x1="100" y1="86" x2="100" y2="164" stroke="#96aa8c" stroke-width="1" opacity="0.4"/>
+            <!-- Shoulder blade L -->
+            <ellipse class="body-acc" cx="83" cy="106" rx="13" ry="15" opacity="0.6"/>
+            <!-- Shoulder blade R -->
+            <ellipse class="body-acc" cx="117" cy="106" rx="13" ry="15" opacity="0.6"/>
+
+            <!-- BUTTOCKS -->
+            <path class="body-dark" d="M68 168 Q66 200 84 204 L100 204 L116 204 Q134 200 132 168 Z"/>
+            <line x1="100" y1="168" x2="100" y2="204" stroke="#96aa8c" stroke-width="0.8" opacity="0.35"/>
+
+            <!-- LEFT ARM BACK -->
+            <path class="body-base" d="M54 90 Q44 92 40 100 L37 148 Q37 156 44 158 L56 158 Q62 154 62 146 L60 96 Z"/>
+            <path class="body-base" d="M44 156 Q38 158 37 166 L37 200 Q37 206 42 208 L54 208 Q60 206 60 200 L58 158 Z"/>
+            <ellipse class="body-dark" cx="48" cy="213" rx="12" ry="9"/>
+            <rect class="body-acc" x="38" y="220" width="5" height="10" rx="2.5"/>
+            <rect class="body-acc" x="44" y="222" width="5" height="11" rx="2.5"/>
+            <rect class="body-acc" x="50" y="222" width="5" height="11" rx="2.5"/>
+            <rect class="body-acc" x="56" y="220" width="5" height="10" rx="2.5"/>
+
+            <!-- RIGHT ARM BACK -->
+            <path class="body-base" d="M146 90 Q156 92 160 100 L163 148 Q163 156 156 158 L144 158 Q138 154 138 146 L140 96 Z"/>
+            <path class="body-base" d="M156 156 Q162 158 163 166 L163 200 Q163 206 158 208 L146 208 Q140 206 140 200 L142 158 Z"/>
+            <ellipse class="body-dark" cx="152" cy="213" rx="12" ry="9"/>
+            <rect class="body-acc" x="139" y="220" width="5" height="10" rx="2.5"/>
+            <rect class="body-acc" x="145" y="222" width="5" height="11" rx="2.5"/>
+            <rect class="body-acc" x="151" y="222" width="5" height="11" rx="2.5"/>
+            <rect class="body-acc" x="157" y="220" width="5" height="10" rx="2.5"/>
+
+            <!-- THIGHS BACK -->
+            <path class="body-base" d="M68 202 Q66 206 68 280 Q68 288 78 290 L94 290 Q100 288 100 280 L100 206 Q96 200 84 200 Z"/>
+            <ellipse class="body-dark" cx="84" cy="292" rx="16" ry="11"/>
+            <!-- CALVES -->
+            <path class="body-base" d="M70 300 Q68 302 70 374 Q70 382 80 384 L90 384 Q96 382 94 374 L92 302 Q88 298 80 300 Z"/>
+            <ellipse class="body-dark" cx="82" cy="382" rx="14" ry="9"/>
+            <path class="body-dark" d="M70 386 Q68 398 82 400 Q94 400 96 388 Q90 384 80 384 Z"/>
+
+            <path class="body-base" d="M100 206 L114 200 Q130 200 132 204 L130 280 Q130 288 120 290 L106 290 Q100 288 100 280 Z"/>
+            <ellipse class="body-dark" cx="116" cy="292" rx="16" ry="11"/>
+            <path class="body-base" d="M106 300 L120 300 Q128 302 128 310 L128 374 Q128 382 118 384 L108 384 Q104 382 106 374 Z"/>
+            <ellipse class="body-dark" cx="118" cy="382" rx="14" ry="9"/>
+            <path class="body-dark" d="M104 388 Q102 400 118 400 Q132 400 130 386 Q122 384 110 384 Z"/>
+
+            <!-- ══ BACK CLICKABLE ZONES ══ -->
+            <ellipse class="zone" data-id="head-back"   data-label="Head (back)"        cx="100" cy="36" rx="30" ry="33"/>
+            <rect    class="zone" data-id="neck-back"   data-label="Neck (back)"         x="87" y="62" width="26" height="20" rx="7"/>
+            <rect    class="zone" data-id="upper-back"  data-label="Upper Back"          x="54" y="79" width="92" height="44" rx="10"/>
+            <rect    class="zone" data-id="mid-back"    data-label="Mid Back"            x="56" y="122" width="88" height="26" rx="8"/>
+            <rect    class="zone" data-id="lower-back"  data-label="Lower Back"          x="58" y="146" width="84" height="24" rx="8"/>
+            <path    class="zone" data-id="buttocks"    data-label="Buttocks"            d="M66 166 Q64 208 84 210 L116 210 Q136 208 134 166 Z"/>
+            <rect    class="zone" data-id="l-upper-arm-back" data-label="Left Upper Arm (back)"  x="35" y="88" width="28" height="68" rx="12"/>
+            <ellipse class="zone" data-id="l-elbow-back" data-label="Left Elbow (back)"  cx="47" cy="158" rx="15" ry="10"/>
+            <rect    class="zone" data-id="l-forearm-back" data-label="Left Forearm (back)" x="35" y="166" width="26" height="44" rx="11"/>
+            <ellipse class="zone" data-id="l-hand-back" data-label="Left Hand (back)"    cx="48" cy="220" rx="16" ry="14"/>
+            <rect    class="zone" data-id="r-upper-arm-back" data-label="Right Upper Arm (back)" x="137" y="88" width="28" height="68" rx="12"/>
+            <ellipse class="zone" data-id="r-elbow-back" data-label="Right Elbow (back)" cx="153" cy="158" rx="15" ry="10"/>
+            <rect    class="zone" data-id="r-forearm-back" data-label="Right Forearm (back)" x="139" y="166" width="26" height="44" rx="11"/>
+            <ellipse class="zone" data-id="r-hand-back" data-label="Right Hand (back)"   cx="152" cy="220" rx="16" ry="14"/>
+            <rect    class="zone" data-id="l-thigh-back" data-label="Left Thigh (back)"  x="66" y="198" width="36" height="92" rx="14"/>
+            <ellipse class="zone" data-id="l-knee-back" data-label="Left Knee (popliteal)" cx="84" cy="293" rx="18" ry="13"/>
+            <rect    class="zone" data-id="l-calf"      data-label="Left Calf"           x="68" y="304" width="28" height="78" rx="13"/>
+            <ellipse class="zone" data-id="l-ankle-back" data-label="Left Ankle (Achilles)" cx="82" cy="384" rx="15" ry="10"/>
+            <path    class="zone" data-id="l-foot-back" data-label="Left Heel / Sole"    d="M66 386 Q64 404 82 406 Q98 406 98 390 Z"/>
+            <rect    class="zone" data-id="r-thigh-back" data-label="Right Thigh (back)" x="98" y="198" width="36" height="92" rx="14"/>
+            <ellipse class="zone" data-id="r-knee-back" data-label="Right Knee (popliteal)" cx="116" cy="293" rx="18" ry="13"/>
+            <rect    class="zone" data-id="r-calf"      data-label="Right Calf"          x="104" y="304" width="28" height="78" rx="13"/>
+            <ellipse class="zone" data-id="r-ankle-back" data-label="Right Ankle (Achilles)" cx="118" cy="384" rx="15" ry="10"/>
+            <path    class="zone" data-id="r-foot-back" data-label="Right Heel / Sole"   d="M102 390 Q102 406 118 406 Q134 404 134 386 Z"/>
+        </svg>
+    </div><!-- /svg-wrap -->
+
+    <!-- SELECTION BADGE -->
+    <div class="sel-badge" id="selBadge">
+        <div class="sel-pin"><i class="fa-solid fa-location-dot"></i></div>
+        <div>
+            <div class="sel-title" id="selTitle"></div>
+            <div class="sel-sub" id="selSub">Choose precise spot below ↓</div>
+        </div>
+        <button class="sel-clear" onclick="clearSelection()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <!-- SUB-PICKER -->
+    <div class="sub-section" id="subSection">
+        <div class="sub-lbl">Precise location</div>
+        <div class="sub-grid" id="subGrid"></div>
+    </div>
+
+    <!-- FORM -->
+    <form method="POST" id="woundForm">
+        {% csrf_token %}
+        <input type="hidden" name="location"         id="locationInput">
+        <input type="hidden" name="location_precise" id="locationPreciseInput">
+        <div class="form-error" id="formError">⚠ Please select a body zone first</div>
+        <button type="submit" class="save-btn">
+            <i class="fa-solid fa-floppy-disk" style="margin-right:8px;"></i>Save Wound Location
+        </button>
+    </form>
+
+</div><!-- /main-card -->
+</div><!-- /wrap -->
+
+<script>
+// ── Sub-location data ──────────────────────────────────────────────────────────
+var SUBS = {
+  'head':          ['Forehead','Left temple','Right temple','Left cheek','Right cheek','Nose bridge','Chin','Left ear','Right ear','Scalp'],
+  'neck':          ['Front of neck','Left side','Right side'],
+  'chest':         ['Upper chest (L)','Upper chest (R)','Sternum','Left pectoral','Right pectoral','Left rib area','Right rib area','Lower chest'],
+  'abdomen':       ['Epigastric (upper centre)','Left upper abdomen','Right upper abdomen','Umbilical (navel)','Left lower abdomen','Right lower abdomen'],
+  'pelvis':        ['Pubic area','Left groin','Right groin','Perineum'],
+  'l-upper-arm':   ['Outer upper arm','Inner upper arm','Bicep','Front upper arm'],
+  'l-elbow':       ['Elbow cap (olecranon)','Inner elbow (cubital fossa)','Outer elbow'],
+  'l-forearm':     ['Outer forearm','Inner (volar) forearm','Dorsal forearm'],
+  'l-hand':        ['Palm','Back of hand','Thumb','Index finger','Middle finger','Ring finger','Little finger','Wrist'],
+  'r-upper-arm':   ['Outer upper arm','Inner upper arm','Bicep','Front upper arm'],
+  'r-elbow':       ['Elbow cap (olecranon)','Inner elbow (cubital fossa)','Outer elbow'],
+  'r-forearm':     ['Outer forearm','Inner (volar) forearm','Dorsal forearm'],
+  'r-hand':        ['Palm','Back of hand','Thumb','Index finger','Middle finger','Ring finger','Little finger','Wrist'],
+  'l-thigh':       ['Front thigh','Inner thigh (medial)','Outer thigh (lateral)'],
+  'r-thigh':       ['Front thigh','Inner thigh (medial)','Outer thigh (lateral)'],
+  'l-knee':        ['Kneecap (patella)','Inner knee','Outer knee'],
+  'r-knee':        ['Kneecap (patella)','Inner knee','Outer knee'],
+  'l-lower-leg':   ['Shin (front)','Inner lower leg','Outer lower leg'],
+  'r-lower-leg':   ['Shin (front)','Inner lower leg','Outer lower leg'],
+  'l-ankle':       ['Front ankle','Inner ankle (medial malleolus)','Outer ankle (lateral malleolus)'],
+  'r-ankle':       ['Front ankle','Inner ankle (medial malleolus)','Outer ankle (lateral malleolus)'],
+  'l-foot':        ['Sole (plantar)','Top of foot (dorsum)','Big toe','2nd toe','3rd toe','4th toe','Little toe','Arch','Ball of foot'],
+  'r-foot':        ['Sole (plantar)','Top of foot (dorsum)','Big toe','2nd toe','3rd toe','4th toe','Little toe','Arch','Ball of foot'],
+  'head-back':     ['Occiput (base of skull)','Back of scalp','Left side','Right side','Nape'],
+  'neck-back':     ['Back of neck','Left side','Right side','Nape'],
+  'upper-back':    ['Left shoulder blade (scapula)','Right shoulder blade','Upper spine','Left upper back','Right upper back'],
+  'mid-back':      ['Mid spine (thoracic)','Left mid back','Right mid back'],
+  'lower-back':    ['Lumbar (centre)','Left loin','Right loin','Sacrum'],
+  'buttocks':      ['Left buttock (upper)','Left buttock (lower)','Right buttock (upper)','Right buttock (lower)','Coccyx / tailbone'],
+  'l-upper-arm-back':['Tricep','Back of upper arm','Outer upper arm'],
+  'l-elbow-back':  ['Elbow point','Inner elbow back'],
+  'l-forearm-back':['Dorsal forearm','Outer forearm','Inner forearm'],
+  'l-hand-back':   ['Back of hand','Thumb (back)','Knuckles','Wrist (back)'],
+  'r-upper-arm-back':['Tricep','Back of upper arm','Outer upper arm'],
+  'r-elbow-back':  ['Elbow point','Inner elbow back'],
+  'r-forearm-back':['Dorsal forearm','Outer forearm','Inner forearm'],
+  'r-hand-back':   ['Back of hand','Thumb (back)','Knuckles','Wrist (back)'],
+  'l-thigh-back':  ['Back of thigh','Inner thigh (back)','Outer thigh (back)','Hamstring'],
+  'r-thigh-back':  ['Back of thigh','Inner thigh (back)','Outer thigh (back)','Hamstring'],
+  'l-knee-back':   ['Popliteal fossa','Inner back of knee','Outer back of knee'],
+  'r-knee-back':   ['Popliteal fossa','Inner back of knee','Outer back of knee'],
+  'l-calf':        ['Gastrocnemius (calf)','Inner calf','Outer calf','Back of lower leg'],
+  'r-calf':        ['Gastrocnemius (calf)','Inner calf','Outer calf','Back of lower leg'],
+  'l-ankle-back':  ['Achilles tendon','Inner ankle (back)','Outer ankle (back)'],
+  'r-ankle-back':  ['Achilles tendon','Inner ankle (back)','Outer ankle (back)'],
+  'l-foot-back':   ['Heel (calcaneus)','Sole','Arch (back)','Lateral border'],
+  'r-foot-back':   ['Heel (calcaneus)','Sole','Arch (back)','Lateral border'],
+};
+
+var currentView = 'front';
+var selectedId  = null;
+var selectedSub = null;
+
+// ── View toggle ───────────────────────────────────────────────────────────────
+function setView(v) {
+    currentView = v;
+    document.getElementById('svg-front').style.display = v === 'front' ? 'block' : 'none';
+    document.getElementById('svg-back').style.display  = v === 'back'  ? 'block' : 'none';
+    document.getElementById('btn-front').classList.toggle('active', v === 'front');
+    document.getElementById('btn-back').classList.toggle('active',  v === 'back');
+    clearSelection();
+}
+
+// ── Get zones of the active SVG ───────────────────────────────────────────────
+function visibleZones() {
+    var svgId = currentView === 'front' ? 'svg-front' : 'svg-back';
+    return Array.from(document.getElementById(svgId).querySelectorAll('.zone'));
+}
+
+// ── Zone selection ────────────────────────────────────────────────────────────
+function selectZone(id, label) {
+    selectedId  = id;
+    selectedSub = null;
+
+    // Reset all zones
+    document.querySelectorAll('.zone').forEach(function(z) { z.classList.remove('selected'); });
+    // Select this one
+    var el = document.querySelector('.zone[data-id="' + id + '"]');
+    if (el) el.classList.add('selected');
+
+    // Badge
+    document.getElementById('selTitle').textContent = label;
+    document.getElementById('selSub').textContent   = 'Choose precise spot below ↓';
+    document.getElementById('selBadge').classList.add('show');
+    document.getElementById('locationInput').value        = label;
+    document.getElementById('locationPreciseInput').value = '';
+    document.getElementById('formError').style.display   = 'none';
+
+    // Sub-picker
+    var subs = SUBS[id] || [];
+    var grid = document.getElementById('subGrid');
+    grid.innerHTML = '';
+    var section = document.getElementById('subSection');
+    if (subs.length) {
+        section.style.display = 'block';
+        subs.forEach(function(s) {
+            var btn = document.createElement('button');
+            btn.className   = 'sub-btn';
+            btn.textContent = s;
+            btn.type        = 'button';
+            btn.onclick = function() {
+                document.querySelectorAll('.sub-btn').forEach(function(b){ b.classList.remove('active'); });
+                btn.classList.add('active');
+                selectedSub = s;
+                document.getElementById('selSub').textContent          = s;
+                document.getElementById('locationPreciseInput').value  = s;
+            };
+            grid.appendChild(btn);
+        });
+        setTimeout(function(){
+            section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 120);
+    } else {
+        section.style.display = 'none';
+    }
+}
+
+function clearSelection() {
+    selectedId = null; selectedSub = null;
+    document.querySelectorAll('.zone').forEach(function(z){ z.classList.remove('selected'); });
+    document.getElementById('selBadge').classList.remove('show');
+    document.getElementById('subSection').style.display  = 'none';
+    document.getElementById('locationInput').value        = '';
+    document.getElementById('locationPreciseInput').value = '';
+}
+
+// ── Zone click events ─────────────────────────────────────────────────────────
+document.addEventListener('click', function(e) {
+    var z = e.target.closest('.zone');
+    if (z) selectZone(z.dataset.id, z.dataset.label);
+});
+
+// ── Tooltip ───────────────────────────────────────────────────────────────────
+var tip = document.getElementById('tooltip');
+document.addEventListener('mousemove', function(e) {
+    var z = e.target.closest('.zone');
+    if (z) {
+        tip.textContent   = z.dataset.label;
+        tip.style.display = 'block';
+        tip.style.left    = (e.clientX - tip.offsetWidth / 2) + 'px';
+        tip.style.top     = (e.clientY - 44) + 'px';
+    } else {
+        tip.style.display = 'none';
+    }
+});
+document.addEventListener('mouseleave', function(){ tip.style.display = 'none'; });
+
+// ── Form validation ───────────────────────────────────────────────────────────
+document.getElementById('woundForm').addEventListener('submit', function(e) {
+    if (!document.getElementById('locationInput').value) {
+        e.preventDefault();
+        document.getElementById('formError').style.display = 'block';
+        document.getElementById('svg-front').scrollIntoView({ behavior: 'smooth' });
+    }
+});
+</script>
 
 </body>
 </html>

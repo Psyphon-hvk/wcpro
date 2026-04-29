@@ -1,93 +1,333 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patients - WoundPro_Ke</title>
+    <title>Patients — WoundPro_Ke</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #F0F7F9; }
-        .soft-card { border-radius: 2rem; }
-        .search-input:focus { box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
+        :root {
+            --brand-green: #6B8013; /* From the top square */
+            --brand-blue: #2E5088;  /* From the bottom circle */
+            --brand-gradient: linear-gradient(180deg, #6B8013 0%, #2E5088 100%);
+        }
+
+        body {
+            background-color: #F4F7F2; /* Subtle greenish-grey background */
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .patient-card {
+            background: white;
+            border-radius: 1.5rem;
+            border: 1.5px solid transparent;
+            transition: border-color 0.15s, transform 0.1s;
+        }
+        .patient-card:active {
+            transform: scale(0.985);
+            border-color: var(--brand-blue);
+        }
+
+        .avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 800;
+            flex-shrink: 0;
+            color: white;
+        }
+
+        /* Gradient styling for avatars based on the image */
+        .avatar-blue   { background: var(--brand-blue); }
+        .avatar-teal   { background: var(--brand-green); }
+        .avatar-violet { background: var(--brand-gradient); }
+        .avatar-rose   { background: #A4B454; } /* Lighter olive */
+        .avatar-amber  { background: #4A6999; } /* Lighter blue */
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+        /* Color updates based on green/blue palette */
+        .badge-active  { background: #E9EDD5; color: var(--brand-green); }
+        .badge-warning { background: #FDF4E3; color: #B28B34; }
+        .badge-male    { background: #E7EEF8; color: var(--brand-blue); }
+        .badge-female  { background: #FCE7F3; color: #9D174D; }
+        .badge-other   { background: #F3F4F6; color: #4B5563; }
+
+        .stat-pill {
+            background: #F1F5F9;
+            border-radius: 0.75rem;
+            padding: 6px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748B;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .search-wrap input:focus {
+            box-shadow: 0 0 0 4px rgba(107, 128, 19, 0.1);
+            border-color: var(--brand-green);
+            outline: none;
+        }
+
+        .divider { width: 1px; height: 36px; background: #E2E8F0; }
+
+        .fab {
+            width: 58px;
+            height: 58px;
+            background: var(--brand-blue);
+            border-radius: 1.25rem;
+            box-shadow: 0 8px 24px rgba(46, 80, 136, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 22px;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .fab:active { transform: scale(0.9); box-shadow: 0 4px 12px rgba(46, 80, 136, 0.25); }
+
+        .filter-chip {
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            border: 1.5px solid #E2E8F0;
+            color: #64748B;
+            background: white;
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .filter-chip.active {
+            background: var(--brand-green);
+            border-color: var(--brand-green);
+            color: white;
+        }
     </style>
 </head>
 
-<body class="font-sans pb-24">
+<body class="pb-28">
 
-<div class="max-w-md mx-auto p-5">
+<div class="max-w-md mx-auto px-4 pt-6">
 
-    <div class="mb-8">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-extrabold text-gray-800">Patient Registry</h1>
-            <a href="/" class="text-gray-400 text-xl"><i class="fa-solid fa-house"></i></a>
+    <div class="flex justify-between items-start mb-6">
+        <div>
+            <h1 class="text-2xl font-extrabold text-gray-800 leading-tight">Patient Registry</h1>
+            <p class="text-xs text-gray-400 font-semibold mt-0.5">WoundPro_Ke · Nairobi</p>
         </div>
-        
-        <div class="relative group">
-            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            <input type="text" placeholder="Search by name or diagnosis..." 
-                class="w-full bg-white py-4 pl-12 pr-4 rounded-2xl shadow-sm border-transparent focus:border-blue-300 focus:ring-0 search-input transition-all text-sm font-medium">
+        <a href="/" class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-gray-400 shadow-sm">
+            <i class="fa-solid fa-house text-sm"></i>
+        </a>
+    </div>
+
+    <div class="search-wrap relative mb-5">
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 text-sm"></i>
+        <input id="searchInput" type="text" placeholder="Search name, diagnosis, ID..."
+            oninput="filterPatients()"
+            class="w-full bg-white py-3.5 pl-11 pr-4 rounded-2xl text-sm font-semibold text-gray-700 placeholder-gray-300 border border-transparent transition-all">
+    </div>
+
+    <div class="flex items-center gap-5 mb-5 px-1">
+        <div>
+            <p class="text-2xl font-black text-gray-800" id="totalCount">{{ patients|length }}</p>
+            <p class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Total Files</p>
+        </div>
+        <div class="divider"></div>
+        <div>
+            <p class="text-2xl font-black" style="color: var(--brand-green);" id="activeCount">—</p>
+            <p class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Active</p>
+        </div>
+        <div class="divider"></div>
+        <div>
+            <p class="text-2xl font-black" style="color: var(--brand-blue);" id="todayCount">—</p>
+            <p class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Today</p>
         </div>
     </div>
 
-    <div class="flex gap-4 mb-8 px-2">
-        <div class="flex flex-col">
-            <span class="text-2xl font-black text-gray-800">{{ patients|length }}</span>
-            <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Total Files</span>
-        </div>
-        <div class="w-[1px] h-10 bg-gray-200"></div>
-        <div class="flex flex-col">
-            <span class="text-2xl font-black text-emerald-500">Active</span>
-            <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Status</span>
-        </div>
+    <div class="flex gap-2 mb-5 overflow-x-auto pb-1 scrollbar-hide">
+        <button class="filter-chip active" onclick="setFilter('all', this)">All</button>
+        <button class="filter-chip" onclick="setFilter('male', this)">Male</button>
+        <button class="filter-chip" onclick="setFilter('female', this)">Female</button>
+        <button class="filter-chip" onclick="setFilter('active', this)">Active</button>
+        <button class="filter-chip" onclick="setFilter('review', this)">Review Due</button>
     </div>
 
-    <div class="space-y-4">
+    <div class="space-y-3" id="patientList">
+
         {% for patient in patients %}
         <a href="/patient/{{ patient.id }}/"
-           class="flex items-center gap-4 bg-white p-5 soft-card shadow-sm border border-white hover:border-blue-100 transition-all active:scale-[0.98]">
-            
-            <div class="w-14 h-14 rounded-[1.5rem] bg-blue-50 flex items-center justify-center text-blue-500 text-xl font-bold">
-                {{ patient.name|first }}
-            </div>
+           class="patient-card block p-4 shadow-sm"
+           data-gender="{{ patient.gender|lower }}"
+           data-status="{{ patient.status|default:'active'|lower }}"
+           data-name="{{ patient.first_name }} {{ patient.surname }}"
+           data-diagnosis="{{ patient.diagnosis|default:'' }}">
 
-            <div class="flex-1">
-                <p class="text-md font-extrabold text-gray-800 leading-tight">
-                    {{ patient.name }}
-                </p>
-                <div class="flex items-center gap-2 mt-1">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                    <p class="text-xs font-bold text-gray-400 truncate w-40">
-                        {{ patient.diagnosis }}
-                    </p>
+            <div class="flex items-start gap-3">
+
+                {% with initials=patient.first_name|first %}
+                <div class="avatar
+                    {% if patient.gender == 'Male' %}avatar-blue
+                    {% elif patient.gender == 'Female' %}avatar-rose
+                    {% else %}avatar-violet{% endif %}">
+                    {{ patient.first_name|first }}{{ patient.surname|first }}
                 </div>
-            </div>
+                {% endwith %}
 
-            <div class="text-gray-300">
-                <i class="fa-solid fa-chevron-right text-sm"></i>
+                <div class="flex-1 min-w-0">
+
+                    <div class="flex items-center justify-between gap-2 mb-1">
+                        <p class="text-sm font-extrabold text-gray-800 truncate leading-tight">
+                            {{ patient.first_name }} {{ patient.surname }}
+                        </p>
+                        <span class="badge badge-active flex-shrink-0">
+                            <span class="w-1.5 h-1.5 rounded-full" style="background-color: var(--brand-green);"></span>
+                            Active
+                        </span>
+                    </div>
+
+                    <div class="flex items-center gap-2 mb-2.5 flex-wrap">
+                        {% if patient.date_of_birth %}
+                        <span class="text-xs text-gray-500 font-semibold">
+                            <i class="fa-solid fa-cake-candles text-gray-300 mr-1"></i>
+                            {{ patient.age }} yrs
+                        </span>
+                        <span class="text-gray-200">·</span>
+                        {% endif %}
+
+                        {% if patient.gender %}
+                        <span class="badge
+                            {% if patient.gender == 'Male' %}badge-male
+                            {% elif patient.gender == 'Female' %}badge-female
+                            {% else %}badge-other{% endif %}">
+                            <i class="fa-solid
+                                {% if patient.gender == 'Male' %}fa-mars
+                                {% elif patient.gender == 'Female' %}fa-venus
+                                {% else %}fa-genderless{% endif %}"></i>
+                            {{ patient.gender }}
+                        </span>
+                        {% endif %}
+
+                        {% if patient.id %}
+                        <span class="text-[10px] font-bold text-gray-300 ml-auto">
+                            #{{ patient.id|stringformat:"04d" }}
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    <div class="flex gap-2 flex-wrap">
+                        {% if patient.diagnosis %}
+                        <div class="stat-pill flex-1 min-w-0">
+                            <i class="fa-solid fa-bandage flex-shrink-0" style="color: #A4B454;"></i>
+                            <span class="truncate">{{ patient.diagnosis }}</span>
+                        </div>
+                        {% endif %}
+
+                        {% if patient.date_of_birth %}
+                        <div class="stat-pill flex-shrink-0">
+                            <i class="fa-regular fa-calendar text-gray-300"></i>
+                            {% if patient.last_visit %}
+                                {{ patient.last_visit }}
+                            {% else %}
+                                New
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                <div class="text-gray-200 self-center flex-shrink-0 ml-1">
+                    <i class="fa-solid fa-chevron-right text-xs"></i>
+                </div>
+
             </div>
         </a>
         {% empty %}
-        <div class="text-center py-20">
-            <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i class="fa-solid fa-users-slash text-gray-300 text-2xl"></i>
-            </div>
-            <p class="text-gray-400 font-bold">No patients registered.</p>
-            <p class="text-xs text-gray-400 mt-1">Tap the plus button to add your first patient.</p>
-        </div>
-        {% endfor %}
-    </div>
 
+        <div class="text-center py-20" id="emptyState">
+            <div class="w-20 h-20 bg-white rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-sm">
+                <i class="fa-solid fa-user-plus text-2xl" style="color: #E9EDD5;"></i>
+            </div>
+            <p class="text-gray-500 font-bold text-sm">No patients yet</p>
+            <p class="text-xs text-gray-400 mt-1">Tap <span class="font-bold" style="color: var(--brand-blue);">+</span> to register your first patient.</p>
+        </div>
+
+        {% endfor %}
+
+        <div id="noResults" class="text-center py-16 hidden">
+            <div class="w-16 h-16 bg-white rounded-3xl flex items-center justify-center mx-auto mb-3 shadow-sm">
+                <i class="fa-solid fa-magnifying-glass text-gray-300 text-xl"></i>
+            </div>
+            <p class="text-gray-400 font-bold text-sm">No results found</p>
+            <p class="text-xs text-gray-400 mt-1">Try a different name or diagnosis.</p>
+        </div>
+
+    </div>
 </div>
 
-<div class="fixed bottom-8 right-8 left-8 max-w-md mx-auto pointer-events-none">
+<div class="fixed bottom-6 right-0 left-0 max-w-md mx-auto px-4 pointer-events-none">
     <div class="flex justify-end pointer-events-auto">
-        <a href="/add/" 
-           class="w-16 h-16 bg-blue-600 rounded-3xl shadow-xl shadow-blue-200 flex items-center justify-center text-white text-2xl transition-transform hover:scale-105 active:scale-90">
+        <a href="/add/" class="fab">
             <i class="fa-solid fa-plus"></i>
         </a>
     </div>
 </div>
+
+<script>
+let activeFilter = 'all';
+
+function setFilter(filter, btn) {
+    activeFilter = filter;
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    filterPatients();
+}
+
+function filterPatients() {
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+    const cards = document.querySelectorAll('#patientList a.patient-card');
+    let visible = 0;
+
+    cards.forEach(card => {
+        const name = (card.dataset.name || '').toLowerCase();
+        const diagnosis = (card.dataset.diagnosis || '').toLowerCase();
+        const gender = (card.dataset.gender || '').toLowerCase();
+        const status = (card.dataset.status || '').toLowerCase();
+
+        const matchesSearch = !query || name.includes(query) || diagnosis.includes(query);
+        const matchesFilter =
+            activeFilter === 'all' ||
+            (activeFilter === 'male' && gender === 'male') ||
+            (activeFilter === 'female' && gender === 'female') ||
+            (activeFilter === 'active' && status === 'active') ||
+            (activeFilter === 'review' && status === 'review');
+
+        const show = matchesSearch && matchesFilter;
+        card.style.display = show ? 'block' : 'none';
+        if (show) visible++;
+    });
+
+    document.getElementById('noResults').classList.toggle('hidden', visible > 0 || cards.length === 0);
+    document.getElementById('totalCount').textContent = visible;
+}
+</script>
 
 </body>
 </html>

@@ -1,16 +1,46 @@
 from django.db import models
+from django.contrib.auth.models import User
+from datetime import date
 
 
 # 👤 Patient Model
 class Patient(models.Model):
-    name = models.CharField(max_length=100)
-    age = models.IntegerField()
-    gender = models.CharField(max_length=10)
-    phone = models.CharField(max_length=15)
-    diagnosis = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="patients", null=True, blank=True)
+    first_name = models.CharField(max_length=100, default="")
+    surname = models.CharField(max_length=100, default="")
+    gender = models.CharField(max_length=10, default="unknown")
+
+    date_of_birth = models.DateField(null=True, blank=True)
+
+    reg_number = models.CharField(max_length=20, blank=True, null=True, unique=True)  # ← e.g. KH0017575
+
+    phone = models.CharField(max_length=15, blank=True, null=True)
+    diagnosis = models.CharField(max_length=100, blank=True, null=True)
+
+    # Health info fields
+    general_factors = models.TextField(blank=True, null=True)
+    metabolic_factors = models.TextField(blank=True, null=True)
+    pathologies = models.TextField(blank=True, null=True)
+    surgical_history = models.TextField(blank=True, null=True)
+    allergies = models.TextField(blank=True, null=True)
+    medication = models.TextField(blank=True, null=True)
+    compliance = models.TextField(blank=True, null=True)
+    additional_info = models.TextField(blank=True, null=True)
+
+    consent_given = models.BooleanField(default=False)
+
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
+    @property
+    def age(self):
+        if self.date_of_birth:
+            today = date.today()
+            d = self.date_of_birth
+            return today.year - d.year - ((today.month, today.day) < (d.month, d.day))
+        return None
 
     def __str__(self):
-        return self.name
+        return f"{self.first_name} {self.surname}"
 
 
 # 🩺 Wound Model
@@ -18,60 +48,35 @@ class Wound(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     wound_number = models.IntegerField()
     location = models.CharField(max_length=50)
-
-    # 🔥 Clinical classification
     wound_type = models.CharField(max_length=50, blank=True, null=True)
-
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Wound {self.wound_number} - {self.patient.name}"
+        return f"Wound {self.wound_number} - {self.patient.first_name}"
 
 
 # 📊 Assessment Model
 class Assessment(models.Model):
-
-    EXUDATE_CHOICES = [
-        ('none', 'None'),
-        ('low', 'Low'),
-        ('moderate', 'Moderate'),
-        ('heavy', 'Heavy'),
-    ]
-
-    TISSUE_CHOICES = [
-        ('granulation', 'Granulation'),
-        ('slough', 'Slough'),
-        ('necrosis', 'Necrosis'),
-        ('epithelial', 'Epithelial'),
-    ]
-
     wound = models.ForeignKey(Wound, on_delete=models.CASCADE)
-    length = models.FloatField()
-    width = models.FloatField()
-    depth = models.FloatField()
 
-    pain_score = models.IntegerField()
+    wound_type = models.CharField(max_length=100, blank=True, null=True)
+    aetiology = models.CharField(max_length=100, blank=True, null=True)
+    duration = models.CharField(max_length=100, blank=True, null=True)
 
-    # 🔥 Clinical fields
-    exudate = models.CharField(
-        max_length=10,
-        choices=EXUDATE_CHOICES,
-        default='none'
-    )
+    margins = models.CharField(max_length=100, blank=True, null=True)
+    surrounding_skin = models.CharField(max_length=100, blank=True, null=True)
+    exudate = models.CharField(max_length=20, blank=True, null=True)
 
-    infection = models.BooleanField(default=False)
+    progression = models.CharField(max_length=50, blank=True, null=True)
+    notes = models.TextField(blank=True, null=True)
 
-    tissue_type = models.CharField(
-        max_length=20,
-        choices=TISSUE_CHOICES,
-        blank=True,
-        null=True
-    )
+    # Tissue percentages
+    tissue_epithelial = models.IntegerField(default=0)
+    tissue_granulation = models.IntegerField(default=0)
+    tissue_slough = models.IntegerField(default=0)
+    tissue_necrosis = models.IntegerField(default=0)
 
     date_assessed = models.DateTimeField(auto_now_add=True)
-
-    def area(self):
-        return self.length * self.width
 
     def __str__(self):
         return f"Assessment for {self.wound}"
@@ -85,3 +90,43 @@ class WoundImage(models.Model):
 
     def __str__(self):
         return f"Image for {self.wound}"
+
+
+# 👤 Profile Model
+class Profile(models.Model):
+    ROLE_CHOICES = [
+        ('surgeon', 'Surgeon'),
+        ('doctor', 'Doctor'),
+        ('nurse', 'Nurse'),
+        ('guest', 'Guest'),
+    ]
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+    registration_number = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.role}"
+
+
+
+class PatientAccess(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="access_list")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="shared_patients")
+
+    can_edit = models.BooleanField(default=False)
+    granted_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="granted_access"
+    )
+
+    granted_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('patient', 'user')
+
+    def __str__(self):
+        return f"{self.patient} shared with {self.user.username}"
