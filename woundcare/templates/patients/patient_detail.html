@@ -24,15 +24,13 @@
             --text-sub:   #637060;
             --text-muted: #a8b5a3;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
             background: var(--surface);
             font-family: 'DM Sans', sans-serif;
             color: var(--text-main);
             min-height: 100vh;
-            padding-bottom: 40px;
+            padding-bottom: 56px;
         }
 
         /* ─── HERO ─── */
@@ -43,77 +41,49 @@
             overflow: hidden;
         }
         .hero::before {
-            content: '';
-            position: absolute;
-            top: -60px; right: -60px;
-            width: 200px; height: 200px;
-            border-radius: 50%;
+            content: ''; position: absolute; top: -60px; right: -60px;
+            width: 200px; height: 200px; border-radius: 50%;
             background: rgba(255,255,255,0.05);
         }
         .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -40px; left: 30px;
-            width: 120px; height: 120px;
-            border-radius: 50%;
+            content: ''; position: absolute; bottom: -40px; left: 30px;
+            width: 120px; height: 120px; border-radius: 50%;
             background: rgba(255,255,255,0.04);
         }
-
         .hero-nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 24px;
+            display: flex; align-items: center;
+            justify-content: space-between; margin-bottom: 24px;
         }
         .nav-btn {
-            width: 38px; height: 38px;
-            border-radius: 12px;
+            width: 38px; height: 38px; border-radius: 12px;
             background: rgba(255,255,255,0.15);
             border: 1px solid rgba(255,255,255,0.2);
             display: flex; align-items: center; justify-content: center;
-            color: rgba(255,255,255,0.9);
-            font-size: 13px;
-            text-decoration: none;
-            transition: background 0.2s;
+            color: rgba(255,255,255,0.9); font-size: 13px;
+            text-decoration: none; transition: background 0.2s;
         }
         .nav-label {
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
+            font-size: 11px; font-weight: 600;
+            letter-spacing: 0.1em; text-transform: uppercase;
             color: rgba(255,255,255,0.55);
         }
-
         .avatar {
-            width: 68px; height: 68px;
-            border-radius: 20px;
+            width: 68px; height: 68px; border-radius: 20px;
             background: rgba(255,255,255,0.18);
             border: 2px solid rgba(255,255,255,0.3);
             display: flex; align-items: center; justify-content: center;
             font-family: 'DM Serif Display', serif;
-            font-size: 26px;
-            color: white;
-            flex-shrink: 0;
+            font-size: 26px; color: white; flex-shrink: 0;
         }
-
         .patient-name {
             font-family: 'DM Serif Display', serif;
-            font-size: 22px;
-            color: white;
-            line-height: 1.2;
-            margin-bottom: 6px;
+            font-size: 22px; color: white; line-height: 1.2; margin-bottom: 6px;
         }
-
         .hero-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 3px 10px;
-            border-radius: 999px;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 3px 10px; border-radius: 999px;
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 0.08em; text-transform: uppercase;
         }
         .pill-active {
             background: rgba(255,255,255,0.18);
@@ -125,47 +95,34 @@
             border: 1px solid rgba(255,255,255,0.15);
             color: rgba(255,255,255,0.7);
         }
-        .dot-green {
-            width: 6px; height: 6px;
-            border-radius: 50%;
-            background: #a3e635;
-            display: inline-block;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 20px;
-        }
+        .dot-green { width: 6px; height: 6px; border-radius: 50%; background: #a3e635; display: inline-block; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
         .stat-box {
             background: rgba(255,255,255,0.1);
             border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 14px;
-            padding: 12px 10px;
-            text-align: center;
+            border-radius: 14px; padding: 12px 10px; text-align: center;
         }
-        .stat-val {
-            font-family: 'DM Serif Display', serif;
-            font-size: 20px;
-            color: white;
-            line-height: 1;
-        }
-        .stat-lbl {
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.5);
-            margin-top: 4px;
-        }
+        .stat-val { font-family: 'DM Serif Display', serif; font-size: 20px; color: white; line-height: 1; }
+        .stat-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-top: 4px; }
 
-        /* ─── WRAPPER ─── */
-        .content {
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 20px 16px;
+        /* ─── STATUS TAB BAR ─── */
+        .location-bar {
+            max-width: 480px; margin: 0 auto;
+            padding: 12px 16px 0;
+            display: flex; align-items: center; gap: 8px;
         }
+        .location-pill {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; border-radius: 999px;
+            font-size: 11px; font-weight: 800;
+            letter-spacing: 0.06em; text-transform: uppercase;
+        }
+        .lp-inpatient  { background: #dde5f4; color: var(--navy-deep); border: 1px solid #c3cfe8; }
+        .lp-outpatient { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .location-text { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+        /* ─── CONTENT ─── */
+        .content { max-width: 480px; margin: 0 auto; padding: 16px 16px; }
 
         /* ─── MESSAGES ─── */
         .msg { padding: 10px 14px; border-radius: 12px; font-size: 13px; font-weight: 600; margin-bottom: 10px; }
@@ -173,138 +130,32 @@
         .msg-error   { background: #fef2f2; color: #991b1b; }
         .msg-warn    { background: #fefce8; color: #78350f; }
 
-        /* ─── SECTION CARD ─── */
-        .s-card {
-            background: var(--card);
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            margin-bottom: 14px;
-        }
-        .s-head {
-            padding: 9px 18px 7px;
-            background: #f8faf6;
-            border-bottom: 1px solid var(--border);
-            font-size: 9px;
-            font-weight: 800;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-        }
-
-        /* ─── DATA ROWS ─── */
-        .d-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            padding: 12px 18px;
-            border-bottom: 1px solid #f5f7f3;
-            gap: 12px;
-        }
+        /* ─── SECTION CARDS ─── */
+        .s-card { background: var(--card); border-radius: 20px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 14px; }
+        .s-head { padding: 9px 18px 7px; background: #f8faf6; border-bottom: 1px solid var(--border); font-size: 9px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); }
+        .d-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 12px 18px; border-bottom: 1px solid #f5f7f3; gap: 12px; }
         .d-row:last-child { border-bottom: none; }
-        .d-label {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-muted);
-            flex-shrink: 0;
-            min-width: 100px;
-            padding-top: 2px;
-        }
-        .d-val {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-main);
-            text-align: right;
-            line-height: 1.5;
-        }
+        .d-label { font-size: 11px; font-weight: 700; color: var(--text-muted); flex-shrink: 0; min-width: 100px; padding-top: 2px; }
+        .d-val { font-size: 13px; font-weight: 600; color: var(--text-main); text-align: right; line-height: 1.5; }
         .d-val.muted { color: var(--text-muted); font-weight: 400; font-style: italic; }
 
-        /* ─── CHIPS / TAGS ─── */
-        .chip {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 999px;
-            font-size: 11px;
-            font-weight: 700;
-            margin: 2px 2px 0 0;
-        }
+        /* ─── CHIPS ─── */
+        .chip { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; margin: 2px 2px 0 0; }
         .chip-olive  { background: #eef1dc; color: var(--olive); }
         .chip-teal   { background: #d8eeeb; color: var(--teal-dark); }
         .chip-navy   { background: #dde5f4; color: var(--navy-deep); }
         .chip-red    { background: #fee2e2; color: #b91c1c; }
         .chip-green  { background: #dcfce7; color: #166534; }
         .chip-gray   { background: #f1f5f1; color: #475547; }
+        .badge-consent { display: inline-flex; align-items: center; gap: 4px; background: #d8eeeb; color: var(--teal-dark); padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 800; }
 
-        .badge-consent {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            background: #d8eeeb;
-            color: var(--teal-dark);
-            padding: 3px 10px;
-            border-radius: 999px;
-            font-size: 11px;
-            font-weight: 800;
-        }
-
-        /* ─── SHARE CARD ─── */
-        .share-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 16px 18px;
-            margin-bottom: 14px;
-        }
-        .share-card h3 {
-            font-size: 12px;
-            font-weight: 800;
-            color: var(--text-sub);
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-        }
-        .share-input {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1.5px solid var(--border);
-            border-radius: 12px;
-            font-size: 13px;
-            font-family: 'DM Sans', sans-serif;
-            color: var(--text-main);
-            background: var(--surface);
-            outline: none;
-            transition: border-color 0.2s;
-            margin-bottom: 10px;
-        }
-        .share-input:focus { border-color: var(--teal); }
-        .share-btn {
-            width: 100%;
-            padding: 11px;
-            background: linear-gradient(135deg, var(--teal) 0%, var(--navy) 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 700;
-            font-family: 'DM Sans', sans-serif;
-            cursor: pointer;
-            letter-spacing: 0.04em;
-        }
-
-        /* ─── COLLAPSIBLE HEALTH ROWS ─── */
+        /* ─── COLLAPSIBLE ─── */
         .h-section { cursor: pointer; }
         .h-chevron { transition: transform 0.25s; flex-shrink: 0; }
         .h-section.open .h-chevron { transform: rotate(90deg); }
         .h-body { display: none; padding: 10px 18px 14px; background: #fafbf8; }
         .h-body.open { display: block; }
-
-        .h-icon {
-            width: 32px; height: 32px;
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-            font-size: 13px;
-        }
+        .h-icon { width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 13px; }
         .ic-olive  { background: #eef1dc; color: var(--olive); }
         .ic-amber  { background: #fef3c7; color: #92400e; }
         .ic-red    { background: #fee2e2; color: #b91c1c; }
@@ -312,107 +163,167 @@
         .ic-pink   { background: #fce7f3; color: #be185d; }
         .ic-teal   { background: #d8eeeb; color: var(--teal-dark); }
         .ic-green  { background: #dcfce7; color: #166534; }
-
         .h-row-title { font-size: 13px; font-weight: 700; color: var(--text-main); }
         .h-row-sub   { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
 
+        /* ─── SHARE ─── */
+        .share-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 16px 18px; margin-bottom: 14px; }
+        .share-card h3 { font-size: 12px; font-weight: 800; color: var(--text-sub); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 12px; }
+        .select-wrapper { position: relative; margin-bottom: 10px; }
+        .select-wrapper::after { content: '\f078'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 11px; pointer-events: none; }
+        .share-select { width: 100%; padding: 11px 38px 11px 14px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 13px; font-family: 'DM Sans', sans-serif; color: var(--text-main); background: var(--surface); outline: none; appearance: none; -webkit-appearance: none; transition: border-color 0.2s; cursor: pointer; }
+        .share-select:focus { border-color: var(--teal); }
+        .share-search { width: 100%; padding: 9px 14px 9px 36px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 13px; font-family: 'DM Sans', sans-serif; color: var(--text-main); background: var(--surface); outline: none; transition: border-color 0.2s; }
+        .share-search:focus { border-color: var(--teal); }
+        .search-wrap { position: relative; margin-bottom: 8px; }
+        .search-wrap i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 12px; }
+        .share-btn { width: 100%; padding: 11px; background: linear-gradient(135deg, var(--teal) 0%, var(--navy) 100%); color: white; border: none; border-radius: 12px; font-size: 13px; font-weight: 700; font-family: 'DM Sans', sans-serif; cursor: pointer; letter-spacing: 0.04em; }
+        .share-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+        .no-users-note { text-align: center; padding: 14px 0 4px; font-size: 12px; color: var(--text-muted); font-style: italic; }
+
+        /* ─── TRANSFER SECTION ─── */
+        .transfer-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            margin-bottom: 14px;
+            overflow: hidden;
+        }
+        .transfer-head {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 18px;
+            background: #f8faf6;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            user-select: none;
+        }
+        .transfer-head-left { display: flex; align-items: center; gap: 8px; }
+        .transfer-head h3 { font-size: 12px; font-weight: 800; color: var(--text-sub); letter-spacing: 0.06em; text-transform: uppercase; }
+        .transfer-chevron { color: var(--text-muted); font-size: 11px; transition: transform 0.25s; }
+        .transfer-head.open .transfer-chevron { transform: rotate(90deg); }
+        .transfer-body { display: none; padding: 16px 18px; }
+        .transfer-body.open { display: block; }
+
+        /* Type selector */
+        .type-grid { display: grid; gap: 10px; margin-bottom: 16px; }
+        .type-card {
+            display: flex; align-items: center; gap: 14px;
+            padding: 12px 14px; background: var(--surface);
+            border: 2px solid var(--border); border-radius: 14px;
+            cursor: pointer; transition: border-color 0.15s, background 0.15s;
+            position: relative;
+        }
+        .type-card input[type=radio] { position: absolute; opacity: 0; width: 0; height: 0; }
+        .type-card.selected { border-color: var(--teal); background: #f0f9f7; }
+        .type-card.disabled-card { opacity: 0.38; cursor: not-allowed; pointer-events: none; }
+        .type-icon { width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+        .ic-amber-t { background: #fef3c7; color: #92400e; }
+        .ic-teal-t  { background: #d8eeeb; color: var(--teal-dark); }
+        .ic-purple-t{ background: #ede9fe; color: #6d28d9; }
+        .type-title { font-size: 12px; font-weight: 800; color: var(--text-main); }
+        .type-sub   { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+        .check-circle { margin-left: auto; width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
+        .type-card.selected .check-circle { background: var(--teal); border-color: var(--teal); color: white; }
+
+        /* Transfer form fields */
+        .t-field-wrap { margin-bottom: 12px; }
+        .form-label { display: block; font-size: 10px; font-weight: 800; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+        .form-input { width: 100%; padding: 10px 13px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 13px; font-family: 'DM Sans', sans-serif; color: var(--text-main); background: var(--surface); outline: none; transition: border-color 0.2s; }
+        .form-input:focus { border-color: var(--teal); }
+        textarea.form-input { resize: vertical; min-height: 72px; line-height: 1.6; }
+        .transfer-submit {
+            width: 100%; padding: 13px;
+            background: linear-gradient(135deg, #7c3a3a 0%, #9c5a2e 45%, var(--navy) 100%);
+            color: white; border: none; border-radius: 14px;
+            font-size: 13px; font-weight: 800;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer; letter-spacing: 0.03em;
+            box-shadow: 0 4px 16px rgba(44,74,124,0.2);
+            transition: transform 0.12s, box-shadow 0.12s;
+        }
+        .transfer-submit:active { transform: scale(0.97); }
+        .transfer-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+
         /* ─── FAB ─── */
         .fab {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
             background: linear-gradient(135deg, var(--teal) 0%, var(--navy) 100%);
-            color: white;
-            border-radius: 18px;
-            padding: 16px 24px;
-            font-size: 14px;
-            font-weight: 800;
+            color: white; border-radius: 18px; padding: 16px 24px;
+            font-size: 14px; font-weight: 800;
             box-shadow: 0 8px 28px rgba(44,74,124,0.28);
-            text-decoration: none;
-            margin-bottom: 20px;
-            transition: transform 0.15s, box-shadow 0.15s;
-            letter-spacing: 0.02em;
+            text-decoration: none; margin-bottom: 20px;
+            transition: transform 0.15s, box-shadow 0.15s; letter-spacing: 0.02em;
         }
-        .fab:active { transform: scale(0.97); box-shadow: 0 4px 12px rgba(44,74,124,0.18); }
+        .fab:active { transform: scale(0.97); }
 
         /* ─── WOUND CARDS ─── */
-        .wound-card {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 14px 16px;
-            background: white;
-            border-radius: 16px;
-            border: 1.5px solid var(--border);
-            text-decoration: none;
-            margin-bottom: 10px;
-            transition: border-color 0.15s, transform 0.1s;
-        }
+        .wound-card { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: white; border-radius: 16px; border: 1.5px solid var(--border); text-decoration: none; margin-bottom: 10px; transition: border-color 0.15s, transform 0.1s; }
         .wound-card:active { transform: scale(0.98); border-color: #9cb8b0; }
-        .wound-icon {
-            width: 44px; height: 44px;
-            border-radius: 14px;
-            background: #d8eeeb;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--teal-dark);
-            flex-shrink: 0;
-        }
+        .wound-icon { width: 44px; height: 44px; border-radius: 14px; background: #d8eeeb; display: flex; align-items: center; justify-content: center; color: var(--teal-dark); flex-shrink: 0; }
         .wound-num { font-size: 13px; font-weight: 800; color: var(--text-main); }
         .wound-loc { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
-
-        /* ─── WOUND EMPTY STATE ─── */
-        .wound-empty {
-            background: white;
-            border-radius: 18px;
-            border: 2px dashed var(--border);
-            padding: 40px 20px;
-            text-align: center;
-        }
-
-        /* ─── DELETE BTN ─── */
-        .del-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: #fef2f2;
-            color: #b91c1c;
-            border: 1.5px solid #fecaca;
-            padding: 10px 18px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 700;
-            font-family: 'DM Sans', sans-serif;
-            text-decoration: none;
-            margin-top: 8px;
-        }
+        .wound-empty { background: white; border-radius: 18px; border: 2px dashed var(--border); padding: 40px 20px; text-align: center; }
 
         /* ─── SECTION HEADER ROW ─── */
-        .sec-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
+        .sec-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .sec-row h3 { font-size: 13px; font-weight: 800; color: var(--text-main); }
         .sec-row span { font-size: 11px; font-weight: 700; color: var(--text-muted); }
 
-        /* animations */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(12px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        .content > * {
-            animation: fadeUp 0.35s ease both;
-        }
+        /* ─── DELETE ─── */
+        .del-btn { display: inline-flex; align-items: center; gap: 8px; background: #fef2f2; color: #b91c1c; border: 1.5px solid #fecaca; padding: 10px 18px; border-radius: 12px; font-size: 13px; font-weight: 700; font-family: 'DM Sans', sans-serif; text-decoration: none; margin-top: 8px; }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        .content > * { animation: fadeUp 0.35s ease both; }
         .content > *:nth-child(1) { animation-delay: 0.05s; }
         .content > *:nth-child(2) { animation-delay: 0.10s; }
         .content > *:nth-child(3) { animation-delay: 0.15s; }
         .content > *:nth-child(4) { animation-delay: 0.20s; }
         .content > *:nth-child(5) { animation-delay: 0.25s; }
+        .content > *:nth-child(6) { animation-delay: 0.30s; }
     </style>
 </head>
+<body>
 
+<!-- ══ HERO ══ -->
+<div class="hero">
+    <div class="hero-nav">
+        <a href="/" class="nav-btn"><i class="fa-solid fa-chevron-left"></i></a>
+        <span class="nav-label">Patient Profile</span>
+        <a href="/edit/{{ patient.id }}/" class="nav-btn"><i class="fa-solid fa-pen"></i></a>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:16px;margin-bottom:20px;">
+        <div class="avatar">{{ patient.first_name|first }}{{ patient.surname|first }}</div>
+        <div>
+            <h1 class="patient-name">{{ patient.first_name }} {{ patient.surname }}</h1>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;">
+                <span class="hero-pill pill-active"><span class="dot-green"></span> Active</span>
+                {% if patient.reg_number %}
+                    <span class="hero-pill pill-id"><i class="fa-solid fa-id-card" style="font-size:9px;"></i> {{ patient.reg_number }}</span>
+                {% else %}
+                    <span class="hero-pill pill-id">#{{ patient.id|stringformat:"04d" }}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="stats-grid">
+        <div class="stat-box">
+            <div class="stat-val">{% if patient.date_of_birth %}{{ patient.age }}{% else %}—{% endif %}</div>
+            <div class="stat-lbl">Age</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-val">
+                {% if patient.gender == 'Male' %}♂{% elif patient.gender == 'Female' %}♀{% else %}—{% endif %}
+            </div>
+            <div class="stat-lbl">Gender</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-val">{{ wounds|length }}</div>
+            <div class="stat-lbl">Wounds</div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ MESSAGES ══ -->
 {% if messages %}
 <div style="max-width:480px;margin:0 auto;padding:12px 16px 0;">
     {% for message in messages %}
@@ -423,320 +334,442 @@
 </div>
 {% endif %}
 
-<body>
+<!-- ══ LOCATION INDICATOR ══ -->
+<div class="location-bar">
+    <span class="location-pill {% if is_inpatient %}lp-inpatient{% else %}lp-outpatient{% endif %}">
+        <i class="fa-solid {% if is_inpatient %}fa-bed{% else %}fa-house-medical{% endif %}" style="font-size:9px;"></i>
+        {% if is_inpatient %}Inpatient{% else %}Outpatient{% endif %}
+    </span>
+    <span class="location-text">
+        {% if is_inpatient %}
+            Currently in <strong style="color:var(--text-main);">{{ patient.current_ward|default:"Unknown Ward" }}</strong>
+        {% else %}
+            Not currently admitted
+        {% endif %}
+    </span>
+</div>
 
-    <!-- ══════════ HERO ══════════ -->
-    <div class="hero">
-        <div class="hero-nav">
-            <a href="/" class="nav-btn"><i class="fa-solid fa-chevron-left"></i></a>
-            <span class="nav-label">Patient Profile</span>
-            <a href="/edit/{{ patient.id }}/" class="nav-btn"><i class="fa-solid fa-pen"></i></a>
+<!-- ══ CONTENT ══ -->
+<div class="content">
+
+    <!-- Personal Details -->
+    <div class="s-card">
+        <div class="s-head">Personal Details</div>
+        <div class="d-row">
+            <span class="d-label">Full Name</span>
+            <span class="d-val">{{ patient.first_name }} {{ patient.surname }}</span>
         </div>
-
-        <div style="display:flex;align-items:flex-start;gap:16px;margin-bottom:20px;">
-            <div class="avatar">{{ patient.first_name|first }}{{ patient.surname|first }}</div>
-            <div>
-                <h1 class="patient-name">{{ patient.first_name }} {{ patient.surname }}</h1>
-                <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;">
-                    <span class="hero-pill pill-active">
-                        <span class="dot-green"></span> Active
-                    </span>
-                    {% if patient.reg_number %}
-                        <span class="hero-pill pill-id">
-                            <i class="fa-solid fa-id-card" style="font-size:9px;"></i>
-                            {{ patient.reg_number }}
-                        </span>
-                    {% else %}
-                        <span class="hero-pill pill-id">#{{ patient.id|stringformat:"04d" }}</span>
-                    {% endif %}
-                </div>
-            </div>
+        <div class="d-row">
+            <span class="d-label">Reg Number</span>
+            <span class="d-val">
+                {% if patient.reg_number %}
+                    <span class="chip chip-navy" style="letter-spacing:0.06em;">{{ patient.reg_number }}</span>
+                {% else %}<span class="muted">Not assigned</span>{% endif %}
+            </span>
         </div>
-
-        <div class="stats-grid">
-            <div class="stat-box">
-                <div class="stat-val">{% if patient.date_of_birth %}{{ patient.age }}{% else %}—{% endif %}</div>
-                <div class="stat-lbl">Age</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-val">
-                    {% if patient.gender %}
-                        {% if patient.gender == 'Male' %}♂{% elif patient.gender == 'Female' %}♀{% else %}—{% endif %}
-                    {% else %}—{% endif %}
-                </div>
-                <div class="stat-lbl">Gender</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-val">{{ wounds|length }}</div>
-                <div class="stat-lbl">Wounds</div>
-            </div>
+        <div class="d-row">
+            <span class="d-label">Date of Birth</span>
+            <span class="d-val">{% if patient.date_of_birth %}{{ patient.date_of_birth }}{% else %}<span class="muted">Not specified</span>{% endif %}</span>
+        </div>
+        <div class="d-row">
+            <span class="d-label">Age</span>
+            <span class="d-val">{% if patient.age %}{{ patient.age }} years{% else %}<span class="muted">—</span>{% endif %}</span>
+        </div>
+        <div class="d-row">
+            <span class="d-label">Gender</span>
+            <span class="d-val">
+                {% if patient.gender %}
+                    <span class="chip {% if patient.gender == 'Male' %}chip-navy{% elif patient.gender == 'Female' %}chip-red{% else %}chip-gray{% endif %}">{{ patient.gender }}</span>
+                {% else %}<span class="muted">Not specified</span>{% endif %}
+            </span>
+        </div>
+        <div class="d-row">
+            <span class="d-label">Consent</span>
+            <span class="d-val">
+                <span class="badge-consent"><i class="fa-solid fa-check" style="font-size:9px;"></i> Given</span>
+            </span>
         </div>
     </div>
 
-    <!-- ══════════ CONTENT ══════════ -->
-    <div class="content">
-
-        <!-- Personal Details -->
-        <div class="s-card">
-            <div class="s-head">Personal Details</div>
-
-            <div class="d-row">
-                <span class="d-label">Full Name</span>
-                <span class="d-val">{{ patient.first_name }} {{ patient.surname }}</span>
+    <!-- ══ TRANSFER — collapsible inline ══ -->
+    <div class="transfer-card">
+        <div class="transfer-head" id="transferToggle" onclick="toggleTransfer()">
+            <div class="transfer-head-left">
+                <i class="fa-solid fa-right-left" style="color:var(--teal);font-size:12px;"></i>
+                <h3>Patient Transfer</h3>
             </div>
-            <div class="d-row">
-                <span class="d-label">Reg Number</span>
-                <span class="d-val">
-                    {% if patient.reg_number %}
-                        <span class="chip chip-navy" style="letter-spacing:0.06em;">{{ patient.reg_number }}</span>
-                    {% else %}
-                        <span class="muted">Not assigned</span>
-                    {% endif %}
-                </span>
-            </div>
-            <div class="d-row">
-                <span class="d-label">Date of Birth</span>
-                <span class="d-val">{% if patient.date_of_birth %}{{ patient.date_of_birth }}{% else %}<span class="muted">Not specified</span>{% endif %}</span>
-            </div>
-            <div class="d-row">
-                <span class="d-label">Age</span>
-                <span class="d-val">{% if patient.age %}{{ patient.age }} years{% else %}<span class="muted">—</span>{% endif %}</span>
-            </div>
-            <div class="d-row">
-                <span class="d-label">Gender</span>
-                <span class="d-val">
-                    {% if patient.gender %}
-                        <span class="chip {% if patient.gender == 'Male' %}chip-navy{% elif patient.gender == 'Female' %}chip-red{% else %}chip-gray{% endif %}">
-                            {{ patient.gender }}
-                        </span>
-                    {% else %}<span class="muted">Not specified</span>{% endif %}
-                </span>
-            </div>
-            <div class="d-row">
-                <span class="d-label">Consent</span>
-                <span class="d-val">
-                    <span class="badge-consent">
-                        <i class="fa-solid fa-check" style="font-size:9px;"></i> Given
-                    </span>
-                </span>
-            </div>
+            <i class="fa-solid fa-chevron-right transfer-chevron" id="transferChevron"></i>
         </div>
-
-        <!-- Share Patient -->
-        <div class="share-card">
-            <h3><i class="fa-solid fa-share-nodes" style="margin-right:6px;color:var(--teal);"></i>Share Patient</h3>
-            <form method="POST" action="{% url 'share_patient' patient.id %}">
+        <div class="transfer-body" id="transferBody">
+            <form method="POST" action="{% url 'transfer_patient' patient.id %}">
                 {% csrf_token %}
-                <input type="text"
-                       name="registration_number"
-                       placeholder="Enter Registration Number (e.g. PS12345)"
-                       class="share-input">
-                <button type="submit" class="share-btn">Share Patient</button>
+
+                <!-- Type selector -->
+                <p style="font-size:10px;font-weight:800;color:var(--text-muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:10px;">Select transfer type</p>
+                <div class="type-grid">
+
+                    <label class="type-card {% if not is_inpatient %}disabled-card{% endif %}"
+                           id="card_ward_to_ward" onclick="selectType('ward_to_ward', true)">
+                        <input type="radio" name="transfer_type" value="ward_to_ward" {% if not is_inpatient %}disabled{% endif %}>
+                        <div class="type-icon ic-amber-t"><i class="fa-solid fa-right-left"></i></div>
+                        <div>
+                            <div class="type-title">Ward → Ward</div>
+                            <div class="type-sub">Move between inpatient wards</div>
+                        </div>
+                        <div class="check-circle"><i class="fa-solid fa-check" style="font-size:9px;display:none;" id="chk_ward_to_ward"></i></div>
+                    </label>
+
+                    <label class="type-card {% if not is_inpatient %}disabled-card{% endif %}"
+                           id="card_ward_to_outpatient" onclick="selectType('ward_to_outpatient', false)">
+                        <input type="radio" name="transfer_type" value="ward_to_outpatient" {% if not is_inpatient %}disabled{% endif %}>
+                        <div class="type-icon ic-teal-t"><i class="fa-solid fa-house-medical"></i></div>
+                        <div>
+                            <div class="type-title">Ward → Outpatient</div>
+                            <div class="type-sub">Discharge to outpatient care</div>
+                        </div>
+                        <div class="check-circle"><i class="fa-solid fa-check" style="font-size:9px;display:none;" id="chk_ward_to_outpatient"></i></div>
+                    </label>
+
+                    <label class="type-card {% if is_inpatient %}disabled-card{% endif %}"
+                           id="card_outpatient_to_ward" onclick="selectType('outpatient_to_ward', true)">
+                        <input type="radio" name="transfer_type" value="outpatient_to_ward" {% if is_inpatient %}disabled{% endif %}>
+                        <div class="type-icon ic-purple-t"><i class="fa-solid fa-bed"></i></div>
+                        <div>
+                            <div class="type-title">Outpatient → Ward</div>
+                            <div class="type-sub">Admit to inpatient ward</div>
+                        </div>
+                        <div class="check-circle"><i class="fa-solid fa-check" style="font-size:9px;display:none;" id="chk_outpatient_to_ward"></i></div>
+                    </label>
+
+                </div>
+
+                <!-- Destination ward -->
+                <div class="t-field-wrap" id="wardField" style="display:none;">
+                    <label class="form-label" for="to_location">
+                        <i class="fa-solid fa-location-dot" style="margin-right:4px;color:var(--teal);"></i>Destination Ward
+                    </label>
+                    <input type="text" id="to_location" name="to_location" class="form-input"
+                           placeholder="e.g. Ward 4B, ICU, Surgical Ward…" autocomplete="off">
+                </div>
+
+                <!-- Notes -->
+                <div class="t-field-wrap" id="notesField" style="display:none;">
+                    <label class="form-label" for="notes">
+                        <i class="fa-solid fa-note-sticky" style="margin-right:4px;color:var(--teal);"></i>
+                        Notes <span style="font-weight:400;color:var(--text-muted);">(optional)</span>
+                    </label>
+                    <textarea id="notes" name="notes" class="form-input"
+                              placeholder="Reason for transfer, clinical notes…"></textarea>
+                </div>
+
+                <button type="submit" class="transfer-submit" id="submitBtn" disabled>
+                    <i class="fa-solid fa-arrow-right-arrow-left" style="margin-right:8px;"></i>Confirm Transfer
+                </button>
             </form>
         </div>
+    </div>
 
-        <!-- Health Information -->
-        <div class="s-card">
-            <div class="s-head">Health Information</div>
-
-            <!-- General Factors -->
-            <div class="h-section" onclick="toggleSection(this)">
-                <div class="d-row" style="cursor:pointer;">
-                    <div style="display:flex;align-items:center;gap:10px;">
-                        <span class="h-icon ic-olive"><i class="fa-solid fa-person-walking"></i></span>
-                        <div>
-                            <div class="h-row-title">General factors</div>
-                            <div class="h-row-sub">{% if patient.general_factors %}{{ patient.general_factors|truncatechars:38 }}{% else %}Not specified{% endif %}</div>
-                        </div>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-xs h-chevron" style="color:var(--text-muted);margin-top:8px;"></i>
+    <!-- ══ SHARE — owner only ══ -->
+    {% if is_owner %}
+    <div class="share-card">
+        <h3><i class="fa-solid fa-share-nodes" style="margin-right:6px;color:var(--teal);"></i>Share Patient</h3>
+        {% if shareable_profiles %}
+            <form method="POST" action="{% url 'share_patient' patient.id %}">
+                {% csrf_token %}
+                <div class="search-wrap">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="userSearch" class="share-search"
+                           placeholder="Search by name or PS number…"
+                           autocomplete="off" oninput="filterUsers(this.value)">
                 </div>
-            </div>
-            <div class="h-body">
-                {% if patient.general_factors %}{% for item in patient.general_factors_list %}<span class="chip chip-olive">{{ item }}</span>{% endfor %}
-                {% else %}<p style="font-size:12px;color:var(--text-muted);">No general factors recorded.</p>{% endif %}
-            </div>
-
-            <!-- Metabolic Factors -->
-            <div class="h-section" onclick="toggleSection(this)">
-                <div class="d-row" style="cursor:pointer;">
-                    <div style="display:flex;align-items:center;gap:10px;">
-                        <span class="h-icon ic-amber"><i class="fa-solid fa-dna"></i></span>
-                        <div>
-                            <div class="h-row-title">Metabolic factors</div>
-                            <div class="h-row-sub">{% if patient.metabolic_factors %}{{ patient.metabolic_factors|truncatechars:38 }}{% else %}Not specified{% endif %}</div>
-                        </div>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-xs h-chevron" style="color:var(--text-muted);margin-top:8px;"></i>
+                <div class="select-wrapper">
+                    <select name="registration_number" id="userSelect" class="share-select" required onchange="updateShareBtn(this)">
+                        <option value="" disabled selected>— Select a user —</option>
+                        {% for profile in shareable_profiles %}
+                        <option value="{{ profile.registration_number }}"
+                                data-name="{{ profile.user.get_full_name|default:profile.user.username }}"
+                                data-reg="{{ profile.registration_number }}">
+                            {{ profile.registration_number }} — {{ profile.user.get_full_name|default:profile.user.username }}
+                        </option>
+                        {% endfor %}
+                    </select>
                 </div>
-            </div>
-            <div class="h-body">
-                {% if patient.metabolic_factors %}{% for item in patient.metabolic_factors_list %}<span class="chip" style="background:#fef3c7;color:#92400e;">{{ item }}</span>{% endfor %}
-                {% else %}<p style="font-size:12px;color:var(--text-muted);">No metabolic factors recorded.</p>{% endif %}
-            </div>
-
-            <!-- Pathologies -->
-            <div class="h-section" onclick="toggleSection(this)">
-                <div class="d-row" style="cursor:pointer;">
-                    <div style="display:flex;align-items:center;gap:10px;">
-                        <span class="h-icon ic-red"><i class="fa-solid fa-heart-pulse"></i></span>
-                        <div>
-                            <div class="h-row-title">Pathologies</div>
-                            <div class="h-row-sub">{% if patient.pathologies %}{{ patient.pathologies|truncatechars:38 }}{% else %}Not specified{% endif %}</div>
-                        </div>
+                <div id="selectedPreview" style="display:none;background:#f0f7f5;border:1.5px solid #b2d8d0;border-radius:12px;padding:10px 14px;margin-bottom:10px;align-items:center;gap:10px;">
+                    <div style="width:36px;height:36px;border-radius:10px;background:var(--teal);display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:14px;flex-shrink:0;" id="previewInitial">?</div>
+                    <div>
+                        <div style="font-size:13px;font-weight:700;color:var(--text-main);" id="previewName">—</div>
+                        <div style="font-size:11px;color:var(--teal-dark);font-weight:600;" id="previewReg">—</div>
                     </div>
-                    <i class="fa-solid fa-chevron-right text-xs h-chevron" style="color:var(--text-muted);margin-top:8px;"></i>
                 </div>
-            </div>
-            <div class="h-body">
-                {% if patient.pathologies %}{% for item in patient.pathologies_list %}<span class="chip chip-red">{{ item }}</span>{% endfor %}
-                {% else %}<p style="font-size:12px;color:var(--text-muted);">No pathologies recorded.</p>{% endif %}
-            </div>
-
-            <!-- Surgical History -->
-            <div class="h-section" onclick="toggleSection(this)">
-                <div class="d-row" style="cursor:pointer;">
-                    <div style="display:flex;align-items:center;gap:10px;">
-                        <span class="h-icon ic-purple"><i class="fa-solid fa-scalpel"></i></span>
-                        <div>
-                            <div class="h-row-title">Surgical history</div>
-                            <div class="h-row-sub">{% if patient.surgical_history %}{{ patient.surgical_history|truncatechars:38 }}{% else %}Not specified{% endif %}</div>
-                        </div>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-xs h-chevron" style="color:var(--text-muted);margin-top:8px;"></i>
-                </div>
-            </div>
-            <div class="h-body">
-                {% if patient.surgical_history %}{% for item in patient.surgical_history_list %}<span class="chip" style="background:#ede9fe;color:#6d28d9;">{{ item }}</span>{% endfor %}
-                {% else %}<p style="font-size:12px;color:var(--text-muted);">No surgical history recorded.</p>{% endif %}
-            </div>
-
-            <!-- Allergies -->
-            <div class="h-section" onclick="toggleSection(this)">
-                <div class="d-row" style="cursor:pointer;">
-                    <div style="display:flex;align-items:center;gap:10px;">
-                        <span class="h-icon ic-pink"><i class="fa-solid fa-triangle-exclamation"></i></span>
-                        <div>
-                            <div class="h-row-title">Allergies / Skin sensitivities</div>
-                            <div class="h-row-sub">{% if patient.allergies %}{{ patient.allergies|truncatechars:38 }}{% else %}Not specified{% endif %}</div>
-                        </div>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-xs h-chevron" style="color:var(--text-muted);margin-top:8px;"></i>
-                </div>
-            </div>
-            <div class="h-body">
-                {% if patient.allergies %}{% for item in patient.allergies_list %}<span class="chip chip-red">{{ item }}</span>{% endfor %}
-                {% else %}<p style="font-size:12px;color:var(--text-muted);">No allergies recorded.</p>{% endif %}
-            </div>
-        </div>
-
-        <!-- Treatment & Compliance -->
-        <div class="s-card">
-            <div class="s-head">Treatment &amp; Compliance</div>
-
-            <!-- Medication -->
-            <div class="h-section" onclick="toggleSection(this)">
-                <div class="d-row" style="cursor:pointer;">
-                    <div style="display:flex;align-items:center;gap:10px;">
-                        <span class="h-icon ic-green"><i class="fa-solid fa-pills"></i></span>
-                        <div>
-                            <div class="h-row-title">Treatments / Medication</div>
-                            <div class="h-row-sub">{% if patient.medication %}{{ patient.medication|truncatechars:38 }}{% else %}Not specified{% endif %}</div>
-                        </div>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-xs h-chevron" style="color:var(--text-muted);margin-top:8px;"></i>
-                </div>
-            </div>
-            <div class="h-body">
-                {% if patient.medication %}{% for item in patient.medication_list %}<span class="chip chip-green">{{ item }}</span>{% endfor %}
-                {% else %}<p style="font-size:12px;color:var(--text-muted);">No medication recorded.</p>{% endif %}
-            </div>
-
-            <!-- Compliance -->
-            <div class="h-section" onclick="toggleSection(this)">
-                <div class="d-row" style="cursor:pointer;">
-                    <div style="display:flex;align-items:center;gap:10px;">
-                        <span class="h-icon ic-teal"><i class="fa-solid fa-clipboard-check"></i></span>
-                        <div>
-                            <div class="h-row-title">Compliance and ability</div>
-                            <div class="h-row-sub">{% if patient.compliance %}{{ patient.compliance|truncatechars:38 }}{% else %}Not specified{% endif %}</div>
-                        </div>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-xs h-chevron" style="color:var(--text-muted);margin-top:8px;"></i>
-                </div>
-            </div>
-            <div class="h-body">
-                {% if patient.compliance %}
-                    <p style="font-size:13px;color:#334155;line-height:1.7;white-space:pre-line;">{{ patient.compliance }}</p>
-                {% else %}
-                    <p style="font-size:12px;color:var(--text-muted);">No compliance data recorded.</p>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Additional Info -->
-        {% if patient.additional_info %}
-        <div class="s-card">
-            <div class="s-head">Additional Information</div>
-            <div style="padding:16px 18px;">
-                <p style="font-size:13px;color:#334155;line-height:1.7;">{{ patient.additional_info }}</p>
-            </div>
-        </div>
+                <button type="submit" class="share-btn" id="shareSubmitBtn" disabled>
+                    <i class="fa-solid fa-paper-plane" style="margin-right:6px;"></i>Share Patient
+                </button>
+            </form>
+        {% else %}
+            <p class="no-users-note"><i class="fa-solid fa-users-slash" style="margin-right:4px;"></i>No other users available to share with.</p>
         {% endif %}
+    </div>
+    {% endif %}
 
-        <!-- Register Wound CTA -->
-        <a href="/add-wound/{{ patient.id }}/" class="fab">
-            <i class="fa-solid fa-plus-circle" style="font-size:16px;"></i>
-            Register New Wound
-        </a>
+    <!-- Health Information -->
+    <div class="s-card">
+        <div class="s-head">Health Information</div>
 
-        <!-- Wounds List -->
-        <div class="sec-row">
-            <h3>Tracked Wounds</h3>
-            <span>{{ wounds|length }} total</span>
+        <div class="h-section" onclick="toggleSection(this)">
+            <div class="d-row" style="cursor:pointer;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <span class="h-icon ic-olive"><i class="fa-solid fa-person-walking"></i></span>
+                    <div>
+                        <div class="h-row-title">General factors</div>
+                        <div class="h-row-sub">{% if patient.general_factors %}{{ patient.general_factors|truncatechars:38 }}{% else %}Not specified{% endif %}</div>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-xs h-chevron" style="color:var(--text-muted);margin-top:8px;"></i>
+            </div>
         </div>
+        <div class="h-body">{% if patient.general_factors %}{% for item in patient.general_factors_list %}<span class="chip chip-olive">{{ item }}</span>{% endfor %}{% else %}<p style="font-size:12px;color:var(--text-muted);">No general factors recorded.</p>{% endif %}</div>
 
-        {% for wound in wounds %}
-        <a href="/wound/{{ wound.id }}/" class="wound-card">
-            <div class="wound-icon">
-                <i class="fa-solid fa-droplet"></i>
+        <div class="h-section" onclick="toggleSection(this)">
+            <div class="d-row" style="cursor:pointer;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <span class="h-icon ic-amber"><i class="fa-solid fa-dna"></i></span>
+                    <div>
+                        <div class="h-row-title">Metabolic factors</div>
+                        <div class="h-row-sub">{% if patient.metabolic_factors %}{{ patient.metabolic_factors|truncatechars:38 }}{% else %}Not specified{% endif %}</div>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-xs h-chevron" style="color:var(--text-muted);margin-top:8px;"></i>
             </div>
-            <div style="flex:1;min-width:0;">
-                <p class="wound-num">Wound #{{ wound.wound_number }}</p>
-                <p class="wound-loc">
-                    <i class="fa-solid fa-location-dot" style="font-size:10px;margin-right:3px;"></i>{{ wound.location }}
-                </p>
-            </div>
-            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;">
-                {% if wound.status %}
-                <span class="chip chip-teal" style="font-size:10px;">{{ wound.status }}</span>
-                {% endif %}
-                <i class="fa-solid fa-chevron-right text-xs" style="color:var(--text-muted);"></i>
-            </div>
-        </a>
-        {% empty %}
-        <div class="wound-empty">
-            <i class="fa-solid fa-folder-open" style="font-size:32px;color:#c8d5c4;margin-bottom:12px;display:block;"></i>
-            <p style="font-size:13px;color:var(--text-muted);font-weight:600;">No wounds recorded yet.</p>
-            <p style="font-size:11px;color:var(--text-muted);margin-top:4px;font-style:italic;">Use the button above to register one.</p>
         </div>
-        {% endfor %}
+        <div class="h-body">{% if patient.metabolic_factors %}{% for item in patient.metabolic_factors_list %}<span class="chip" style="background:#fef3c7;color:#92400e;">{{ item }}</span>{% endfor %}{% else %}<p style="font-size:12px;color:var(--text-muted);">No metabolic factors recorded.</p>{% endif %}</div>
 
-        <!-- Delete -->
-        <a href="{% url 'delete_patient' patient.id %}" class="del-btn">
-            <i class="fa-solid fa-trash-can"></i> Delete Patient
-        </a>
+        <div class="h-section" onclick="toggleSection(this)">
+            <div class="d-row" style="cursor:pointer;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <span class="h-icon ic-red"><i class="fa-solid fa-heart-pulse"></i></span>
+                    <div>
+                        <div class="h-row-title">Pathologies</div>
+                        <div class="h-row-sub">{% if patient.pathologies %}{{ patient.pathologies|truncatechars:38 }}{% else %}Not specified{% endif %}</div>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-xs h-chevron" style="color:var(--text-muted);margin-top:8px;"></i>
+            </div>
+        </div>
+        <div class="h-body">{% if patient.pathologies %}{% for item in patient.pathologies_list %}<span class="chip chip-red">{{ item }}</span>{% endfor %}{% else %}<p style="font-size:12px;color:var(--text-muted);">No pathologies recorded.</p>{% endif %}</div>
 
-    </div><!-- /content -->
-</body>
+        <div class="h-section" onclick="toggleSection(this)">
+            <div class="d-row" style="cursor:pointer;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <span class="h-icon ic-purple"><i class="fa-solid fa-scalpel"></i></span>
+                    <div>
+                        <div class="h-row-title">Surgical history</div>
+                        <div class="h-row-sub">{% if patient.surgical_history %}{{ patient.surgical_history|truncatechars:38 }}{% else %}Not specified{% endif %}</div>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-xs h-chevron" style="color:var(--text-muted);margin-top:8px;"></i>
+            </div>
+        </div>
+        <div class="h-body">{% if patient.surgical_history %}{% for item in patient.surgical_history_list %}<span class="chip" style="background:#ede9fe;color:#6d28d9;">{{ item }}</span>{% endfor %}{% else %}<p style="font-size:12px;color:var(--text-muted);">No surgical history recorded.</p>{% endif %}</div>
+
+        <div class="h-section" onclick="toggleSection(this)">
+            <div class="d-row" style="cursor:pointer;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <span class="h-icon ic-pink"><i class="fa-solid fa-triangle-exclamation"></i></span>
+                    <div>
+                        <div class="h-row-title">Allergies / Skin sensitivities</div>
+                        <div class="h-row-sub">{% if patient.allergies %}{{ patient.allergies|truncatechars:38 }}{% else %}Not specified{% endif %}</div>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-xs h-chevron" style="color:var(--text-muted);margin-top:8px;"></i>
+            </div>
+        </div>
+        <div class="h-body">{% if patient.allergies %}{% for item in patient.allergies_list %}<span class="chip chip-red">{{ item }}</span>{% endfor %}{% else %}<p style="font-size:12px;color:var(--text-muted);">No allergies recorded.</p>{% endif %}</div>
+    </div>
+
+    <!-- Treatment & Compliance -->
+    <div class="s-card">
+        <div class="s-head">Treatment &amp; Compliance</div>
+
+        <div class="h-section" onclick="toggleSection(this)">
+            <div class="d-row" style="cursor:pointer;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <span class="h-icon ic-green"><i class="fa-solid fa-pills"></i></span>
+                    <div>
+                        <div class="h-row-title">Treatments / Medication</div>
+                        <div class="h-row-sub">{% if patient.medication %}{{ patient.medication|truncatechars:38 }}{% else %}Not specified{% endif %}</div>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-xs h-chevron" style="color:var(--text-muted);margin-top:8px;"></i>
+            </div>
+        </div>
+        <div class="h-body">{% if patient.medication %}{% for item in patient.medication_list %}<span class="chip chip-green">{{ item }}</span>{% endfor %}{% else %}<p style="font-size:12px;color:var(--text-muted);">No medication recorded.</p>{% endif %}</div>
+
+        <div class="h-section" onclick="toggleSection(this)">
+            <div class="d-row" style="cursor:pointer;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <span class="h-icon ic-teal"><i class="fa-solid fa-clipboard-check"></i></span>
+                    <div>
+                        <div class="h-row-title">Compliance and ability</div>
+                        <div class="h-row-sub">{% if patient.compliance %}{{ patient.compliance|truncatechars:38 }}{% else %}Not specified{% endif %}</div>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-xs h-chevron" style="color:var(--text-muted);margin-top:8px;"></i>
+            </div>
+        </div>
+        <div class="h-body">{% if patient.compliance %}<p style="font-size:13px;color:#334155;line-height:1.7;white-space:pre-line;">{{ patient.compliance }}</p>{% else %}<p style="font-size:12px;color:var(--text-muted);">No compliance data recorded.</p>{% endif %}</div>
+    </div>
+
+    <!-- Additional Info -->
+    {% if patient.additional_info %}
+    <div class="s-card">
+        <div class="s-head">Additional Information</div>
+        <div style="padding:16px 18px;">
+            <p style="font-size:13px;color:#334155;line-height:1.7;">{{ patient.additional_info }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Register Wound CTA -->
+    <a href="/add-wound/{{ patient.id }}/" class="fab">
+        <i class="fa-solid fa-plus-circle" style="font-size:16px;"></i>Register New Wound
+    </a>
+
+    <!-- Wounds List -->
+    <div class="sec-row">
+        <h3>Tracked Wounds</h3>
+        <span>{{ wounds|length }} total</span>
+    </div>
+
+    {% for wound in wounds %}
+    <a href="/wound/{{ wound.id }}/" class="wound-card">
+        <div class="wound-icon"><i class="fa-solid fa-droplet"></i></div>
+        <div style="flex:1;min-width:0;">
+            <p class="wound-num">Wound #{{ wound.wound_number }}</p>
+            <p class="wound-loc"><i class="fa-solid fa-location-dot" style="font-size:10px;margin-right:3px;"></i>{{ wound.location }}</p>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;">
+            {% if wound.status %}<span class="chip chip-teal" style="font-size:10px;">{{ wound.status }}</span>{% endif %}
+            <i class="fa-solid fa-chevron-right text-xs" style="color:var(--text-muted);"></i>
+        </div>
+    </a>
+    {% empty %}
+    <div class="wound-empty">
+        <i class="fa-solid fa-folder-open" style="font-size:32px;color:#c8d5c4;margin-bottom:12px;display:block;"></i>
+        <p style="font-size:13px;color:var(--text-muted);font-weight:600;">No wounds recorded yet.</p>
+        <p style="font-size:11px;color:var(--text-muted);margin-top:4px;font-style:italic;">Use the button above to register one.</p>
+    </div>
+    {% endfor %}
+
+    <!-- Delete — owner only -->
+    {% if is_owner %}
+    <a href="{% url 'delete_patient' patient.id %}" class="del-btn">
+        <i class="fa-solid fa-trash-can"></i> Delete Patient
+    </a>
+    {% endif %}
+
+</div>
 
 <script>
+/* ── Collapsible health sections ── */
 function toggleSection(el) {
     el.classList.toggle('open');
     const body = el.nextElementSibling;
-    if (body && body.classList.contains('h-body')) {
-        body.classList.toggle('open');
-    }
+    if (body && body.classList.contains('h-body')) body.classList.toggle('open');
 }
+
+/* ── Transfer panel toggle ── */
+function toggleTransfer() {
+    const head   = document.getElementById('transferToggle');
+    const body   = document.getElementById('transferBody');
+    const chev   = document.getElementById('transferChevron');
+    const isOpen = body.classList.contains('open');
+    body.classList.toggle('open');
+    head.classList.toggle('open');
+}
+
+/* ── Transfer type selector ── */
+const allTypes = ['ward_to_ward', 'ward_to_outpatient', 'outpatient_to_ward'];
+
+function selectType(type, needsWard) {
+    allTypes.forEach(t => {
+        const card = document.getElementById('card_' + t);
+        const chk  = document.getElementById('chk_' + t);
+        if (!card) return;
+        if (t === type) {
+            card.classList.add('selected');
+            if (chk) chk.style.display = 'block';
+            const radio = card.querySelector('input[type=radio]');
+            if (radio) radio.checked = true;
+        } else {
+            card.classList.remove('selected');
+            if (chk) chk.style.display = 'none';
+        }
+    });
+
+    const wardField = document.getElementById('wardField');
+    const wardInput = document.getElementById('to_location');
+    const notesField = document.getElementById('notesField');
+
+    if (needsWard) {
+        wardField.style.display = 'block';
+        wardInput.required = true;
+    } else {
+        wardField.style.display = 'none';
+        wardInput.required = false;
+        wardInput.value = '';
+    }
+
+    notesField.style.display = 'block';
+    document.getElementById('submitBtn').disabled = false;
+}
+
+/* ── Share dropdown ── */
+function filterUsers(query) {
+    const select  = document.getElementById('userSelect');
+    const options = select.querySelectorAll('option');
+    const q = query.trim().toLowerCase();
+    options.forEach(opt => {
+        if (!opt.value) return;
+        opt.hidden = q.length > 0 && !opt.textContent.toLowerCase().includes(q);
+    });
+    const sel = select.options[select.selectedIndex];
+    if (sel && sel.hidden) { select.selectedIndex = 0; resetPreview(); }
+}
+
+function updateShareBtn(select) {
+    const btn     = document.getElementById('shareSubmitBtn');
+    const preview = document.getElementById('selectedPreview');
+    if (select.value) {
+        const opt  = select.options[select.selectedIndex];
+        const name = opt.dataset.name || opt.value;
+        const reg  = opt.dataset.reg  || opt.value;
+        document.getElementById('previewInitial').textContent = name.charAt(0).toUpperCase();
+        document.getElementById('previewName').textContent    = name;
+        document.getElementById('previewReg').textContent     = reg;
+        preview.style.display = 'flex';
+        btn.disabled = false;
+    } else { resetPreview(); }
+}
+
+function resetPreview() {
+    const preview = document.getElementById('selectedPreview');
+    const btn     = document.getElementById('shareSubmitBtn');
+    if (preview) preview.style.display = 'none';
+    if (btn)     btn.disabled = true;
+}
+
+/* Auto-open transfer panel if there's a transfer-related message */
+{% if messages %}
+{% for message in messages %}
+{% if 'transfer' in message.tags or 'ward' in message.message|lower %}
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('transferToggle').click();
+    document.getElementById('transferBody').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+{% endif %}
+{% endfor %}
+{% endif %}
 </script>
+
+</body>
 </html>

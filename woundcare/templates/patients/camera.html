@@ -336,7 +336,8 @@
         canvas.height = video.videoHeight;
         context.drawImage(video, 0, 0);
 
-        document.getElementById('image_data').value = canvas.toDataURL('image/png');
+        // ✅ Compress image to reduce size before sending
+document.getElementById('image_data').value = canvas.toDataURL('image/jpeg', 0.7);
 
         // Flash effect
         flash.classList.add('go');

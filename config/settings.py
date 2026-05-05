@@ -12,13 +12,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Keep secret key in env variable on Render
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-jympxqttm48&@iupp#v0-^nx%15jw#3+pc66=)xrpp!ry@8mo#')
 
+# ✅ FIXED: reads from env var — False on Render, can be True locally
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['*']
+# ✅ FIXED: reads from env var — set to your Render domain in dashboard
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost').split(',')
 
 CSRF_TRUSTED_ORIGINS = [
     "https://*.ngrok-free.dev",
-    "https://*.onrender.com",  # ✅ Added for Render
+    "https://*.onrender.com",
 ]
 
 INSTALLED_APPS = [
@@ -33,7 +35,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # ✅ Added for static files
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -62,10 +64,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# ✅ DATABASE — uses PostgreSQL on Render, SQLite locally
+# ✅ FIXED: added conn_max_age and conn_health_checks for stable Render PostgreSQL connections
 DATABASES = {
     'default': dj_database_url.config(
-        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}'
+        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
+        conn_max_age=600,
+        conn_health_checks=True,
     )
 }
 
@@ -81,7 +85,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# ✅ Static files with whitenoise
+# Static files with whitenoise
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -89,8 +93,13 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-CSRF_COOKIE_SECURE = False
-SESSION_COOKIE_SECURE = False
+# Allow large image uploads from camera
+DATA_UPLOAD_MAX_MEMORY_SIZE = 20971520  # 20MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 20971520  # 20MB
+
+# ✅ FIXED: secure cookies automatically enabled in production, relaxed locally
+CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
